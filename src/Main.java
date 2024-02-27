@@ -1,4 +1,5 @@
 import dao.ConnectionDao;
+import exceptions.CustomException;
 import exceptions.DaoException;
 import utilitaires.Utilitaires;
 
@@ -10,7 +11,11 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Utilitaires.creationLog();
+        try {
+            Utilitaires.creationLog();
+        } catch (CustomException e) {
+            System.out.println("Erreur fichier .log. "+ e.getMessage() + " " + e);
+        }
 
         try {
             ConnectionDao.getConnection();
