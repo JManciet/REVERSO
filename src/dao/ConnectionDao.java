@@ -10,6 +10,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.logging.Level;
+
+import static utilitaires.Utilitaires.LOGGER;
 
 public class ConnectionDao {
 
@@ -51,14 +54,14 @@ public class ConnectionDao {
         {
             public void run()
             {
+                LOGGER.log(Level.INFO, "fin pg");
                 if (connection != null) {
-
                     try {
                         connection.close();
+                        LOGGER.info("Database fermée");
                     } catch (SQLException e) {
-                        throw new RuntimeException(e);
+                        LOGGER.severe(e.getMessage());
                     }
-
                 }
             }
         });
