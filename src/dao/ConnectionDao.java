@@ -43,4 +43,24 @@ public class ConnectionDao {
         return connection;
     }
 
+    static {
+        Runtime.getRuntime().addShutdownHook(new Thread()
+        {
+            public void run()
+            {
+                if (connection != null) {
+
+                    try {
+                        connection.close();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                }
+            }
+        });
+    }
+
+
+
 }
