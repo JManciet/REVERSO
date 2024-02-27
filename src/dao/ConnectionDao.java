@@ -1,5 +1,7 @@
 package dao;
 
+import exceptions.DaoException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,7 +15,7 @@ public class ConnectionDao {
 
     private static Connection connection;
 
-    private ConnectionDao() {
+    private ConnectionDao() throws DaoException {
 
         final Properties dataProperties = new Properties();
         File fichier = new File("database.properties");
@@ -26,17 +28,18 @@ public class ConnectionDao {
                     dataProperties.getProperty("password")
             );
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new DaoException("Fichier de connection non trouvé");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new DaoException("Soucis avec le fichier de connection");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException("Connection avec la base de données non " +
+                    "établie");
         }
 
 
     }
 
-    public static Connection getConnection() {
+    public static Connection getConnection() throws DaoException {
         if (connection == null) {
             new ConnectionDao();
         }
