@@ -11,7 +11,7 @@ public class Utilitaires {
 
     public static void creationLog(){
 
-        FileHandler fh = null;
+        FileHandler fh;
         try {
             fh = new FileHandler("logReverso.log", true);
         } catch (IOException e) {
