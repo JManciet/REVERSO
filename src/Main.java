@@ -10,6 +10,7 @@ import exceptions.DaoException;
 import utilitaires.Utilitaires;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.logging.Level;
 
 import static utilitaires.Utilitaires.LOGGER;
@@ -37,7 +38,7 @@ public class Main {
         Adresse adresse = new Adresse(1,"55","rue générale Papin",
                 "67400",
                 "Nancy");
-        Client client = new Client(1,"REVERSO++",adresse,"0606050408",
+        Client client = new Client(1,"MAn++",adresse,"0606050408",
                 "contact" +
                 "@reverso.fr","its good",5555555, 55);
 
@@ -51,9 +52,17 @@ public class Main {
         ProspectDao prospectDao = new ProspectDao();
 
         try {
-            System.out.println(prospectDao.findByName("REVERSO2"));
+
+//            clientDao.create(client);
+
+            List<Prospect> clients = prospectDao.findAll();
+
+            for (int i = 0; i < clients.size(); i++) {
+                System.out.println(clients.get(i));
+            }
+
         } catch (DaoException e) {
-            throw new RuntimeException(e);
+            System.out.println("Nom d'entreprise déjà enregistré");
         }
 
 

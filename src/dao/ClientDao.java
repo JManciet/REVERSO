@@ -5,12 +5,43 @@ import entites.Client;
 import exceptions.DaoException;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClientDao implements IDao<Client>{
     @Override
-    public List<Client> findAll() {
-        return null;
+    public List<Client> findAll() throws DaoException {
+        try (Connection connection = ConnectionDao.getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "SELECT c.*, a.* FROM CLIENT c " +
+                             "INNER JOIN ADRESSE a ON c.IDADRESSE = a.IDADRESSE")) {
+            ResultSet resultSet = statement.executeQuery();
+            List<Client> clients = new ArrayList<>();
+            while (resultSet.next()) {
+
+                Adresse adresse = new Adresse(
+                        resultSet.getInt("IDADRESSE"),
+                        resultSet.getString("NUMERORUE"),
+                        resultSet.getString("NOMRUE"),
+                        resultSet.getString("CODEPOSTAL"),
+                        resultSet.getString("VILLE")
+                );
+
+                clients.add(new Client(
+                        resultSet.getInt("IDCLIENT"),
+                        resultSet.getString("RAISONSOCIALECLIENT"),
+                        adresse,
+                        resultSet.getString("TELEPHONECLIENT"),
+                        resultSet.getString("EMAILCLIENT"),
+                        resultSet.getString("COMMENTAIRESCLIENT"),
+                        resultSet.getDouble("CHIFFREAFFAIRE"),
+                        resultSet.getInt("NBREMPLOYES")
+                ));
+            }
+            return clients;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -87,6 +118,8 @@ public class ClientDao implements IDao<Client>{
             statement.setInt(6, client.getNbrEmployes());
             statement.setString(7, client.getCommentaires());
             statement.executeUpdate();
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw new DaoException("Duplication de champ");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -133,6 +166,8 @@ public class ClientDao implements IDao<Client>{
             statement.setString(6, client.getCommentaires());
             statement.setInt(7, client.getIdentifiant());
             statement.executeUpdate();
+        }catch (SQLIntegrityConstraintViolationException e) {
+            throw new DaoException("Duplication de champ");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

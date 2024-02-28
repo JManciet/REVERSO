@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface IDao<T> {
 
-    List<T> findAll();
+    List<T> findAll() throws DaoException;
 
     T findByName(String nom) throws DaoException;
 

@@ -5,12 +5,44 @@ import entites.Prospect;
 import exceptions.DaoException;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProspectDao implements IDao<Prospect>{
     @Override
-    public List<Prospect> findAll() {
-        return null;
+    public List<Prospect> findAll() throws DaoException {
+        try (Connection connection = ConnectionDao.getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "SELECT p.*, a.* FROM PROSPECT p " +
+                             "INNER JOIN ADRESSE a ON p.IDADRESSE = a" +
+                             ".IDADRESSE")) {
+            ResultSet resultSet = statement.executeQuery();
+            List<Prospect> prospects = new ArrayList<>();
+            while (resultSet.next()) {
+
+                Adresse adresse = new Adresse(
+                        resultSet.getInt("IDADRESSE"),
+                        resultSet.getString("NUMERORUE"),
+                        resultSet.getString("NOMRUE"),
+                        resultSet.getString("CODEPOSTAL"),
+                        resultSet.getString("VILLE")
+                );
+
+                prospects.add(new Prospect(
+                        resultSet.getInt("IDPROSPECT"),
+                        resultSet.getString("RAISONSOCIALEPROSPECT"),
+                        adresse,
+                        resultSet.getString("TELEPHONEPROSPECT"),
+                        resultSet.getString("EMAILPROSPECT"),
+                        resultSet.getString("COMMENTAIRESPROSPECT"),
+                        resultSet.getDate("DATEPROSPECTION").toLocalDate(),
+                        resultSet.getString("INTERESSE")
+                ));
+            }
+            return prospects;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -87,6 +119,8 @@ public class ProspectDao implements IDao<Prospect>{
             statement.setString(6, prospect.getInteresse());
             statement.setString(7, prospect.getCommentaires());
             statement.executeUpdate();
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw new DaoException("Duplication de champ");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -131,6 +165,8 @@ public class ProspectDao implements IDao<Prospect>{
             statement.setString(6, prospect.getCommentaires());
             statement.setInt(7, prospect.getIdentifiant());
             statement.executeUpdate();
+        } catch (SQLIntegrityConstraintViolationException e) {
+            throw new DaoException("Duplication de champ");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
