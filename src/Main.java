@@ -11,11 +11,14 @@ public class Main {
 
     public static void main(String[] args) {
 
+
         try {
             Utilitaires.creationLog();
         } catch (CustomException e) {
             System.out.println("Erreur fichier .log. "+ e.getMessage() + " " + e);
         }
+
+        LOGGER.log(Level.INFO, "début pg");
 
         try {
             ConnectionDao.getConnection();
@@ -23,7 +26,7 @@ public class Main {
             throw new RuntimeException(e);
         }
 
-        LOGGER.log(Level.INFO, "début pg");
+
 
         System.out.println("Hello world!");
     }

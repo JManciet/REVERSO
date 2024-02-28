@@ -31,10 +31,13 @@ public class ConnectionDao {
                     dataProperties.getProperty("password")
             );
         } catch (FileNotFoundException e) {
+            LOGGER.severe(e.getMessage());
             throw new DaoException("Fichier de connection non trouvé");
         } catch (IOException e) {
+            LOGGER.severe(e.getMessage());
             throw new DaoException("Soucis avec le fichier de connection");
         } catch (SQLException e) {
+            LOGGER.severe(e.getMessage());
             throw new DaoException("Connection avec la base de données non " +
                     "établie");
         }
