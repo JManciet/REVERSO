@@ -8,6 +8,7 @@ import entites.Prospect;
 import exceptions.CustomException;
 import exceptions.DaoException;
 import utilitaires.Utilitaires;
+import vues.Acceuil;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,6 +34,10 @@ public class Main {
         } catch (DaoException e) {
             throw new RuntimeException(e);
         }
+
+        Acceuil acceuil = new Acceuil();
+        acceuil.setSize(400,300);
+        acceuil.setVisible(true);
 
 
         Adresse adresse = new Adresse(1,"55","rue générale Papin",
