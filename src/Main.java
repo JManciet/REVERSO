@@ -1,4 +1,4 @@
-import dao.CLientDao;
+import dao.ClientDao;
 import dao.ConnectionDao;
 import dao.ProspectDao;
 import entites.Adresse;
@@ -34,20 +34,24 @@ public class Main {
         }
 
 
-        Adresse adresse = new Adresse("55","rue générale Leklerc","67400",
+        Adresse adresse = new Adresse(1,"55","rue générale Papin",
+                "67400",
                 "Nancy");
-        Client client = new Client("REVERSO",adresse,"0606050408","contact" +
+        Client client = new Client(1,"REVERSO++",adresse,"0606050408",
+                "contact" +
                 "@reverso.fr","its good",5555555, 55);
 
-        Prospect prospect = new Prospect("REVERSO",adresse,"0606050408",
+        Prospect prospect = new Prospect(1,"REVERSOCHOUETTE",adresse,
+                "0606050408",
                 "contact" +
                 "@reverso.fr","its good", LocalDate.now(), Interessement.NON);
 
 
-        CLientDao clientDao = new CLientDao();
+        ClientDao clientDao = new ClientDao();
         ProspectDao prospectDao = new ProspectDao();
+
         try {
-            prospectDao.create(prospect);
+            prospectDao.update(prospect);
         } catch (DaoException e) {
             throw new RuntimeException(e);
         }

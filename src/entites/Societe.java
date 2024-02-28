@@ -1,19 +1,29 @@
 package entites;
 
 public abstract class Societe {
-    private int identifiant;
+    private Integer identifiant;
     private String raisonSociale;
     private Adresse adresse;
     private String telephone;
     private String eMail;
     private String commentaires;
 
-    public Societe(String raisonSociale, Adresse adresse, String telephone, String eMail, String commentaires) {
+    public Societe(Integer identifiant, String raisonSociale, Adresse adresse,
+                   String telephone, String eMail, String commentaires) {
+        setIdentifiant(identifiant);
         setRaisonSociale(raisonSociale);
         setAdresse(adresse);
         setTelephone(telephone);
         seteMail(eMail);
         setCommentaires(commentaires);
+    }
+
+    public Integer getIdentifiant() {
+        return identifiant;
+    }
+
+    public void setIdentifiant(Integer identifiant) {
+        this.identifiant = identifiant;
     }
 
     public String getRaisonSociale() {

@@ -12,7 +12,7 @@ public interface IDao<T> {
 
     void create(T entity) throws DaoException;
 
-    void update(T entity);
+    void update(T entity) throws DaoException;
 
     void delete(T entity);
 

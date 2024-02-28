@@ -1,33 +1,34 @@
 package dao;
 
 import entites.Adresse;
-import entites.Prospect;
+import entites.Client;
 import exceptions.DaoException;
 
 import java.sql.*;
 import java.util.List;
 
-public class ProspectDao implements IDao<Prospect>{
+public class ClientDao implements IDao<Client>{
     @Override
-    public List<Prospect> findAll() {
+    public List<Client> findAll() {
         return null;
     }
 
     @Override
-    public Prospect findByName(String nom) {
+    public Client findByName(String nom) {
         return null;
     }
 
     @Override
-    public void create(Prospect prospect) throws DaoException {
+    public void create(Client client) throws DaoException {
+
         try (Connection connection = ConnectionDao.getConnection()) {
             // Insérer l'adresse en premier
             PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO ADRESSE (NUMERORUE, NOMRUE, CODEPOSTAL, VILLE) " +
-                            "VALUES (?, ?, ?, ?)",
+                        "VALUES (?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS);
 
-            Adresse adresse = prospect.getAdresse();
+            Adresse adresse = client.getAdresse();
 
             statement.setString(1, adresse.getNumeroRue());
             statement.setString(2, adresse.getNomRue());
@@ -40,30 +41,32 @@ public class ProspectDao implements IDao<Prospect>{
             generatedKeys.next();
             int idAdresse = generatedKeys.getInt(1);
 
-            // Insérer le prospect avec ID de l'adresse générer.
-            statement = connection.prepareStatement("INSERT INTO PROSPECT " +
-                    "(IDADRESSE, RAISONSOCIALEPROSPECT, TELEPHONEPROSPECT, " +
-                    "EMAILPROSPECT, DATEPROSPECTION, INTERESSE, " +
-                    "COMMENTAIRESPROSPECT) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)");
+            // Insérer le client avec ID de l'adresse générer.
+            statement = connection.prepareStatement(
+                    "INSERT INTO CLIENT (IDADRESSE, RAISONSOCIALECLIENT, " +
+                            "TELEPHONECLIENT, EMAILCLIENT, CHIFFREAFFAIRE, " +
+                            "NBREMPLOYES, COMMENTAIRESCLIENT) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)");
             statement.setInt(1, idAdresse);
-            statement.setString(2, prospect.getRaisonSociale());
-            statement.setString(3, prospect.getTelephone());
-            statement.setString(4, prospect.geteMail());
-            statement.setDate(5, Date.valueOf(prospect.getDateProspection()));
-            statement.setString(6, prospect.getInteresse().getValue());
-            statement.setString(7, prospect.getCommentaires());
+            statement.setString(2, client.getRaisonSociale());
+            statement.setString(3, client.getTelephone());
+            statement.setString(4, client.geteMail());
+            statement.setDouble(5, client.getChiffreAffaires());
+            statement.setInt(6, client.getNbrEmployes());
+            statement.setString(7, client.getCommentaires());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     @Override
-    public void update(Prospect prospect) throws DaoException {
+    public void update(Client client) throws DaoException {
+
         try (Connection connection = ConnectionDao.getConnection()) {
 
-            Adresse adresse = prospect.getAdresse();
+            Adresse adresse = client.getAdresse();
             // Maj adresse
             PreparedStatement statement = connection.prepareStatement(
                     "UPDATE ADRESSE SET " +
@@ -80,31 +83,32 @@ public class ProspectDao implements IDao<Prospect>{
             statement.executeUpdate();
 
 
-            // Maj prospect
+            // Maj client
             statement = connection.prepareStatement(
-                    "UPDATE PROSPECT SET " +
-                            "RAISONSOCIALEPROSPECT = ?, " +
-                            "TELEPHONEPROSPECT = ?, " +
-                            "EMAILPROSPECT = ?, " +
-                            "DATEPROSPECTION = ?, " +
-                            "INTERESSE = ?, " +
-                            "COMMENTAIRESPROSPECT = ? " +
-                        "WHERE IDPROSPECT = ?");
-            statement.setString(1, prospect.getRaisonSociale());
-            statement.setString(2, prospect.getTelephone());
-            statement.setString(3, prospect.geteMail());
-            statement.setDate(4, Date.valueOf(prospect.getDateProspection()));
-            statement.setString(5, prospect.getInteresse().getValue());
-            statement.setString(6, prospect.getCommentaires());
-            statement.setInt(7, prospect.getIdentifiant());
+                    "UPDATE CLIENT SET " +
+                            "RAISONSOCIALECLIENT = ?, " +
+                            "TELEPHONECLIENT = ?, " +
+                            "EMAILCLIENT = ?, " +
+                            "CHIFFREAFFAIRE = ?, " +
+                            "NBREMPLOYES = ?, " +
+                            "COMMENTAIRESCLIENT = ? " +
+                        "WHERE IDCLIENT = ?");
+            statement.setString(1, client.getRaisonSociale());
+            statement.setString(2, client.getTelephone());
+            statement.setString(3, client.geteMail());
+            statement.setDouble(4, client.getChiffreAffaires());
+            statement.setInt(5, client.getNbrEmployes());
+            statement.setString(6, client.getCommentaires());
+            statement.setInt(7, client.getIdentifiant());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     @Override
-    public void delete(Prospect entity) {
+    public void delete(Client entity) {
 
     }
 }

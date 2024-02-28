@@ -4,8 +4,10 @@ public class Client extends Societe {
     private double chiffreAffaires;
     private int nbrEmployes;
 
-    public Client(String raisonSociale, Adresse adresse, String telephone, String eMail, String commentaires, double chiffreAffaires, int nbrEmployes) {
-        super(raisonSociale, adresse, telephone, eMail, commentaires);
+    public Client(Integer identifiant, String raisonSociale, Adresse adresse,
+                  String telephone, String eMail, String commentaires, double chiffreAffaires, int nbrEmployes) {
+        super(identifiant,raisonSociale, adresse, telephone, eMail,
+                commentaires);
         setChiffreAffaires(chiffreAffaires);
         setNbrEmployes(nbrEmployes);
     }
