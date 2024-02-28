@@ -44,17 +44,19 @@ public class Main {
         Prospect prospect = new Prospect(1,"REVERSOCHOUETTE",adresse,
                 "0606050408",
                 "contact" +
-                "@reverso.fr","its good", LocalDate.now(), Interessement.NON);
+                "@reverso.fr","its good", LocalDate.now(), Interessement.NON.getValue());
 
 
         ClientDao clientDao = new ClientDao();
         ProspectDao prospectDao = new ProspectDao();
 
         try {
-            prospectDao.create(prospect);
+            System.out.println(prospectDao.findByName("REVERSO2"));
         } catch (DaoException e) {
             throw new RuntimeException(e);
         }
+
+
 
         System.out.println("Hello world!");
     }

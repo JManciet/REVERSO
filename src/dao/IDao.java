@@ -8,7 +8,7 @@ public interface IDao<T> {
 
     List<T> findAll();
 
-    T findByName(String nom);
+    T findByName(String nom) throws DaoException;
 
     void create(T entity) throws DaoException;
 

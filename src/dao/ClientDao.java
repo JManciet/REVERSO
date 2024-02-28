@@ -14,8 +14,40 @@ public class ClientDao implements IDao<Client>{
     }
 
     @Override
-    public Client findByName(String nom) {
-        return null;
+    public Client findByName(String nom) throws DaoException {
+        try (Connection connection = ConnectionDao.getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "SELECT c.*, a.* FROM CLIENT c " +
+                             "INNER JOIN ADRESSE a ON c.IDADRESSE = a.IDADRESSE " +
+                         "WHERE RAISONSOCIALECLIENT = ?")) {
+            statement.setString(1, nom);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+
+                Adresse adresse = new Adresse(
+                        resultSet.getInt("IDADRESSE"),
+                        resultSet.getString("NUMERORUE"),
+                        resultSet.getString("NOMRUE"),
+                        resultSet.getString("CODEPOSTAL"),
+                        resultSet.getString("VILLE")
+                );
+
+                return new Client(
+                        resultSet.getInt("IDCLIENT"),
+                        resultSet.getString("RAISONSOCIALECLIENT"),
+                        adresse,
+                        resultSet.getString("TELEPHONECLIENT"),
+                        resultSet.getString("EMAILCLIENT"),
+                        resultSet.getString("COMMENTAIRESCLIENT"),
+                        resultSet.getDouble("CHIFFREAFFAIRE"),
+                        resultSet.getInt("NBREMPLOYES")
+                );
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

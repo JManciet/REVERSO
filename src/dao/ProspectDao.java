@@ -14,8 +14,41 @@ public class ProspectDao implements IDao<Prospect>{
     }
 
     @Override
-    public Prospect findByName(String nom) {
-        return null;
+    public Prospect findByName(String nom) throws DaoException {
+        try (Connection connection = ConnectionDao.getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "SELECT p.*, a.* FROM PROSPECT p " +
+                             "INNER JOIN ADRESSE a ON p.IDADRESSE = a" +
+                             ".IDADRESSE " +
+                             "WHERE RAISONSOCIALEPROSPECT = ?")) {
+            statement.setString(1, nom);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+
+                Adresse adresse = new Adresse(
+                        resultSet.getInt("IDADRESSE"),
+                        resultSet.getString("NUMERORUE"),
+                        resultSet.getString("NOMRUE"),
+                        resultSet.getString("CODEPOSTAL"),
+                        resultSet.getString("VILLE")
+                );
+
+                return new Prospect(
+                        resultSet.getInt("IDPROSPECT"),
+                        resultSet.getString("RAISONSOCIALEPROSPECT"),
+                        adresse,
+                        resultSet.getString("TELEPHONEPROSPECT"),
+                        resultSet.getString("EMAILPROSPECT"),
+                        resultSet.getString("COMMENTAIRESPROSPECT"),
+                        resultSet.getDate("DATEPROSPECTION").toLocalDate(),
+                        resultSet.getString("INTERESSE")
+                );
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -51,7 +84,7 @@ public class ProspectDao implements IDao<Prospect>{
             statement.setString(3, prospect.getTelephone());
             statement.setString(4, prospect.geteMail());
             statement.setDate(5, Date.valueOf(prospect.getDateProspection()));
-            statement.setString(6, prospect.getInteresse().getValue());
+            statement.setString(6, prospect.getInteresse());
             statement.setString(7, prospect.getCommentaires());
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -94,7 +127,7 @@ public class ProspectDao implements IDao<Prospect>{
             statement.setString(2, prospect.getTelephone());
             statement.setString(3, prospect.geteMail());
             statement.setDate(4, Date.valueOf(prospect.getDateProspection()));
-            statement.setString(5, prospect.getInteresse().getValue());
+            statement.setString(5, prospect.getInteresse());
             statement.setString(6, prospect.getCommentaires());
             statement.setInt(7, prospect.getIdentifiant());
             statement.executeUpdate();

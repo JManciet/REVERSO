@@ -65,4 +65,16 @@ public abstract class Societe {
     public void setCommentaires(String commentaires) {
         this.commentaires = commentaires;
     }
+
+    @Override
+    public String toString() {
+        return "Societe{" +
+                "identifiant=" + identifiant +
+                ", raisonSociale='" + raisonSociale + '\'' +
+                ", adresse=" + adresse +
+                ", telephone='" + telephone + '\'' +
+                ", eMail='" + eMail + '\'' +
+                ", commentaires='" + commentaires + '\'' +
+                '}';
+    }
 }

@@ -27,4 +27,12 @@ public class Client extends Societe {
     public void setNbrEmployes(int nbrEmployes) {
         this.nbrEmployes = nbrEmployes;
     }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "chiffreAffaires=" + chiffreAffaires +
+                ", nbrEmployes=" + nbrEmployes +
+                '}'+" "+super.toString();
+    }
 }

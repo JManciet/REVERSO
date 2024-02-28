@@ -4,11 +4,11 @@ import java.time.LocalDate;
 
 public class Prospect extends Societe{
     private LocalDate dateProspection;
-    private Interessement interesse;
+    private String interesse;
 
     public Prospect(Integer identifiant, String raisonSociale, Adresse adresse,
                     String telephone,
-                    String eMail, String commentaires, LocalDate dateProspection, Interessement interesse) {
+                    String eMail, String commentaires, LocalDate dateProspection, String interesse) {
         super(identifiant, raisonSociale, adresse, telephone, eMail,
                 commentaires);
         setDateProspection(dateProspection);
@@ -23,11 +23,19 @@ public class Prospect extends Societe{
         this.dateProspection = dateProspection;
     }
 
-    public Interessement getInteresse() {
+    public String getInteresse() {
         return interesse;
     }
 
-    public void setInteresse(Interessement interesse) {
+    public void setInteresse(String interesse) {
         this.interesse = interesse;
+    }
+
+    @Override
+    public String toString() {
+        return "Prospect{" +
+                "dateProspection=" + dateProspection +
+                ", interesse=" + interesse +
+                '}'+" "+super.toString();
     }
 }
