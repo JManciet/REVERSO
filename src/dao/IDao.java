@@ -1,5 +1,7 @@
 package dao;
 
+import exceptions.DaoException;
+
 import java.util.List;
 
 public interface IDao<T> {
@@ -8,7 +10,7 @@ public interface IDao<T> {
 
     T findByName(String nom);
 
-    void create(T entity);
+    void create(T entity) throws DaoException;
 
     void update(T entity);
 

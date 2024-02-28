@@ -1,8 +1,15 @@
+import dao.CLientDao;
 import dao.ConnectionDao;
+import dao.ProspectDao;
+import entites.Adresse;
+import entites.Client;
+import entites.Interessement;
+import entites.Prospect;
 import exceptions.CustomException;
 import exceptions.DaoException;
 import utilitaires.Utilitaires;
 
+import java.time.LocalDate;
 import java.util.logging.Level;
 
 import static utilitaires.Utilitaires.LOGGER;
@@ -27,6 +34,23 @@ public class Main {
         }
 
 
+        Adresse adresse = new Adresse("55","rue générale Leklerc","67400",
+                "Nancy");
+        Client client = new Client("REVERSO",adresse,"0606050408","contact" +
+                "@reverso.fr","its good",5555555, 55);
+
+        Prospect prospect = new Prospect("REVERSO",adresse,"0606050408",
+                "contact" +
+                "@reverso.fr","its good", LocalDate.now(), Interessement.NON);
+
+
+        CLientDao clientDao = new CLientDao();
+        ProspectDao prospectDao = new ProspectDao();
+        try {
+            prospectDao.create(prospect);
+        } catch (DaoException e) {
+            throw new RuntimeException(e);
+        }
 
         System.out.println("Hello world!");
     }
