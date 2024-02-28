@@ -108,7 +108,28 @@ public class ClientDao implements IDao<Client>{
     }
 
     @Override
-    public void delete(Client entity) {
+    public void delete(Client client) throws DaoException {
+
+        try (Connection connection = ConnectionDao.getConnection()) {
+            // Supprimmer client
+            PreparedStatement statement = connection.prepareStatement(
+                    "DELETE FROM CLIENT WHERE IDCLIENT = ?"
+            );
+            statement.setInt(1, client.getIdentifiant());
+            statement.executeUpdate();
+
+            Adresse adresse = client.getAdresse();
+
+            // Supprimmer adresse
+
+            statement = connection.prepareStatement(
+                    "DELETE FROM ADRESSE WHERE IDADRESSE = ?"
+            );
+            statement.setInt(1, adresse.getIdentifiant());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 }

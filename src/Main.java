@@ -51,7 +51,7 @@ public class Main {
         ProspectDao prospectDao = new ProspectDao();
 
         try {
-            prospectDao.update(prospect);
+            prospectDao.create(prospect);
         } catch (DaoException e) {
             throw new RuntimeException(e);
         }

@@ -104,7 +104,26 @@ public class ProspectDao implements IDao<Prospect>{
     }
 
     @Override
-    public void delete(Prospect entity) {
+    public void delete(Prospect prospect) throws DaoException {
+        try (Connection connection = ConnectionDao.getConnection()) {
+            // Supprimmer prospect
+            PreparedStatement statement = connection.prepareStatement(
+                    "DELETE FROM PROSPECT WHERE IDPROSPECT = ?"
+            );
+            statement.setInt(1, prospect.getIdentifiant());
+            statement.executeUpdate();
 
+            Adresse adresse = prospect.getAdresse();
+
+            // Supprimmer adresse
+
+            statement = connection.prepareStatement(
+                    "DELETE FROM ADRESSE WHERE IDADRESSE = ?"
+            );
+            statement.setInt(1, adresse.getIdentifiant());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

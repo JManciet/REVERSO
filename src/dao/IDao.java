@@ -14,6 +14,6 @@ public interface IDao<T> {
 
     void update(T entity) throws DaoException;
 
-    void delete(T entity);
+    void delete(T entity) throws DaoException;
 
 }
