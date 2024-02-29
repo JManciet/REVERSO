@@ -1,5 +1,8 @@
 package vues;
 
+import controleurs.TypeSociete;
+import entites.Interessement;
+
 import javax.swing.*;
 import java.awt.event.*;
 
@@ -17,11 +20,19 @@ public class Formulaire extends JDialog {
     private JTextField textField8;
     private JTextField textField9;
     private JTextArea textArea1;
+    private JTextField textField10;
+    private JRadioButton ouiRadioButton;
+    private JRadioButton nonRadioButton;
+    private JPanel zoneClient;
+    private JPanel zoneProspect;
 
-    public Formulaire() {
+    public Formulaire(TypeSociete choix) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
+
+        if (choix.equals(TypeSociete.CLIENT)) zoneClient.setVisible(true);
+        else zoneProspect.setVisible(true);
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -54,10 +65,16 @@ public class Formulaire extends JDialog {
     private void onOK() {
         // add your code here
         dispose();
+        Acceuil acceuil = new Acceuil();
+        acceuil.setSize(500,300);
+        acceuil.setVisible(true);
     }
 
     private void onCancel() {
         // add your code here if necessary
         dispose();
+        Acceuil acceuil = new Acceuil();
+        acceuil.setSize(500,300);
+        acceuil.setVisible(true);
     }
 }

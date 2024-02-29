@@ -127,7 +127,7 @@ public class Acceuil extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 panelList.setVisible(false);
-                Formulaire formulaire = new Formulaire();
+                Formulaire formulaire = new Formulaire(choix);
                 formulaire.setSize(700,400);
                 formulaire.setVisible(true);
             }
