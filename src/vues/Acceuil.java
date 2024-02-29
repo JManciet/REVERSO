@@ -5,6 +5,8 @@ import controleurs.ControleurAcceuil;
 import exceptions.DaoException;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.event.*;
 import java.sql.SQLException;
 
@@ -130,6 +132,41 @@ public class Acceuil extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 panelList.setVisible(false);
+            }
+        });
+
+        list1.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    // Récupérer l'objet sélectionné
+                    Object elementSelectionne = list1.getSelectedValue();
+
+                    if (elementSelectionne != null) {
+                        // Exécution de la suppression
+                        int dialogChoix = JOptionPane.showConfirmDialog(
+                                null,
+                                "Voulez-vous vraiment supprimer le "+(choix.equals(TypeSociete.CLIENT)? "client ":"prospect ")+elementSelectionne+" ?",
+                                "Confirmation",
+                                JOptionPane.YES_NO_OPTION
+                        );
+                        System.out.println(elementSelectionne);
+                        if (dialogChoix == JOptionPane.YES_OPTION) {
+                        try {
+                            controleurAcceuil.suppression(choix,
+                                    elementSelectionne.toString());
+                            list1.setListData(controleurAcceuil.liste(choix).toArray());
+                        } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        } catch (DaoException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        }
+                        //list1.clearSelection();
+                    }
+
+
+                }
             }
         });
     }

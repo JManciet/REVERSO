@@ -11,10 +11,6 @@ import java.util.List;
 import static utilitaires.Utilitaires.LOGGER;
 
 public class ProspectDao implements IDao<Prospect>{
-//    private Connection connection = ConnectionDao.getConnection();
-//
-//    public ProspectDao() throws DaoException {
-//    }
 
     @Override
     public List<Prospect> findAll() throws DaoException, SQLException {

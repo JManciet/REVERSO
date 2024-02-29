@@ -33,4 +33,16 @@ public class ControleurAcceuil {
         return result;
     };
 
+    public void suppression(TypeSociete choix,String nom) throws SQLException, DaoException {
+        if(choix.equals(TypeSociete.CLIENT)) {
+            ClientDao clientDao = new ClientDao();
+            Client client = clientDao.findByName(nom);
+            clientDao.delete(client);
+        }else{
+            ProspectDao prospectDao = new ProspectDao();
+            Prospect prospect = prospectDao.findByName(nom);
+            prospectDao.delete(prospect);
+        }
+    }
+
 }

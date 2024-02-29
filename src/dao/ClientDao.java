@@ -12,10 +12,6 @@ import static utilitaires.Utilitaires.LOGGER;
 
 public class ClientDao implements IDao<Client>{
 
-//    private Connection connection = ConnectionDao.getConnection();
-//
-//    public ClientDao() throws DaoException {
-//    }
     @Override
     public List<Client> findAll() throws DaoException, SQLException {
 
