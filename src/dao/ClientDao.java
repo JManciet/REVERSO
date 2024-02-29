@@ -8,7 +8,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static utilitaires.Utilitaires.LOGGER;
+
 public class ClientDao implements IDao<Client>{
+
+//    private Connection connection = ConnectionDao.getConnection();
+//
+//    public ClientDao() throws DaoException {
+//    }
     @Override
     public List<Client> findAll() throws DaoException {
         try (Connection connection = ConnectionDao.getConnection();
@@ -39,8 +46,12 @@ public class ClientDao implements IDao<Client>{
                 ));
             }
             return clients;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (DaoException e) {
+            LOGGER.severe(e.getMessage());
+            throw new DaoException("Problème avec la connection : "+ e.getMessage());
+        }catch (SQLException e) {
+            throw new DaoException("Problème lors de la recherche des " +
+                    "clients dans la base de donnée : "+ e.getMessage());
         }
     }
 
@@ -77,7 +88,8 @@ public class ClientDao implements IDao<Client>{
                 return null;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException("Problème lors de la recherche par nom des" +
+                    " client dans la base de donnée");
         }
     }
 
@@ -121,7 +133,7 @@ public class ClientDao implements IDao<Client>{
         } catch (SQLIntegrityConstraintViolationException e) {
             throw new DaoException("Duplication de champ");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException("Problème lors de la creation d'un client");
         }
 
     }
@@ -169,7 +181,8 @@ public class ClientDao implements IDao<Client>{
         }catch (SQLIntegrityConstraintViolationException e) {
             throw new DaoException("Duplication de champ");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException("Problème lors de la mise à jour d'un " +
+                    "client");
         }
 
     }
@@ -195,7 +208,8 @@ public class ClientDao implements IDao<Client>{
             statement.setInt(1, adresse.getIdentifiant());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException("Problème lors de la suppression d'un " +
+                    "client");
         }
 
     }

@@ -1,9 +1,13 @@
 package vues;
 
-import controleurs.ChoixClientProspect;
+import controleurs.TypeSociete;
+import controleurs.ControleurAcceuil;
+import exceptions.DaoException;
 
 import javax.swing.*;
 import java.awt.event.*;
+
+import static utilitaires.Utilitaires.LOGGER;
 
 public class Acceuil extends JDialog {
     private JPanel contentPane;
@@ -20,7 +24,10 @@ public class Acceuil extends JDialog {
     private JLabel labelChoixGestion;
     private JPanel panelChoixGestion;
     private JPanel panelChoixAction;
-    private ChoixClientProspect choix;
+    private JList list1;
+    private JPanel panelList;
+    private JLabel selection;
+    private TypeSociete choix;
 
     public Acceuil() {
 
@@ -28,7 +35,6 @@ public class Acceuil extends JDialog {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-
         buttonCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onCancel();
@@ -49,10 +55,16 @@ public class Acceuil extends JDialog {
                 onCancel();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+
+        ControleurAcceuil controleurAcceuil = new ControleurAcceuil();
+
+
         buttonClient.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                choix = ChoixClientProspect.CLIENT;
+                choix = TypeSociete.CLIENT;
+                buttonAcceuil.setVisible(true);
                 panelChoixGestion.setVisible(false);
                 panelChoixAction.setVisible(true);
                 labelChoixGestion.setText("Gestion des clients");
@@ -62,7 +74,8 @@ public class Acceuil extends JDialog {
         buttonProspect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                choix = ChoixClientProspect.PROSPECT;
+                choix = TypeSociete.PROSPECT;
+                buttonAcceuil.setVisible(true);
                 panelChoixGestion.setVisible(false);
                 panelChoixAction.setVisible(true);
                 labelChoixGestion.setText("Gestion des prospects");
@@ -71,8 +84,51 @@ public class Acceuil extends JDialog {
         buttonAcceuil.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                panelList.setVisible(false);
+                buttonAcceuil.setVisible(false);
                 panelChoixGestion.setVisible(true);
                 panelChoixAction.setVisible(false);
+            }
+        });
+        MODIFICATIONButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                selection.setText("Choisissez le "+(choix.equals(TypeSociete.CLIENT)? "client":"prospect")+" à " +
+                        "modifier :");
+                panelList.setVisible(true);
+                try {
+                    list1.setListData(controleurAcceuil.liste(choix).toArray());
+                } catch (DaoException d) {
+                    LOGGER.severe("Problème avec la connection : "+d.getMessage());
+                    System.out.println("problème, voir log");
+                }
+            }
+        });
+        SUPPRESSIONButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selection.setText("Choisissez le "+(choix.equals(TypeSociete.CLIENT)? "client":"prospect")+" à " +
+                        "modifier :");
+                panelList.setVisible(true);
+                try {
+                    list1.setListData(controleurAcceuil.liste(choix).toArray());
+                } catch (DaoException d) {
+                    LOGGER.severe("Problème avec la connection : "+d.getMessage());
+                    System.out.println("problème, voir log");
+                }
+            }
+        });
+        CREATIONButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelList.setVisible(false);
+            }
+        });
+        AFFICHAGEButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panelList.setVisible(false);
             }
         });
     }
@@ -82,6 +138,7 @@ public class Acceuil extends JDialog {
     private void onCancel() {
         // add your code here if necessary
         dispose();
+
     }
 
     private void createUIComponents() {

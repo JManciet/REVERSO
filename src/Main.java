@@ -36,7 +36,7 @@ public class Main {
         }
 
         Acceuil acceuil = new Acceuil();
-        acceuil.setSize(400,300);
+        acceuil.setSize(500,300);
         acceuil.setVisible(true);
 
 
@@ -53,21 +53,25 @@ public class Main {
                 "@reverso.fr","its good", LocalDate.now(), Interessement.NON.getValue());
 
 
-        ClientDao clientDao = new ClientDao();
+
+            ClientDao clientDao = new ClientDao();
+
         ProspectDao prospectDao = new ProspectDao();
+
 
         try {
 
 //            clientDao.create(client);
 
             List<Prospect> clients = prospectDao.findAll();
+            clients = prospectDao.findAll();
 
             for (int i = 0; i < clients.size(); i++) {
                 System.out.println(clients.get(i));
             }
 
         } catch (DaoException e) {
-            System.out.println("Nom d'entreprise déjà enregistré");
+            System.out.println(e.getMessage());
         }
 
 

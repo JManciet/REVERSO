@@ -8,7 +8,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static utilitaires.Utilitaires.LOGGER;
+
 public class ProspectDao implements IDao<Prospect>{
+//    private Connection connection = ConnectionDao.getConnection();
+//
+//    public ProspectDao() throws DaoException {
+//    }
+
     @Override
     public List<Prospect> findAll() throws DaoException {
         try (Connection connection = ConnectionDao.getConnection();
@@ -40,8 +47,12 @@ public class ProspectDao implements IDao<Prospect>{
                 ));
             }
             return prospects;
+        } catch (DaoException e) {
+            LOGGER.severe(e.getMessage());
+            throw new DaoException("Problème avec la connection : "+ e.getMessage());
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException("Problème lors de la recherche des " +
+                    "prospect dans la base de donnée : "+e);
         }
     }
 
@@ -79,7 +90,8 @@ public class ProspectDao implements IDao<Prospect>{
                 return null;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException("Problème lors de la recherche par nom des" +
+                    " prospects dans la base de donnée");
         }
     }
 
@@ -122,7 +134,8 @@ public class ProspectDao implements IDao<Prospect>{
         } catch (SQLIntegrityConstraintViolationException e) {
             throw new DaoException("Duplication de champ");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException("Problème lors de la creation d'un " +
+                    "prospect");
         }
     }
 
@@ -168,7 +181,8 @@ public class ProspectDao implements IDao<Prospect>{
         } catch (SQLIntegrityConstraintViolationException e) {
             throw new DaoException("Duplication de champ");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException("Problème lors de la mise à jour d'un " +
+                    "prospect");
         }
     }
 
@@ -192,7 +206,8 @@ public class ProspectDao implements IDao<Prospect>{
             statement.setInt(1, adresse.getIdentifiant());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DaoException("Problème lors de la suppression d'un " +
+                    "prospect");
         }
     }
 }

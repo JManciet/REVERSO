@@ -32,14 +32,14 @@ public class ConnectionDao {
             );
         } catch (FileNotFoundException e) {
             LOGGER.severe(e.getMessage());
-            throw new DaoException("Fichier de connection non trouvé");
+            throw new DaoException("Fichier de connection non trouvé :"+e.getMessage());
         } catch (IOException e) {
             LOGGER.severe(e.getMessage());
-            throw new DaoException("Soucis avec le fichier de connection");
+            throw new DaoException("Soucis avec le fichier de connection :"+e.getMessage());
         } catch (SQLException e) {
             LOGGER.severe(e.getMessage());
             throw new DaoException("Connection avec la base de données non " +
-                    "établie");
+                    "établie :"+e.getMessage());
         }
 
 
