@@ -17,11 +17,15 @@ public class ClientDao implements IDao<Client>{
 //    public ClientDao() throws DaoException {
 //    }
     @Override
-    public List<Client> findAll() throws DaoException {
-        try (Connection connection = ConnectionDao.getConnection();
-             PreparedStatement statement = connection.prepareStatement(
+    public List<Client> findAll() throws DaoException, SQLException {
+
+        PreparedStatement statement = null;
+
+        try {Connection connection = ConnectionDao.getConnection();
+            statement = connection.prepareStatement(
                      "SELECT c.*, a.* FROM CLIENT c " +
-                             "INNER JOIN ADRESSE a ON c.IDADRESSE = a.IDADRESSE")) {
+                             "INNER JOIN ADRESSE a ON c.IDADRESSE = a" +
+                             ".IDADRESSE");
             ResultSet resultSet = statement.executeQuery();
             List<Client> clients = new ArrayList<>();
             while (resultSet.next()) {
@@ -52,16 +56,21 @@ public class ClientDao implements IDao<Client>{
         }catch (SQLException e) {
             throw new DaoException("Problème lors de la recherche des " +
                     "clients dans la base de donnée : "+ e.getMessage());
+        }finally {
+            if (statement != null) { statement.close(); }
         }
     }
 
     @Override
-    public Client findByName(String nom) throws DaoException {
-        try (Connection connection = ConnectionDao.getConnection();
-             PreparedStatement statement = connection.prepareStatement(
+    public Client findByName(String nom) throws DaoException, SQLException {
+
+        PreparedStatement statement = null;
+
+        try {Connection connection = ConnectionDao.getConnection();
+             statement = connection.prepareStatement(
                      "SELECT c.*, a.* FROM CLIENT c " +
                              "INNER JOIN ADRESSE a ON c.IDADRESSE = a.IDADRESSE " +
-                         "WHERE RAISONSOCIALECLIENT = ?")) {
+                         "WHERE RAISONSOCIALECLIENT = ?");
             statement.setString(1, nom);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -90,15 +99,22 @@ public class ClientDao implements IDao<Client>{
         } catch (SQLException e) {
             throw new DaoException("Problème lors de la recherche par nom des" +
                     " client dans la base de donnée");
+        }finally {
+            if (statement != null) { statement.close(); }
         }
     }
 
     @Override
-    public void create(Client client) throws DaoException {
+    public void create(Client client) throws DaoException, SQLException {
 
-        try (Connection connection = ConnectionDao.getConnection()) {
+        PreparedStatement statement = null;
+        Connection connection = null;
+
+        try {
+            connection = ConnectionDao.getConnection();
+            connection.setAutoCommit(false);
             // Insérer l'adresse en premier
-            PreparedStatement statement = connection.prepareStatement(
+            statement = connection.prepareStatement(
                     "INSERT INTO ADRESSE (NUMERORUE, NOMRUE, CODEPOSTAL, VILLE) " +
                         "VALUES (?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS);
@@ -130,22 +146,41 @@ public class ClientDao implements IDao<Client>{
             statement.setInt(6, client.getNbrEmployes());
             statement.setString(7, client.getCommentaires());
             statement.executeUpdate();
+            connection.commit();
         } catch (SQLIntegrityConstraintViolationException e) {
-            throw new DaoException("Duplication de champ");
+            throw new DaoException("Duplication de champ dans client");
         } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    connection.rollback();
+                } catch(SQLException excep) {
+                    LOGGER.severe(excep.toString());
+                }
+            }
             throw new DaoException("Problème lors de la creation d'un client");
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            connection.setAutoCommit(true);
         }
 
     }
 
     @Override
-    public void update(Client client) throws DaoException {
+    public void update(Client client) throws DaoException, SQLException {
 
-        try (Connection connection = ConnectionDao.getConnection()) {
+        PreparedStatement statement = null;
+        Connection connection = null;
 
+        try {
+            connection = ConnectionDao.getConnection();
+
+            connection.setAutoCommit(false);
             Adresse adresse = client.getAdresse();
             // Maj adresse
-            PreparedStatement statement = connection.prepareStatement(
+            statement = connection.prepareStatement(
                     "UPDATE ADRESSE SET " +
                             "NUMERORUE = ?, " +
                             "NOMRUE = ?, " +
@@ -178,21 +213,40 @@ public class ClientDao implements IDao<Client>{
             statement.setString(6, client.getCommentaires());
             statement.setInt(7, client.getIdentifiant());
             statement.executeUpdate();
+            connection.commit();
         }catch (SQLIntegrityConstraintViolationException e) {
             throw new DaoException("Duplication de champ");
         } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    connection.rollback();
+                } catch(SQLException excep) {
+                    LOGGER.severe(excep.toString());
+                }
+            }
             throw new DaoException("Problème lors de la mise à jour d'un " +
                     "client");
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            connection.setAutoCommit(true);
         }
 
     }
 
     @Override
-    public void delete(Client client) throws DaoException {
+    public void delete(Client client) throws DaoException, SQLException {
 
-        try (Connection connection = ConnectionDao.getConnection()) {
+        PreparedStatement statement = null;
+        Connection connection = null;
+
+        try {
+            connection = ConnectionDao.getConnection();
+            connection.setAutoCommit(false);
             // Supprimmer client
-            PreparedStatement statement = connection.prepareStatement(
+            statement = connection.prepareStatement(
                     "DELETE FROM CLIENT WHERE IDCLIENT = ?"
             );
             statement.setInt(1, client.getIdentifiant());
@@ -207,9 +261,23 @@ public class ClientDao implements IDao<Client>{
             );
             statement.setInt(1, adresse.getIdentifiant());
             statement.executeUpdate();
+            connection.commit();
         } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    connection.rollback();
+                } catch(SQLException excep) {
+                    LOGGER.severe(excep.toString());
+                }
+            }
             throw new DaoException("Problème lors de la suppression d'un " +
                     "client");
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            connection.setAutoCommit(true);
         }
 
     }

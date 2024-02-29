@@ -17,12 +17,15 @@ public class ProspectDao implements IDao<Prospect>{
 //    }
 
     @Override
-    public List<Prospect> findAll() throws DaoException {
-        try (Connection connection = ConnectionDao.getConnection();
-             PreparedStatement statement = connection.prepareStatement(
+    public List<Prospect> findAll() throws DaoException, SQLException {
+
+        PreparedStatement statement = null;
+
+        try {Connection connection = ConnectionDao.getConnection();
+             statement = connection.prepareStatement(
                      "SELECT p.*, a.* FROM PROSPECT p " +
                              "INNER JOIN ADRESSE a ON p.IDADRESSE = a" +
-                             ".IDADRESSE")) {
+                             ".IDADRESSE");
             ResultSet resultSet = statement.executeQuery();
             List<Prospect> prospects = new ArrayList<>();
             while (resultSet.next()) {
@@ -53,17 +56,22 @@ public class ProspectDao implements IDao<Prospect>{
         } catch (SQLException e) {
             throw new DaoException("Problème lors de la recherche des " +
                     "prospect dans la base de donnée : "+e);
+        }finally {
+            if (statement != null) { statement.close(); }
         }
     }
 
     @Override
-    public Prospect findByName(String nom) throws DaoException {
-        try (Connection connection = ConnectionDao.getConnection();
-             PreparedStatement statement = connection.prepareStatement(
+    public Prospect findByName(String nom) throws DaoException, SQLException {
+
+        PreparedStatement statement = null;
+
+        try {Connection connection = ConnectionDao.getConnection();
+             statement = connection.prepareStatement(
                      "SELECT p.*, a.* FROM PROSPECT p " +
                              "INNER JOIN ADRESSE a ON p.IDADRESSE = a" +
                              ".IDADRESSE " +
-                             "WHERE RAISONSOCIALEPROSPECT = ?")) {
+                             "WHERE RAISONSOCIALEPROSPECT = ?");
             statement.setString(1, nom);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -92,14 +100,22 @@ public class ProspectDao implements IDao<Prospect>{
         } catch (SQLException e) {
             throw new DaoException("Problème lors de la recherche par nom des" +
                     " prospects dans la base de donnée");
+        }finally {
+            if (statement != null) { statement.close(); }
         }
     }
 
     @Override
-    public void create(Prospect prospect) throws DaoException {
-        try (Connection connection = ConnectionDao.getConnection()) {
+    public void create(Prospect prospect) throws DaoException, SQLException {
+
+        PreparedStatement statement = null;
+        Connection connection = null;
+
+        try {
+            connection = ConnectionDao.getConnection();
+            connection.setAutoCommit(false);
             // Insérer l'adresse en premier
-            PreparedStatement statement = connection.prepareStatement(
+            statement = connection.prepareStatement(
                     "INSERT INTO ADRESSE (NUMERORUE, NOMRUE, CODEPOSTAL, VILLE) " +
                             "VALUES (?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS);
@@ -131,21 +147,41 @@ public class ProspectDao implements IDao<Prospect>{
             statement.setString(6, prospect.getInteresse());
             statement.setString(7, prospect.getCommentaires());
             statement.executeUpdate();
+            connection.commit();
         } catch (SQLIntegrityConstraintViolationException e) {
-            throw new DaoException("Duplication de champ");
+            throw new DaoException("Duplication de champ dans prospect");
         } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    connection.rollback();
+                } catch(SQLException excep) {
+                    LOGGER.severe(excep.toString());
+                }
+            }
             throw new DaoException("Problème lors de la creation d'un " +
                     "prospect");
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            connection.setAutoCommit(true);
         }
     }
 
     @Override
-    public void update(Prospect prospect) throws DaoException {
-        try (Connection connection = ConnectionDao.getConnection()) {
+    public void update(Prospect prospect) throws DaoException, SQLException {
 
+        PreparedStatement statement = null;
+        Connection connection = null;
+
+        try {
+            connection = ConnectionDao.getConnection();
+
+            connection.setAutoCommit(false);
             Adresse adresse = prospect.getAdresse();
             // Maj adresse
-            PreparedStatement statement = connection.prepareStatement(
+            statement = connection.prepareStatement(
                     "UPDATE ADRESSE SET " +
                             "NUMERORUE = ?, " +
                             "NOMRUE = ?, " +
@@ -178,19 +214,39 @@ public class ProspectDao implements IDao<Prospect>{
             statement.setString(6, prospect.getCommentaires());
             statement.setInt(7, prospect.getIdentifiant());
             statement.executeUpdate();
+            connection.commit();
         } catch (SQLIntegrityConstraintViolationException e) {
             throw new DaoException("Duplication de champ");
         } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    connection.rollback();
+                } catch(SQLException excep) {
+                    LOGGER.severe(excep.toString());
+                }
+            }
             throw new DaoException("Problème lors de la mise à jour d'un " +
                     "prospect");
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            connection.setAutoCommit(true);
         }
     }
 
     @Override
-    public void delete(Prospect prospect) throws DaoException {
-        try (Connection connection = ConnectionDao.getConnection()) {
+    public void delete(Prospect prospect) throws DaoException, SQLException {
+
+        PreparedStatement statement = null;
+        Connection connection = null;
+
+        try {
+            connection = ConnectionDao.getConnection();
+            connection.setAutoCommit(false);
             // Supprimmer prospect
-            PreparedStatement statement = connection.prepareStatement(
+            statement = connection.prepareStatement(
                     "DELETE FROM PROSPECT WHERE IDPROSPECT = ?"
             );
             statement.setInt(1, prospect.getIdentifiant());
@@ -205,9 +261,23 @@ public class ProspectDao implements IDao<Prospect>{
             );
             statement.setInt(1, adresse.getIdentifiant());
             statement.executeUpdate();
+            connection.commit();
         } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    System.err.print("Transaction is being rolled back");
+                    connection.rollback();
+                } catch(SQLException excep) {
+                    LOGGER.severe(excep.toString());
+                }
+            }
             throw new DaoException("Problème lors de la suppression d'un " +
                     "prospect");
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            connection.setAutoCommit(true);
         }
     }
 }

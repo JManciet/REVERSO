@@ -6,6 +6,7 @@ import exceptions.DaoException;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.sql.SQLException;
 
 import static utilitaires.Utilitaires.LOGGER;
 
@@ -99,7 +100,7 @@ public class Acceuil extends JDialog {
                 panelList.setVisible(true);
                 try {
                     list1.setListData(controleurAcceuil.liste(choix).toArray());
-                } catch (DaoException d) {
+                } catch (DaoException | SQLException d) {
                     LOGGER.severe("Problème avec la connection : "+d.getMessage());
                     System.out.println("problème, voir log");
                 }
@@ -109,11 +110,11 @@ public class Acceuil extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 selection.setText("Choisissez le "+(choix.equals(TypeSociete.CLIENT)? "client":"prospect")+" à " +
-                        "modifier :");
+                        "supprimer :");
                 panelList.setVisible(true);
                 try {
                     list1.setListData(controleurAcceuil.liste(choix).toArray());
-                } catch (DaoException d) {
+                } catch (DaoException | SQLException d) {
                     LOGGER.severe("Problème avec la connection : "+d.getMessage());
                     System.out.println("problème, voir log");
                 }

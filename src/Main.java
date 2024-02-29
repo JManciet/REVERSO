@@ -10,6 +10,7 @@ import exceptions.DaoException;
 import utilitaires.Utilitaires;
 import vues.Acceuil;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Level;
@@ -72,8 +73,9 @@ public class Main {
 
         } catch (DaoException e) {
             System.out.println(e.getMessage());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-
 
 
         System.out.println("Hello world!");

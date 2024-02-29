@@ -6,12 +6,13 @@ import entites.Client;
 import entites.Prospect;
 import exceptions.DaoException;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ControleurAcceuil {
 
-    public List liste(TypeSociete choix) throws DaoException {
+    public List liste(TypeSociete choix) throws DaoException, SQLException {
 
         List result;
         if(choix.equals(TypeSociete.CLIENT)) {
