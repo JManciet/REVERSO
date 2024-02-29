@@ -1,5 +1,6 @@
 package vues;
 
+import controleurs.TypeAction;
 import controleurs.TypeSociete;
 import controleurs.ControleurAcceuil;
 import exceptions.DaoException;
@@ -34,6 +35,7 @@ public class Acceuil extends JDialog {
 
     public Acceuil() {
 
+        final TypeAction[] action = new TypeAction[1];
         setTitle("REVERSO");
         setContentPane(contentPane);
         setModal(true);
@@ -97,6 +99,7 @@ public class Acceuil extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                action[0] = TypeAction.MODIFICATION;
                 selection.setText("Choisissez le "+(choix.equals(TypeSociete.CLIENT)? "client":"prospect")+" à " +
                         "modifier :");
                 panelList.setVisible(true);
@@ -111,6 +114,8 @@ public class Acceuil extends JDialog {
         SUPPRESSIONButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                action[0] = TypeAction.SUPPRESSION;
                 selection.setText("Choisissez le "+(choix.equals(TypeSociete.CLIENT)? "client":"prospect")+" à " +
                         "supprimer :");
                 panelList.setVisible(true);
@@ -126,10 +131,7 @@ public class Acceuil extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                panelList.setVisible(false);
-                Formulaire formulaire = new Formulaire(choix);
-                formulaire.setSize(700,400);
-                formulaire.setVisible(true);
+                controleurAcceuil.formulaire(choix,null,null);
             }
         });
         AFFICHAGEButton.addActionListener(new ActionListener() {
@@ -148,24 +150,29 @@ public class Acceuil extends JDialog {
 
                     if (elementSelectionne != null) {
                         // Exécution de la suppression
-                        int dialogChoix = JOptionPane.showConfirmDialog(
-                                null,
-                                "Voulez-vous vraiment supprimer le "+(choix.equals(TypeSociete.CLIENT)? "client ":"prospect ")+elementSelectionne+" ?",
-                                "Confirmation",
-                                JOptionPane.YES_NO_OPTION
-                        );
-                        System.out.println(elementSelectionne);
-                        if (dialogChoix == JOptionPane.YES_OPTION) {
-                        try {
-                            controleurAcceuil.suppression(choix,
-                                    elementSelectionne.toString());
-                            list1.setListData(controleurAcceuil.liste(choix).toArray());
-                        } catch (SQLException ex) {
-                            throw new RuntimeException(ex);
-                        } catch (DaoException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                        }
+                        dispose();
+                        controleurAcceuil.formulaire(choix,
+                                elementSelectionne.toString(),action[0]);
+
+
+//                        int dialogChoix = JOptionPane.showConfirmDialog(
+//                                null,
+//                                "Voulez-vous vraiment supprimer le "+(choix.equals(TypeSociete.CLIENT)? "client ":"prospect ")+elementSelectionne+" ?",
+//                                "Confirmation",
+//                                JOptionPane.YES_NO_OPTION
+//                        );
+//                        System.out.println(elementSelectionne);
+//                        if (dialogChoix == JOptionPane.YES_OPTION) {
+//                        try {
+//                            controleurAcceuil.suppression(choix,
+//                                    elementSelectionne.toString());
+//                            list1.setListData(controleurAcceuil.liste(choix).toArray());
+//                        } catch (SQLException ex) {
+//                            throw new RuntimeException(ex);
+//                        } catch (DaoException ex) {
+//                            throw new RuntimeException(ex);
+//                        }
+//                        }
                         //list1.clearSelection();
                     }
 

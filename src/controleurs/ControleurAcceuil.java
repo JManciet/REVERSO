@@ -5,6 +5,7 @@ import dao.ProspectDao;
 import entites.Client;
 import entites.Prospect;
 import exceptions.DaoException;
+import vues.Formulaire;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -43,6 +44,12 @@ public class ControleurAcceuil {
             Prospect prospect = prospectDao.findByName(nom);
             prospectDao.delete(prospect);
         }
+    }
+
+    public void formulaire(TypeSociete choix,String nom, TypeAction action){
+        Formulaire formulaire = new Formulaire(choix, nom, action);
+        formulaire.setSize(700,400);
+        formulaire.setVisible(true);
     }
 
 }

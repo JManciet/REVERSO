@@ -37,7 +37,7 @@ public class Main {
         }
 
         Acceuil acceuil = new Acceuil();
-        acceuil.setSize(500,300);
+        acceuil.setSize(600,300);
         acceuil.setVisible(true);
 
 
@@ -62,7 +62,7 @@ public class Main {
 
         try {
 
-//            clientDao.create(client);
+            clientDao.create(client);
 
             List<Prospect> clients = prospectDao.findAll();
             clients = prospectDao.findAll();

@@ -1,38 +1,76 @@
 package vues;
 
+import controleurs.ControleurAcceuil;
+import controleurs.ControleurFormulaire;
+import controleurs.TypeAction;
 import controleurs.TypeSociete;
-import entites.Interessement;
+import entites.Client;
+import entites.Societe;
+import exceptions.DaoException;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
+import java.sql.SQLException;
 
 public class Formulaire extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JTextField textField1;
-    private JTextField textField2;
-    private JTextField textField3;
-    private JTextField textField4;
-    private JTextField textField5;
-    private JTextField textField6;
-    private JTextField textField7;
-    private JTextField textField8;
-    private JTextField textField9;
-    private JTextArea textArea1;
-    private JTextField textField10;
-    private JRadioButton ouiRadioButton;
-    private JRadioButton nonRadioButton;
+    private JTextField textFieldRaisonSocial;
+    private JTextField textFieldTelephone;
+    private JTextField textFieldEmail;
+    private JTextField textFieldNumeroRue;
+    private JTextField textFieldNomRue;
+    private JTextField textFieldCodePostal;
+    private JTextField textFieldVille;
+    private JTextField textFieldChiffreAffaire;
+    private JTextField textFieldNombreEmployes;
+    private JTextArea textAreaCommentaires;
+    private JTextField textFieldDateProspection;
+    private JRadioButton ouiRadioButtonInteresse;
+    private JRadioButton nonRadioButtonInteresse;
     private JPanel zoneClient;
     private JPanel zoneProspect;
 
-    public Formulaire(TypeSociete choix) {
+    public Formulaire(TypeSociete choix, String nom, TypeAction action) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
+        ControleurFormulaire controleurFormulaire = new ControleurFormulaire();
+
         if (choix.equals(TypeSociete.CLIENT)) zoneClient.setVisible(true);
         else zoneProspect.setVisible(true);
+
+        Societe societe = null;
+        try {
+            societe = controleurFormulaire.societe(choix, nom);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (DaoException e) {
+            throw new RuntimeException(e);
+        }
+
+        if(societe != null) {
+            textFieldRaisonSocial.setText(societe.getRaisonSociale());
+        }
+
+        if(action != null && action.equals(TypeAction.SUPPRESSION)) {
+
+            for (Component comp : getContentPane().getComponents()) {
+                if (comp instanceof JPanel) {
+                    JPanel panel = (JPanel) comp;
+                    for (Component child : panel.getComponents()) {
+                        child.setEnabled(false);
+                    }
+                }else{
+                    comp.setEnabled(false);
+                }
+            }
+
+        }
+
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
