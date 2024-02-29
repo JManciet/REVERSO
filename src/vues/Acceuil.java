@@ -125,7 +125,11 @@ public class Acceuil extends JDialog {
         CREATIONButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                dispose();
                 panelList.setVisible(false);
+                Formulaire formulaire = new Formulaire();
+                formulaire.setSize(700,400);
+                formulaire.setVisible(true);
             }
         });
         AFFICHAGEButton.addActionListener(new ActionListener() {
