@@ -144,9 +144,11 @@ public class ProspectDao implements IDao<Prospect>{
             statement.setString(7, prospect.getCommentaires());
             statement.executeUpdate();
             connection.commit();
-        } catch (SQLIntegrityConstraintViolationException e) {
-            throw new DaoException("Duplication de champ dans prospect");
-        } catch (SQLException e) {
+        }
+//        catch (SQLIntegrityConstraintViolationException e) {
+//            throw new DaoException("Duplication de champ dans prospect");
+//        }
+        catch (SQLException e) {
             if (connection != null) {
                 try {
                     System.err.print("Transaction is being rolled back");
@@ -211,9 +213,11 @@ public class ProspectDao implements IDao<Prospect>{
             statement.setInt(7, prospect.getIdentifiant());
             statement.executeUpdate();
             connection.commit();
-        } catch (SQLIntegrityConstraintViolationException e) {
-            throw new DaoException("Duplication de champ");
-        } catch (SQLException e) {
+        }
+//        catch (SQLIntegrityConstraintViolationException e) {
+//            throw new DaoException("Duplication de champ");
+//        }
+        catch (SQLException e) {
             if (connection != null) {
                 try {
                     System.err.print("Transaction is being rolled back");
