@@ -5,6 +5,8 @@ import controleurs.ControleurFormulaire;
 import controleurs.TypeAction;
 import controleurs.TypeSociete;
 import entites.Client;
+import entites.Interessement;
+import entites.Prospect;
 import entites.Societe;
 import exceptions.DaoException;
 
@@ -32,6 +34,7 @@ public class Formulaire extends JDialog {
     private JRadioButton nonRadioButtonInteresse;
     private JPanel zoneClient;
     private JPanel zoneProspect;
+    private JSpinner spinner1;
 
     public Formulaire(TypeSociete choix, String nom, TypeAction action) {
         setContentPane(contentPane);
@@ -39,9 +42,6 @@ public class Formulaire extends JDialog {
         getRootPane().setDefaultButton(buttonOK);
 
         ControleurFormulaire controleurFormulaire = new ControleurFormulaire();
-
-        if (choix.equals(TypeSociete.CLIENT)) zoneClient.setVisible(true);
-        else zoneProspect.setVisible(true);
 
         Societe societe = null;
         try {
@@ -54,13 +54,32 @@ public class Formulaire extends JDialog {
 
         if(societe != null) {
             textFieldRaisonSocial.setText(societe.getRaisonSociale());
+            textFieldTelephone.setText(societe.getTelephone());
+            textFieldEmail.setText(societe.geteMail());
+            textFieldNumeroRue.setText(societe.getAdresse().getNumeroRue());
+            textFieldNomRue.setText(societe.getAdresse().getNomRue());
+            textFieldCodePostal.setText(societe.getAdresse().getCodePostal());
+            textFieldVille.setText(societe.getAdresse().getVille());
+            textAreaCommentaires.setText(societe.getCommentaires());
+            if(societe instanceof Client) {
+                zoneClient.setVisible(true);
+                textFieldChiffreAffaire.setText(String.valueOf(((Client) societe).getChiffreAffaires()));
+                textFieldNombreEmployes.setText(String.valueOf(((Client) societe).getNbrEmployes()));
+            }
+            if(societe instanceof Prospect) {
+                zoneProspect.setVisible(true);
+                textFieldDateProspection.setText(String.valueOf(((Prospect) societe).getDateProspection()));
+                if(((Prospect) societe).getInteresse().equals(Interessement.OUI.toString())){
+                    ouiRadioButtonInteresse.setSelected(true);
+                }else{
+                    nonRadioButtonInteresse.setSelected(true);
+                }
+            }
         }
 
         if(action != null && action.equals(TypeAction.SUPPRESSION)) {
-
             for (Component comp : getContentPane().getComponents()) {
-                if (comp instanceof JPanel) {
-                    JPanel panel = (JPanel) comp;
+                if (comp instanceof JPanel panel) {
                     for (Component child : panel.getComponents()) {
                         child.setEnabled(false);
                     }
@@ -68,7 +87,6 @@ public class Formulaire extends JDialog {
                     comp.setEnabled(false);
                 }
             }
-
         }
 
 

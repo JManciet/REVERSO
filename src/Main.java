@@ -62,7 +62,7 @@ public class Main {
 
         try {
 
-            clientDao.create(client);
+            prospectDao.create(prospect);
 
             List<Prospect> clients = prospectDao.findAll();
             clients = prospectDao.findAll();
