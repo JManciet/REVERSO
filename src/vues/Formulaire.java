@@ -39,6 +39,9 @@ public class Formulaire extends JDialog {
     private JComboBox comboBoxAnnee;
     private JComboBox comboBoxMois;
     private JComboBox comboBoxJour;
+    private JButton buttonCreate;
+    private JButton buttonDelete;
+    private JButton buttonUpdate;
 
     public Formulaire(TypeSociete choix, String nom, TypeAction action) {
         setContentPane(contentPane);
@@ -69,8 +72,7 @@ public class Formulaire extends JDialog {
                 zoneClient.setVisible(true);
                 textFieldChiffreAffaire.setText(String.valueOf(((Client) societe).getChiffreAffaires()));
                 textFieldNombreEmployes.setText(String.valueOf(((Client) societe).getNbrEmployes()));
-            }
-            if(societe instanceof Prospect) {
+            }else if(societe instanceof Prospect) {
                 zoneProspect.setVisible(true);
                 populateCalendar(((Prospect) societe).getDateProspection());
                 if(((Prospect) societe).getInteresse().equals(Interessement.OUI.toString())){
@@ -80,15 +82,31 @@ public class Formulaire extends JDialog {
                 }
             }
         }else{
-            populateCalendar(LocalDate.now());
+            if(choix.equals(TypeSociete.CLIENT)) {
+                zoneClient.setVisible(true);
+            }else if(choix.equals(TypeSociete.PROSPECT)) {
+                populateCalendar(LocalDate.now());
+                zoneProspect.setVisible(true);
+            }
         }
 
-        if(action != null && action.equals(TypeAction.SUPPRESSION)) {
 
 
+
+        String typeSociete = (choix.equals(TypeSociete.CLIENT)? "client":
+                "prospect");
+        if(action.equals(TypeAction.CREATION)){
+            buttonCreate.setVisible(true);
+            buttonCreate.setText("Valider la création du "+typeSociete);
+        } else if(action.equals(TypeAction.MODIFICATION)){
+            buttonUpdate.setVisible(true);
+            buttonUpdate.setText("Valider la modification du "+typeSociete);
+        } else if(action.equals(TypeAction.SUPPRESSION)){
+            buttonDelete.setVisible(true);
+            buttonDelete.setText("Supprimer le "+typeSociete);
             desactiverComponent(getContentPane().getComponents());
-
         }
+
 
 
         buttonOK.addActionListener(new ActionListener() {

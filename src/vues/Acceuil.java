@@ -131,7 +131,7 @@ public class Acceuil extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                controleurAcceuil.formulaire(choix,null,null);
+                controleurAcceuil.formulaire(choix,null,TypeAction.CREATION);
             }
         });
         AFFICHAGEButton.addActionListener(new ActionListener() {
