@@ -1,6 +1,5 @@
 package vues;
 
-import controleurs.ControleurAcceuil;
 import controleurs.ControleurFormulaire;
 import controleurs.TypeAction;
 import controleurs.TypeSociete;
@@ -14,6 +13,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.List;
 
 public class Formulaire extends JDialog {
     private JPanel contentPane;
@@ -34,7 +36,9 @@ public class Formulaire extends JDialog {
     private JRadioButton nonRadioButtonInteresse;
     private JPanel zoneClient;
     private JPanel zoneProspect;
-    private JSpinner spinner1;
+    private JComboBox comboBoxAnnee;
+    private JComboBox comboBoxMois;
+    private JComboBox comboBoxJour;
 
     public Formulaire(TypeSociete choix, String nom, TypeAction action) {
         setContentPane(contentPane);
@@ -68,25 +72,22 @@ public class Formulaire extends JDialog {
             }
             if(societe instanceof Prospect) {
                 zoneProspect.setVisible(true);
-                textFieldDateProspection.setText(String.valueOf(((Prospect) societe).getDateProspection()));
+                populateCalendar(((Prospect) societe).getDateProspection());
                 if(((Prospect) societe).getInteresse().equals(Interessement.OUI.toString())){
                     ouiRadioButtonInteresse.setSelected(true);
                 }else{
                     nonRadioButtonInteresse.setSelected(true);
                 }
             }
+        }else{
+            populateCalendar(LocalDate.now());
         }
 
         if(action != null && action.equals(TypeAction.SUPPRESSION)) {
-            for (Component comp : getContentPane().getComponents()) {
-                if (comp instanceof JPanel panel) {
-                    for (Component child : panel.getComponents()) {
-                        child.setEnabled(false);
-                    }
-                }else{
-                    comp.setEnabled(false);
-                }
-            }
+
+
+            desactiverComponent(getContentPane().getComponents());
+
         }
 
 
@@ -116,6 +117,98 @@ public class Formulaire extends JDialog {
                 onCancel();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+
+
+
+        comboBoxAnnee.addActionListener(e -> {
+            populateComboBoxJour();
+
+        });
+
+        comboBoxMois.addActionListener(e -> {
+            populateComboBoxJour();
+
+        });
+    }
+
+    private void desactiverComponent(Component[] components) {
+
+        for (Component comp : components) {
+            if (comp instanceof JPanel panel) {
+                desactiverComponent(((JPanel) comp).getComponents());
+            }else{
+                if (comp instanceof JTextField || comp instanceof JTextArea || comp instanceof JComboBox<?> || comp instanceof JRadioButton)
+                comp.setEnabled(false);
+            }
+        }
+
+
+//        for (Component comp : getContentPane().getComponents()) {
+//            if (comp instanceof JPanel panel) {
+//                for (Component child : panel.getComponents()) {
+//                    child.setEnabled(false);
+//                }
+//            }else{
+//                comp.setEnabled(false);
+//            }
+//        }
+
+    }
+
+    private void populateCalendar(LocalDate dateProspection) {
+
+        List<String> mois = Arrays.asList("Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+                "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre");
+
+
+
+        List<Integer> annees = new ArrayList<>();
+        int anneeActuel = LocalDate.now().getYear();
+        for (int i = anneeActuel; i >= 2000; i--) {
+            annees.add(i);
+        }
+
+
+        comboBoxAnnee.setModel(new DefaultComboBoxModel<>(annees.toArray()));
+
+        comboBoxMois.setModel(new DefaultComboBoxModel<>(mois.toArray()));
+
+
+        populateComboBoxJour();
+
+        comboBoxAnnee.setSelectedItem(anneeActuel);
+        comboBoxMois.setSelectedIndex(dateProspection.getMonthValue()-1);
+        comboBoxJour.setSelectedIndex(dateProspection.getDayOfMonth()-1);
+    }
+
+    private void populateComboBoxJour() {
+
+        int anneeSelectionnee = comboBoxAnnee.getSelectedIndex();
+        int moisSelectionne = comboBoxMois.getSelectedIndex();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(anneeSelectionnee, moisSelectionne, 1);
+
+        // Récupération du nombre de jours maximum
+        int nbJours = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+        // Mise à jour du modèle de la liste déroulante "Jour"
+        List<Integer> jours = new ArrayList<>();
+        for (int i = 1; i <= nbJours; i++) {
+
+            jours.add(i);
+        }
+        comboBoxJour.setModel(new DefaultComboBoxModel<>(jours.toArray()));
+
+        //Si le jour actuellement saisi n'existe pas réinitialiser
+        // comboBoxJour
+        int indexJourActuellementSaisi = comboBoxJour.getSelectedIndex();
+        if(indexJourActuellementSaisi>nbJours-1) {
+            comboBoxJour.setSelectedIndex(-1);
+        }else {
+            comboBoxJour.setSelectedIndex(indexJourActuellementSaisi);
+        }
     }
 
     private void onOK() {
