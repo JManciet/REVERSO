@@ -3,12 +3,10 @@ package vues;
 import controleurs.ControleurFormulaire;
 import controleurs.TypeAction;
 import controleurs.TypeSociete;
-import dao.ProspectDao;
 import entites.*;
 import exceptions.DaoException;
 
 import javax.swing.*;
-import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
@@ -51,7 +49,7 @@ public class Formulaire extends JDialog {
 
         ControleurFormulaire controleurFormulaire = new ControleurFormulaire();
 
-        Societe societe = null;
+        final Societe societe;
         try {
             societe = controleurFormulaire.getSociete(choix, nom);
         } catch (SQLException e) {
@@ -60,7 +58,7 @@ public class Formulaire extends JDialog {
             throw new RuntimeException(e);
         }
 
-        if(societe != null) {
+        if (societe != null) {
             idAdresse = societe.getAdresse().getIdentifiant();
             idSociete = societe.getIdentifiant();
             textFieldRaisonSocial.setText(societe.getRaisonSociale());
@@ -71,45 +69,42 @@ public class Formulaire extends JDialog {
             textFieldCodePostal.setText(societe.getAdresse().getCodePostal());
             textFieldVille.setText(societe.getAdresse().getVille());
             textAreaCommentaires.setText(societe.getCommentaires());
-            if(societe instanceof Client) {
+            if (societe instanceof Client) {
                 zoneClient.setVisible(true);
                 textFieldChiffreAffaire.setText(String.valueOf(((Client) societe).getChiffreAffaires()));
                 textFieldNombreEmployes.setText(String.valueOf(((Client) societe).getNbrEmployes()));
-            }else if(societe instanceof Prospect) {
+            } else if (societe instanceof Prospect) {
                 zoneProspect.setVisible(true);
                 populateCalendar(((Prospect) societe).getDateProspection());
-                if(((Prospect) societe).getInteresse().equals(Interessement.OUI)){
+                if (((Prospect) societe).getInteresse().equals(Interessement.OUI)) {
                     ouiRadioButtonInteresse.setSelected(true);
-                }else if(((Prospect) societe).getInteresse().equals(Interessement.NON)){
+                } else if (((Prospect) societe).getInteresse().equals(Interessement.NON)) {
                     nonRadioButtonInteresse.setSelected(true);
                 }
             }
-        }else{
-            if(choix.equals(TypeSociete.CLIENT)) {
+        } else {
+            if (choix.equals(TypeSociete.CLIENT)) {
                 zoneClient.setVisible(true);
-            }else if(choix.equals(TypeSociete.PROSPECT)) {
+            } else if (choix.equals(TypeSociete.PROSPECT)) {
                 populateCalendar(LocalDate.now());
                 zoneProspect.setVisible(true);
             }
         }
 
 
-
-
-        String typeSociete = (choix.equals(TypeSociete.CLIENT)? "client":
+        String typeSociete = (choix.equals(TypeSociete.CLIENT) ? "client" :
                 "prospect");
-        if(action.equals(TypeAction.CREATION)){
+        if (action.equals(TypeAction.CREATION)) {
             buttonCreate.setVisible(true);
-            buttonCreate.setText("Valider la création du "+typeSociete);
-        } else if(action.equals(TypeAction.MODIFICATION)){
+            buttonCreate.setText("Valider la création du " + typeSociete);
+        } else if (action.equals(TypeAction.MODIFICATION)) {
             buttonUpdate.setVisible(true);
-            buttonUpdate.setText("Valider la modification du "+typeSociete);
-        } else if(action.equals(TypeAction.SUPPRESSION)){
+            buttonUpdate.setText("Valider la modification du " + typeSociete);
+        } else if (action.equals(TypeAction.SUPPRESSION)) {
             buttonDelete.setVisible(true);
-            buttonDelete.setText("Supprimer le "+typeSociete);
-            desactiverComponent(getContentPane().getComponents());
+            buttonDelete.setText("Supprimer le " + typeSociete);
+            desactivateComponent(getContentPane().getComponents());
         }
-
 
 
         buttonOK.addActionListener(new ActionListener() {
@@ -140,8 +135,6 @@ public class Formulaire extends JDialog {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
 
-
-
         comboBoxAnnee.addActionListener(e -> {
             populateComboBoxJour();
 
@@ -155,7 +148,7 @@ public class Formulaire extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                Societe societe = createOrUpdate(choix);
+                Societe societe = instantiateSociete(choix);
                 try {
                     controleurFormulaire.createSociete(societe);
                 } catch (SQLException ex) {
@@ -168,7 +161,7 @@ public class Formulaire extends JDialog {
         buttonUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Societe societe = createOrUpdate(choix);
+                Societe societe = instantiateSociete(choix);
                 try {
                     controleurFormulaire.updateSociete(societe);
                 } catch (SQLException ex) {
@@ -178,9 +171,30 @@ public class Formulaire extends JDialog {
                 }
             }
         });
+
+        buttonDelete.addActionListener(e -> {
+
+            int dialogChoix = JOptionPane.showConfirmDialog(
+                    null,
+                    "Voulez-vous vraiment supprimer le " + (choix.equals(TypeSociete.CLIENT) ? "client " : "prospect ") + societe.getRaisonSociale() + " ?",
+                    "Confirmation",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            if (dialogChoix == JOptionPane.YES_OPTION) {
+                try {
+                    controleurFormulaire.deleteSociete(societe);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                } catch (DaoException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+
+        });
     }
 
-    private Societe createOrUpdate(TypeSociete choix) {
+    private Societe instantiateSociete(TypeSociete choix) {
 
         Adresse adresse = new Adresse(
                 idAdresse,
@@ -190,7 +204,7 @@ public class Formulaire extends JDialog {
                 textFieldVille.getText()
         );
         Societe societe = null;
-        if(choix.equals(TypeSociete.CLIENT)) {
+        if (choix.equals(TypeSociete.CLIENT)) {
             societe = new Client(
                     idSociete,
                     textFieldRaisonSocial.getText(),
@@ -203,9 +217,9 @@ public class Formulaire extends JDialog {
             );
         } else if (choix.equals(TypeSociete.PROSPECT)) {
             Interessement interesse = null;
-            if(ouiRadioButtonInteresse.isSelected()){
+            if (ouiRadioButtonInteresse.isSelected()) {
                 interesse = Interessement.OUI;
-            } else if (nonRadioButtonInteresse.isSelected()){
+            } else if (nonRadioButtonInteresse.isSelected()) {
                 interesse = Interessement.NON;
             }
             societe = new Prospect(
@@ -217,7 +231,7 @@ public class Formulaire extends JDialog {
                     textAreaCommentaires.getText(),
                     LocalDate.of(
                             (Integer) comboBoxAnnee.getSelectedItem(),
-                            comboBoxMois.getSelectedIndex(),
+                            comboBoxMois.getSelectedIndex()+1,
                             (Integer) comboBoxJour.getSelectedItem()
                     ),
                     interesse
@@ -228,14 +242,14 @@ public class Formulaire extends JDialog {
 
     }
 
-    private void desactiverComponent(Component[] components) {
+    private void desactivateComponent(Component[] components) {
 
         for (Component comp : components) {
             if (comp instanceof JPanel panel) {
-                desactiverComponent(((JPanel) comp).getComponents());
-            }else{
+                desactivateComponent(((JPanel) comp).getComponents());
+            } else {
                 if (comp instanceof JTextField || comp instanceof JTextArea || comp instanceof JComboBox<?> || comp instanceof JRadioButton)
-                comp.setEnabled(false);
+                    comp.setEnabled(false);
             }
         }
 
@@ -258,7 +272,6 @@ public class Formulaire extends JDialog {
                 "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre");
 
 
-
         List<Integer> annees = new ArrayList<>();
         int anneeActuel = LocalDate.now().getYear();
         for (int i = anneeActuel; i >= 2000; i--) {
@@ -274,14 +287,15 @@ public class Formulaire extends JDialog {
         populateComboBoxJour();
 
         comboBoxAnnee.setSelectedItem(anneeActuel);
-        comboBoxMois.setSelectedIndex(dateProspection.getMonthValue()-1);
-        comboBoxJour.setSelectedIndex(dateProspection.getDayOfMonth()-1);
+        comboBoxMois.setSelectedIndex(dateProspection.getMonthValue() - 1);
+        comboBoxJour.setSelectedIndex(dateProspection.getDayOfMonth() - 1);
     }
 
     private void populateComboBoxJour() {
 
         int anneeSelectionnee = comboBoxAnnee.getSelectedIndex();
         int moisSelectionne = comboBoxMois.getSelectedIndex();
+        int indexJourActuellementSaisi = comboBoxJour.getSelectedIndex();
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(anneeSelectionnee, moisSelectionne, 1);
@@ -295,14 +309,15 @@ public class Formulaire extends JDialog {
 
             jours.add(i);
         }
+
         comboBoxJour.setModel(new DefaultComboBoxModel<>(jours.toArray()));
 
         //Si le jour actuellement saisi n'existe pas réinitialiser
         // comboBoxJour
-        int indexJourActuellementSaisi = comboBoxJour.getSelectedIndex();
-        if(indexJourActuellementSaisi>nbJours-1) {
+
+        if (indexJourActuellementSaisi > nbJours - 1) {
             comboBoxJour.setSelectedIndex(-1);
-        }else {
+        } else {
             comboBoxJour.setSelectedIndex(indexJourActuellementSaisi);
         }
     }
@@ -311,7 +326,7 @@ public class Formulaire extends JDialog {
         // add your code here
         dispose();
         Acceuil acceuil = new Acceuil();
-        acceuil.setSize(500,300);
+        acceuil.setSize(500, 300);
         acceuil.setVisible(true);
     }
 
@@ -319,7 +334,7 @@ public class Formulaire extends JDialog {
         // add your code here if necessary
         dispose();
         Acceuil acceuil = new Acceuil();
-        acceuil.setSize(500,300);
+        acceuil.setSize(500, 300);
         acceuil.setVisible(true);
     }
 }

@@ -38,6 +38,14 @@ public class ControleurFormulaire {
         }
     }
 
+    public void deleteSociete(Societe societe) throws SQLException,
+            DaoException {
+        if(societe instanceof Client) {
+            new ClientDao().delete((Client)societe);
+        }else{
+            new ProspectDao().delete((Prospect)societe);
+        }
+    }
 
 
 }

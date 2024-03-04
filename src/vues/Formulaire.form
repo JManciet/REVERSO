@@ -383,7 +383,7 @@
         </constraints>
         <properties>
           <text value="Button"/>
-          <visible value="false"/>
+          <visible value="true"/>
         </properties>
       </component>
     </children>
