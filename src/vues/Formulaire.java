@@ -3,13 +3,12 @@ package vues;
 import controleurs.ControleurFormulaire;
 import controleurs.TypeAction;
 import controleurs.TypeSociete;
-import entites.Client;
-import entites.Interessement;
-import entites.Prospect;
-import entites.Societe;
+import dao.ProspectDao;
+import entites.*;
 import exceptions.DaoException;
 
 import javax.swing.*;
+import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
@@ -52,7 +51,7 @@ public class Formulaire extends JDialog {
 
         Societe societe = null;
         try {
-            societe = controleurFormulaire.societe(choix, nom);
+            societe = controleurFormulaire.getSociete(choix, nom);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (DaoException e) {
@@ -75,9 +74,9 @@ public class Formulaire extends JDialog {
             }else if(societe instanceof Prospect) {
                 zoneProspect.setVisible(true);
                 populateCalendar(((Prospect) societe).getDateProspection());
-                if(((Prospect) societe).getInteresse().equals(Interessement.OUI.toString())){
+                if(((Prospect) societe).getInteresse().equals(Interessement.OUI)){
                     ouiRadioButtonInteresse.setSelected(true);
-                }else{
+                }else if(((Prospect) societe).getInteresse().equals(Interessement.NON)){
                     nonRadioButtonInteresse.setSelected(true);
                 }
             }
@@ -147,6 +146,60 @@ public class Formulaire extends JDialog {
         comboBoxMois.addActionListener(e -> {
             populateComboBoxJour();
 
+        });
+        buttonCreate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Adresse adresse = new Adresse(
+                        null,
+                        textFieldNumeroRue.getText(),
+                        textFieldNomRue.getText(),
+                        textFieldCodePostal.getText(),
+                        textFieldVille.getText()
+                        );
+                Societe societe = null;
+                if(choix.equals(TypeSociete.CLIENT)) {
+                    societe = new Client(
+                            null,
+                            textFieldRaisonSocial.getText(),
+                            adresse,
+                            textFieldTelephone.getText(),
+                            textFieldEmail.getText(),
+                            textAreaCommentaires.getText(),
+                            Double.valueOf(textFieldChiffreAffaire.getText()),
+                            Integer.valueOf(textFieldNombreEmployes.getText())
+                            );
+                } else if (choix.equals(TypeSociete.PROSPECT)) {
+                    Interessement interesse = null;
+                    if(ouiRadioButtonInteresse.isSelected()){
+                        interesse = Interessement.OUI;
+                    } else if (nonRadioButtonInteresse.isSelected()){
+                        interesse = Interessement.NON;
+                    }
+                    societe = new Prospect(
+                            null,
+                            textFieldRaisonSocial.getText(),
+                            adresse,
+                            textFieldTelephone.getText(),
+                            textFieldEmail.getText(),
+                            textAreaCommentaires.getText(),
+                            LocalDate.of(
+                                    (Integer) comboBoxAnnee.getSelectedItem(),
+                                    comboBoxMois.getSelectedIndex(),
+                                    (Integer) comboBoxJour.getSelectedItem()
+                            ),
+                            interesse
+                            );
+                }
+
+                try {
+                    controleurFormulaire.createSociete(societe);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                } catch (DaoException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
         });
     }
 

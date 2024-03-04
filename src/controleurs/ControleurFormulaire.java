@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 public class ControleurFormulaire {
 
-    public Societe societe(TypeSociete choix, String nom) throws SQLException, DaoException {
+    public Societe getSociete(TypeSociete choix, String nom) throws SQLException, DaoException {
         Societe societe = null;
         if(choix.equals(TypeSociete.CLIENT)) {
             societe = new ClientDao().findByName(nom);
@@ -20,5 +20,15 @@ public class ControleurFormulaire {
         }
         return societe;
     }
+
+    public void createSociete(Societe societe) throws SQLException, DaoException {
+        if(societe instanceof Client) {
+            new ClientDao().create((Client)societe);
+        }else{
+            new ProspectDao().create((Prospect)societe);
+        }
+    }
+
+
 
 }

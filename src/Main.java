@@ -51,7 +51,7 @@ public class Main {
         Prospect prospect = new Prospect(1,"REVERSOCHOUETTE",adresse,
                 "0606050408",
                 "contact" +
-                "@reverso.fr","its good", LocalDate.now(), Interessement.NON.getValue());
+                "@reverso.fr","its good", LocalDate.now(), Interessement.NON);
 
 
 
@@ -60,22 +60,22 @@ public class Main {
         ProspectDao prospectDao = new ProspectDao();
 
 
-        try {
-
-            prospectDao.create(prospect);
-
-            List<Prospect> clients = prospectDao.findAll();
-            clients = prospectDao.findAll();
-
-            for (int i = 0; i < clients.size(); i++) {
-                System.out.println(clients.get(i));
-            }
-
-        } catch (DaoException e) {
-            System.out.println(e.getMessage());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//
+//            prospectDao.create(prospect);
+//
+//            List<Prospect> clients = prospectDao.findAll();
+//            clients = prospectDao.findAll();
+//
+//            for (int i = 0; i < clients.size(); i++) {
+//                System.out.println(clients.get(i));
+//            }
+//
+//        } catch (DaoException e) {
+//            System.out.println(e.getMessage());
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
 
 
         System.out.println("Hello world!");

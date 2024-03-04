@@ -1,6 +1,7 @@
 package dao;
 
 import entites.Adresse;
+import entites.Interessement;
 import entites.Prospect;
 import exceptions.DaoException;
 
@@ -42,7 +43,8 @@ public class ProspectDao implements IDao<Prospect>{
                         resultSet.getString("EMAILPROSPECT"),
                         resultSet.getString("COMMENTAIRESPROSPECT"),
                         resultSet.getDate("DATEPROSPECTION").toLocalDate(),
-                        resultSet.getString("INTERESSE")
+                        Interessement.valueOf(resultSet.getString(
+                                "INTERESSE"))
                 ));
             }
             return prospects;
@@ -88,7 +90,7 @@ public class ProspectDao implements IDao<Prospect>{
                         resultSet.getString("EMAILPROSPECT"),
                         resultSet.getString("COMMENTAIRESPROSPECT"),
                         resultSet.getDate("DATEPROSPECTION").toLocalDate(),
-                        resultSet.getString("INTERESSE")
+                        Interessement.valueOf(resultSet.getString("INTERESSE"))
                 );
             } else {
                 return null;
@@ -140,7 +142,7 @@ public class ProspectDao implements IDao<Prospect>{
             statement.setString(3, prospect.getTelephone());
             statement.setString(4, prospect.geteMail());
             statement.setDate(5, Date.valueOf(prospect.getDateProspection()));
-            statement.setString(6, prospect.getInteresse());
+            statement.setString(6, String.valueOf(prospect.getInteresse()));
             statement.setString(7, prospect.getCommentaires());
             statement.executeUpdate();
             connection.commit();
@@ -208,7 +210,7 @@ public class ProspectDao implements IDao<Prospect>{
             statement.setString(2, prospect.getTelephone());
             statement.setString(3, prospect.geteMail());
             statement.setDate(4, Date.valueOf(prospect.getDateProspection()));
-            statement.setString(5, prospect.getInteresse());
+            statement.setString(5, String.valueOf(prospect.getInteresse()));
             statement.setString(6, prospect.getCommentaires());
             statement.setInt(7, prospect.getIdentifiant());
             statement.executeUpdate();

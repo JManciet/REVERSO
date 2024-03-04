@@ -365,7 +365,7 @@
         </constraints>
         <properties>
           <text value="Button"/>
-          <visible value="false"/>
+          <visible value="true"/>
         </properties>
       </component>
       <component id="c92e2" class="javax.swing.JButton" binding="buttonUpdate">
