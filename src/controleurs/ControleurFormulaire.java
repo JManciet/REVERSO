@@ -6,6 +6,8 @@ import entites.Client;
 import entites.Prospect;
 import entites.Societe;
 import exceptions.DaoException;
+import vues.Acceuil;
+import vues.Formulaire;
 
 import java.sql.SQLException;
 
@@ -27,6 +29,7 @@ public class ControleurFormulaire {
         }else{
             new ProspectDao().create((Prospect)societe);
         }
+        retourAcceuil();
     }
 
     public void updateSociete(Societe societe) throws SQLException,
@@ -36,6 +39,7 @@ public class ControleurFormulaire {
         }else{
             new ProspectDao().update((Prospect)societe);
         }
+        retourAcceuil();
     }
 
     public void deleteSociete(Societe societe) throws SQLException,
@@ -45,7 +49,13 @@ public class ControleurFormulaire {
         }else{
             new ProspectDao().delete((Prospect)societe);
         }
+        retourAcceuil();
     }
 
+    public void retourAcceuil(){
+        Acceuil acceuil = new Acceuil();
+        acceuil.setSize(600,300);
+        acceuil.setVisible(true);
+    }
 
 }

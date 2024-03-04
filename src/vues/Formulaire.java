@@ -106,31 +106,23 @@ public class Formulaire extends JDialog {
             desactivateComponent(getContentPane().getComponents());
         }
 
-
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
-
-        buttonCancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
+        buttonCancel.addActionListener(e -> {
+            dispose();
+            controleurFormulaire.retourAcceuil();
         });
 
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                onCancel();
+                dispose();
             }
         });
 
         // call onCancel() on ESCAPE
         contentPane.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                onCancel();
+                dispose();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
@@ -147,7 +139,7 @@ public class Formulaire extends JDialog {
         buttonCreate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                dispose();
                 Societe societe = instantiateSociete(choix);
                 try {
                     controleurFormulaire.createSociete(societe);
@@ -161,6 +153,7 @@ public class Formulaire extends JDialog {
         buttonUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                dispose();
                 Societe societe = instantiateSociete(choix);
                 try {
                     controleurFormulaire.updateSociete(societe);
@@ -183,6 +176,7 @@ public class Formulaire extends JDialog {
 
             if (dialogChoix == JOptionPane.YES_OPTION) {
                 try {
+                    dispose();
                     controleurFormulaire.deleteSociete(societe);
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
@@ -320,21 +314,5 @@ public class Formulaire extends JDialog {
         } else {
             comboBoxJour.setSelectedIndex(indexJourActuellementSaisi);
         }
-    }
-
-    private void onOK() {
-        // add your code here
-        dispose();
-        Acceuil acceuil = new Acceuil();
-        acceuil.setSize(500, 300);
-        acceuil.setVisible(true);
-    }
-
-    private void onCancel() {
-        // add your code here if necessary
-        dispose();
-        Acceuil acceuil = new Acceuil();
-        acceuil.setSize(500, 300);
-        acceuil.setVisible(true);
     }
 }

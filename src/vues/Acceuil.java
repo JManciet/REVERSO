@@ -28,7 +28,7 @@ public class Acceuil extends JDialog {
     private JLabel labelChoixGestion;
     private JPanel panelChoixGestion;
     private JPanel panelChoixAction;
-    private JList list1;
+    private JList listSociete;
     private JPanel panelList;
     private JLabel selection;
     private TypeSociete choix;
@@ -104,7 +104,7 @@ public class Acceuil extends JDialog {
                         "modifier :");
                 panelList.setVisible(true);
                 try {
-                    list1.setListData(controleurAcceuil.liste(choix).toArray());
+                    listSociete.setListData(controleurAcceuil.liste(choix).toArray());
                 } catch (DaoException | SQLException d) {
                     LOGGER.severe("Problème avec la connection : "+d.getMessage());
                     System.out.println("problème, voir log");
@@ -120,7 +120,7 @@ public class Acceuil extends JDialog {
                         "supprimer :");
                 panelList.setVisible(true);
                 try {
-                    list1.setListData(controleurAcceuil.liste(choix).toArray());
+                    listSociete.setListData(controleurAcceuil.liste(choix).toArray());
                 } catch (DaoException | SQLException d) {
                     LOGGER.severe("Problème avec la connection : "+d.getMessage());
                     System.out.println("problème, voir log");
@@ -141,39 +141,18 @@ public class Acceuil extends JDialog {
             }
         });
 
-        list1.addListSelectionListener(new ListSelectionListener() {
+        listSociete.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
                     // Récupérer l'objet sélectionné
-                    Object elementSelectionne = list1.getSelectedValue();
+                    Object elementSelectionne = listSociete.getSelectedValue();
 
                     if (elementSelectionne != null) {
-                        // Exécution de la suppression
+
                         dispose();
                         controleurAcceuil.formulaire(choix,
                                 elementSelectionne.toString(),action[0]);
-
-
-//                        int dialogChoix = JOptionPane.showConfirmDialog(
-//                                null,
-//                                "Voulez-vous vraiment supprimer le "+(choix.equals(TypeSociete.CLIENT)? "client ":"prospect ")+elementSelectionne+" ?",
-//                                "Confirmation",
-//                                JOptionPane.YES_NO_OPTION
-//                        );
-//                        System.out.println(elementSelectionne);
-//                        if (dialogChoix == JOptionPane.YES_OPTION) {
-//                        try {
-//                            controleurAcceuil.suppression(choix,
-//                                    elementSelectionne.toString());
-//                            list1.setListData(controleurAcceuil.liste(choix).toArray());
-//                        } catch (SQLException ex) {
-//                            throw new RuntimeException(ex);
-//                        } catch (DaoException ex) {
-//                            throw new RuntimeException(ex);
-//                        }
-//                        }
-                        //list1.clearSelection();
                     }
 
 
