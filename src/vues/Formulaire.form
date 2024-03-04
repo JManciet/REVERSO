@@ -374,7 +374,7 @@
         </constraints>
         <properties>
           <text value="Button"/>
-          <visible value="false"/>
+          <visible value="true"/>
         </properties>
       </component>
       <component id="73138" class="javax.swing.JButton" binding="buttonDelete">

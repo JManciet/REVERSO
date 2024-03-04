@@ -29,6 +29,15 @@ public class ControleurFormulaire {
         }
     }
 
+    public void updateSociete(Societe societe) throws SQLException,
+            DaoException {
+        if(societe instanceof Client) {
+            new ClientDao().update((Client)societe);
+        }else{
+            new ProspectDao().update((Prospect)societe);
+        }
+    }
+
 
 
 }

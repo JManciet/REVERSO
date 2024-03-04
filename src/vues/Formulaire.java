@@ -41,6 +41,8 @@ public class Formulaire extends JDialog {
     private JButton buttonCreate;
     private JButton buttonDelete;
     private JButton buttonUpdate;
+    private Integer idAdresse;
+    private Integer idSociete;
 
     public Formulaire(TypeSociete choix, String nom, TypeAction action) {
         setContentPane(contentPane);
@@ -59,6 +61,8 @@ public class Formulaire extends JDialog {
         }
 
         if(societe != null) {
+            idAdresse = societe.getAdresse().getIdentifiant();
+            idSociete = societe.getIdentifiant();
             textFieldRaisonSocial.setText(societe.getRaisonSociale());
             textFieldTelephone.setText(societe.getTelephone());
             textFieldEmail.setText(societe.geteMail());
@@ -150,48 +154,8 @@ public class Formulaire extends JDialog {
         buttonCreate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Adresse adresse = new Adresse(
-                        null,
-                        textFieldNumeroRue.getText(),
-                        textFieldNomRue.getText(),
-                        textFieldCodePostal.getText(),
-                        textFieldVille.getText()
-                        );
-                Societe societe = null;
-                if(choix.equals(TypeSociete.CLIENT)) {
-                    societe = new Client(
-                            null,
-                            textFieldRaisonSocial.getText(),
-                            adresse,
-                            textFieldTelephone.getText(),
-                            textFieldEmail.getText(),
-                            textAreaCommentaires.getText(),
-                            Double.valueOf(textFieldChiffreAffaire.getText()),
-                            Integer.valueOf(textFieldNombreEmployes.getText())
-                            );
-                } else if (choix.equals(TypeSociete.PROSPECT)) {
-                    Interessement interesse = null;
-                    if(ouiRadioButtonInteresse.isSelected()){
-                        interesse = Interessement.OUI;
-                    } else if (nonRadioButtonInteresse.isSelected()){
-                        interesse = Interessement.NON;
-                    }
-                    societe = new Prospect(
-                            null,
-                            textFieldRaisonSocial.getText(),
-                            adresse,
-                            textFieldTelephone.getText(),
-                            textFieldEmail.getText(),
-                            textAreaCommentaires.getText(),
-                            LocalDate.of(
-                                    (Integer) comboBoxAnnee.getSelectedItem(),
-                                    comboBoxMois.getSelectedIndex(),
-                                    (Integer) comboBoxJour.getSelectedItem()
-                            ),
-                            interesse
-                            );
-                }
 
+                Societe societe = createOrUpdate(choix);
                 try {
                     controleurFormulaire.createSociete(societe);
                 } catch (SQLException ex) {
@@ -201,6 +165,67 @@ public class Formulaire extends JDialog {
                 }
             }
         });
+        buttonUpdate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Societe societe = createOrUpdate(choix);
+                try {
+                    controleurFormulaire.updateSociete(societe);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                } catch (DaoException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+
+    private Societe createOrUpdate(TypeSociete choix) {
+
+        Adresse adresse = new Adresse(
+                idAdresse,
+                textFieldNumeroRue.getText(),
+                textFieldNomRue.getText(),
+                textFieldCodePostal.getText(),
+                textFieldVille.getText()
+        );
+        Societe societe = null;
+        if(choix.equals(TypeSociete.CLIENT)) {
+            societe = new Client(
+                    idSociete,
+                    textFieldRaisonSocial.getText(),
+                    adresse,
+                    textFieldTelephone.getText(),
+                    textFieldEmail.getText(),
+                    textAreaCommentaires.getText(),
+                    Double.valueOf(textFieldChiffreAffaire.getText()),
+                    Integer.valueOf(textFieldNombreEmployes.getText())
+            );
+        } else if (choix.equals(TypeSociete.PROSPECT)) {
+            Interessement interesse = null;
+            if(ouiRadioButtonInteresse.isSelected()){
+                interesse = Interessement.OUI;
+            } else if (nonRadioButtonInteresse.isSelected()){
+                interesse = Interessement.NON;
+            }
+            societe = new Prospect(
+                    idSociete,
+                    textFieldRaisonSocial.getText(),
+                    adresse,
+                    textFieldTelephone.getText(),
+                    textFieldEmail.getText(),
+                    textAreaCommentaires.getText(),
+                    LocalDate.of(
+                            (Integer) comboBoxAnnee.getSelectedItem(),
+                            comboBoxMois.getSelectedIndex(),
+                            (Integer) comboBoxJour.getSelectedItem()
+                    ),
+                    interesse
+            );
+        }
+
+        return societe;
+
     }
 
     private void desactiverComponent(Component[] components) {
