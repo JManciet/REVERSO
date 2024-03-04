@@ -76,9 +76,9 @@ public class Formulaire extends JDialog {
             } else if (societe instanceof Prospect) {
                 zoneProspect.setVisible(true);
                 populateCalendar(((Prospect) societe).getDateProspection());
-                if (((Prospect) societe).getInteresse().equals(Interessement.OUI)) {
+                if (((Prospect) societe).getInteresse() != null && ((Prospect) societe).getInteresse().equals(Interessement.OUI)) {
                     ouiRadioButtonInteresse.setSelected(true);
-                } else if (((Prospect) societe).getInteresse().equals(Interessement.NON)) {
+                } else if (((Prospect) societe).getInteresse() != null && ((Prospect) societe).getInteresse().equals(Interessement.NON)) {
                     nonRadioButtonInteresse.setSelected(true);
                 }
             }
@@ -139,7 +139,7 @@ public class Formulaire extends JDialog {
         buttonCreate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
+//                dispose();
                 Societe societe = instantiateSociete(choix);
                 try {
                     controleurFormulaire.createSociete(societe);

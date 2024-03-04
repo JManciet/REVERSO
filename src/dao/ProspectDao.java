@@ -43,7 +43,8 @@ public class ProspectDao implements IDao<Prospect>{
                         resultSet.getString("EMAILPROSPECT"),
                         resultSet.getString("COMMENTAIRESPROSPECT"),
                         resultSet.getDate("DATEPROSPECTION").toLocalDate(),
-                        Interessement.valueOf(resultSet.getString(
+                        resultSet.getString("INTERESSE").equals("null")? null:
+                                Interessement.valueOf(resultSet.getString(
                                 "INTERESSE"))
                 ));
             }
@@ -90,7 +91,9 @@ public class ProspectDao implements IDao<Prospect>{
                         resultSet.getString("EMAILPROSPECT"),
                         resultSet.getString("COMMENTAIRESPROSPECT"),
                         resultSet.getDate("DATEPROSPECTION").toLocalDate(),
-                        Interessement.valueOf(resultSet.getString("INTERESSE"))
+                        resultSet.getString("INTERESSE").equals("null")? null:
+                                Interessement.valueOf(resultSet.getString(
+                                        "INTERESSE"))
                 );
             } else {
                 return null;
