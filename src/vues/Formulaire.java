@@ -41,6 +41,9 @@ public class Formulaire extends JDialog {
     private JButton buttonUpdate;
     private Integer idAdresse;
     private Integer idSociete;
+    private TypeSociete choix;
+    private TypeAction action;
+    private ControleurFormulaire controleurFormulaire;
     public void init() {
         this.setSize(700,500);
         this.setVisible(true);
@@ -50,7 +53,10 @@ public class Formulaire extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
-        ControleurFormulaire controleurFormulaire = new ControleurFormulaire();
+        this.choix = choix;
+        this.action = action;
+
+        controleurFormulaire = new ControleurFormulaire();
 
         if (societe != null) {
             idAdresse = societe.getAdresse().getIdentifiant();
@@ -133,41 +139,16 @@ public class Formulaire extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                if (isFormValid(getContentPane().getComponents())) {
-                    Societe societe = instantiateSociete(choix);
-                    try {
-                        controleurFormulaire.createSociete(societe);
-                        dispose();
-                        controleurFormulaire.retourAcceuil();
-                    } catch (SQLException ex) {
-                        throw new RuntimeException(ex);
-                    } catch (DaoException de) {
-                        JOptionPane.showMessageDialog(null, de.getMessage());
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Merci de compléter " +
-                            "les champs manquant");
-                }
+                validationFormulaire();
+
             }
         });
         buttonUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (isFormValid(getContentPane().getComponents())) {
-                    Societe societe = instantiateSociete(choix);
-                    try {
-                        controleurFormulaire.updateSociete(societe);
-                        dispose();
-                        controleurFormulaire.retourAcceuil();
-                    } catch (SQLException ex) {
-                        throw new RuntimeException(ex);
-                    } catch (DaoException de) {
-                        JOptionPane.showMessageDialog(null, de.getMessage());
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Merci de compléter " +
-                            "les champs manquant");
-                }
+
+                validationFormulaire();
+
             }
         });
 
@@ -194,6 +175,28 @@ public class Formulaire extends JDialog {
             }
 
         });
+    }
+
+    private void validationFormulaire() {
+        if (isFormValid(getContentPane().getComponents())) {
+            Societe societe = instantiateSociete(choix);
+            try {
+                if(action.equals(TypeAction.MODIFICATION)) {
+                    controleurFormulaire.updateSociete(societe);
+                } else if (action.equals(TypeAction.CREATION)){
+                    controleurFormulaire.createSociete(societe);
+                }
+                dispose();
+                controleurFormulaire.retourAcceuil();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            } catch (DaoException de) {
+                JOptionPane.showMessageDialog(null, de.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Merci de compléter " +
+                    "les champs manquant");
+        }
     }
 
     private Societe instantiateSociete(TypeSociete choix) {
