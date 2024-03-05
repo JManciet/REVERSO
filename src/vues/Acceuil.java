@@ -36,6 +36,11 @@ public class Acceuil extends JDialog {
     private JLabel selection;
     private TypeSociete choix;
 
+    public void init(){
+        this.setSize(600,300);
+        this.setVisible(true);
+    };
+
     public Acceuil() {
 
         final TypeAction[] action = new TypeAction[1];

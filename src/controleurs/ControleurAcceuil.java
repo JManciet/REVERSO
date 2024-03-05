@@ -60,8 +60,7 @@ public class ControleurAcceuil {
     public void formulaire(TypeSociete choix,Societe societe,
                            TypeAction action){
         Formulaire formulaire = new Formulaire(choix, societe, action);
-        formulaire.setSize(700,500);
-        formulaire.setVisible(true);
+        formulaire.init();
     }
 
 }

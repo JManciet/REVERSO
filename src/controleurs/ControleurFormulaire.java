@@ -41,8 +41,7 @@ public class ControleurFormulaire {
 
     public void retourAcceuil(){
         Acceuil acceuil = new Acceuil();
-        acceuil.setSize(600,300);
-        acceuil.setVisible(true);
+        acceuil.init();
     }
 
 }

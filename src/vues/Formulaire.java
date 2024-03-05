@@ -41,7 +41,10 @@ public class Formulaire extends JDialog {
     private JButton buttonUpdate;
     private Integer idAdresse;
     private Integer idSociete;
-
+    public void init() {
+        this.setSize(700,500);
+        this.setVisible(true);
+    }
     public Formulaire(TypeSociete choix, Societe societe, TypeAction action) {
         setContentPane(contentPane);
         setModal(true);

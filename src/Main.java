@@ -30,15 +30,8 @@ public class Main {
 
         LOGGER.log(Level.INFO, "début pg");
 
-//        try {
-//            ConnectionDao.getConnection();
-//        } catch (DaoException e) {
-//            throw new RuntimeException(e);
-//        }
-
         Acceuil acceuil = new Acceuil();
-        acceuil.setSize(600,300);
-        acceuil.setVisible(true);
+        acceuil.init();
 
 
         Adresse adresse = new Adresse(1,"55","rue générale Papin",
