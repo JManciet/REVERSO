@@ -42,22 +42,12 @@ public class Formulaire extends JDialog {
     private Integer idAdresse;
     private Integer idSociete;
 
-    public Formulaire(TypeSociete choix, String nom, TypeAction action) {
+    public Formulaire(TypeSociete choix, Societe societe, TypeAction action) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
         ControleurFormulaire controleurFormulaire = new ControleurFormulaire();
-
-        Societe societe = null;
-        try {
-            societe = controleurFormulaire.getSociete(choix, nom);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (DaoException de) {
-            JOptionPane.showMessageDialog(null,de.getMessage());
-            dispose();
-        }
 
         if (societe != null) {
             idAdresse = societe.getAdresse().getIdentifiant();
@@ -140,10 +130,11 @@ public class Formulaire extends JDialog {
         buttonCreate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                dispose();
                 Societe societe = instantiateSociete(choix);
                 try {
                     controleurFormulaire.createSociete(societe);
+                    dispose();
+                    controleurFormulaire.retourAcceuil();
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 } catch (DaoException de) {
@@ -179,8 +170,9 @@ public class Formulaire extends JDialog {
 
             if (dialogChoix == JOptionPane.YES_OPTION) {
                 try {
-                    dispose();
                     controleurFormulaire.deleteSociete(finalSociete);
+                    dispose();
+                    controleurFormulaire.retourAcceuil();
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 } catch (DaoException de) {

@@ -3,6 +3,7 @@ package vues;
 import controleurs.TypeAction;
 import controleurs.TypeSociete;
 import controleurs.ControleurAcceuil;
+import entites.Societe;
 import exceptions.DaoException;
 
 import javax.swing.*;
@@ -156,9 +157,21 @@ public class Acceuil extends JDialog {
 
                     if (elementSelectionne != null) {
 
-                        dispose();
-                        controleurAcceuil.formulaire(choix,
-                                elementSelectionne.toString(),action[0]);
+                        try {
+                            Societe societe =
+                                    controleurAcceuil.getSociete(choix,
+                                    elementSelectionne.toString());
+                            dispose();
+                            controleurAcceuil.formulaire(choix,
+                                    societe,action[0]);
+                        } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        } catch (DaoException de) {
+                            JOptionPane.showMessageDialog(null,de.getMessage());
+                            listSociete.clearSelection();
+                        }
+
+
                     }
 
 

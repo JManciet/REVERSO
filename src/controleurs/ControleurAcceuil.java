@@ -4,6 +4,7 @@ import dao.ClientDao;
 import dao.ProspectDao;
 import entites.Client;
 import entites.Prospect;
+import entites.Societe;
 import exceptions.DaoException;
 import vues.Formulaire;
 
@@ -12,6 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ControleurAcceuil {
+
+    public Societe getSociete(TypeSociete choix, String nom) throws SQLException, DaoException {
+        Societe societe = null;
+        if(choix.equals(TypeSociete.CLIENT)) {
+            societe = new ClientDao().findByName(nom);
+        }else{
+            societe = new ProspectDao().findByName(nom);
+        }
+        return societe;
+    }
 
     public List liste(TypeSociete choix) throws DaoException, SQLException {
 
@@ -46,8 +57,9 @@ public class ControleurAcceuil {
         }
     }
 
-    public void formulaire(TypeSociete choix,String nom, TypeAction action){
-        Formulaire formulaire = new Formulaire(choix, nom, action);
+    public void formulaire(TypeSociete choix,Societe societe,
+                           TypeAction action){
+        Formulaire formulaire = new Formulaire(choix, societe, action);
         formulaire.setSize(700,500);
         formulaire.setVisible(true);
     }
