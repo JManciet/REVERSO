@@ -82,7 +82,6 @@ public class Formulaire extends JDialog {
             }
         }
 
-
         String typeSociete = (choix.equals(TypeSociete.CLIENT) ? "client" :
                 "prospect");
         if (action.equals(TypeAction.CREATION)) {
@@ -130,30 +129,41 @@ public class Formulaire extends JDialog {
         buttonCreate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Societe societe = instantiateSociete(choix);
-                try {
-                    controleurFormulaire.createSociete(societe);
-                    dispose();
-                    controleurFormulaire.retourAcceuil();
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                } catch (DaoException de) {
-                    JOptionPane.showMessageDialog(null,de.getMessage());
+
+                if (isFormValid(getContentPane().getComponents())) {
+                    Societe societe = instantiateSociete(choix);
+                    try {
+                        controleurFormulaire.createSociete(societe);
+                        dispose();
+                        controleurFormulaire.retourAcceuil();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (DaoException de) {
+                        JOptionPane.showMessageDialog(null, de.getMessage());
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Merci de compléter " +
+                            "les champs manquant");
                 }
             }
         });
         buttonUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Societe societe = instantiateSociete(choix);
-                try {
-                    controleurFormulaire.updateSociete(societe);
-                    dispose();
-                    controleurFormulaire.retourAcceuil();
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                } catch (DaoException de) {
-                    JOptionPane.showMessageDialog(null,de.getMessage());
+                if (isFormValid(getContentPane().getComponents())) {
+                    Societe societe = instantiateSociete(choix);
+                    try {
+                        controleurFormulaire.updateSociete(societe);
+                        dispose();
+                        controleurFormulaire.retourAcceuil();
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    } catch (DaoException de) {
+                        JOptionPane.showMessageDialog(null, de.getMessage());
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Merci de compléter " +
+                            "les champs manquant");
                 }
             }
         });
@@ -176,7 +186,7 @@ public class Formulaire extends JDialog {
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 } catch (DaoException de) {
-                    JOptionPane.showMessageDialog(null,de.getMessage());
+                    JOptionPane.showMessageDialog(null, de.getMessage());
                 }
             }
 
@@ -220,7 +230,7 @@ public class Formulaire extends JDialog {
                     textAreaCommentaires.getText(),
                     LocalDate.of(
                             (Integer) comboBoxAnnee.getSelectedItem(),
-                            comboBoxMois.getSelectedIndex()+1,
+                            comboBoxMois.getSelectedIndex() + 1,
                             (Integer) comboBoxJour.getSelectedItem()
                     ),
                     interesse
@@ -229,6 +239,29 @@ public class Formulaire extends JDialog {
 
         return societe;
 
+    }
+
+    private boolean isFormValid(Component[] components) {
+
+        boolean result = true;
+        for (Component comp : components) {
+            if (comp instanceof JPanel panel) {
+                if (panel.isVisible()) {
+                    result &= isFormValid(((JPanel) comp).getComponents());
+                }
+            } else {
+                if (comp instanceof JTextField) {
+                    if (((JTextField) comp).getText().equals("")) {
+                        result = false;
+                        comp.setBackground(Color.YELLOW);
+                    } else {
+                        comp.setBackground(Color.WHITE);
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 
     private void desactivateComponent(Component[] components) {
