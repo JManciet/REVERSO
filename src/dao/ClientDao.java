@@ -46,12 +46,11 @@ public class ClientDao implements IDao<Client>{
                 ));
             }
             return clients;
-        } catch (DaoException e) {
-            LOGGER.severe(e.getMessage());
-            throw new DaoException("Problème avec la connection : "+ e.getMessage());
-        }catch (SQLException e) {
-            throw new DaoException("Problème lors de la recherche des " +
-                    "clients dans la base de donnée : "+ e.getMessage());
+        }catch (SQLException sqle) {
+            LOGGER.severe("Problème lors de la recherche des " +
+                    "clients dans la base de donnée : "+ sqle);
+            throw new DaoException("Un problème est survenu lors de la " +
+                    "recherche des clients dans la base de donnée");
         }finally {
             if (statement != null) { statement.close(); }
         }
@@ -92,8 +91,10 @@ public class ClientDao implements IDao<Client>{
             } else {
                 return null;
             }
-        } catch (SQLException e) {
-            throw new DaoException("Problème lors de la recherche par nom des" +
+        } catch (SQLException sqle) {
+            LOGGER.severe("Problème lors de la recherche par nom de" +
+                    " client dans la base de donnée : "+sqle);
+            throw new DaoException("Un problème est survenu lors de la recherche par nom de" +
                     " client dans la base de donnée");
         }finally {
             if (statement != null) { statement.close(); }
@@ -143,25 +144,35 @@ public class ClientDao implements IDao<Client>{
             statement.setString(7, client.getCommentaires());
             statement.executeUpdate();
             connection.commit();
-        }
-//        catch (SQLIntegrityConstraintViolationException e) {
-//            throw new DaoException("Duplication de champ dans client");
-//        }
-        catch (SQLException e) {
-            if (connection != null) {
-                try {
-                    System.err.print("Transaction is being rolled back");
-                    connection.rollback();
-                } catch(SQLException excep) {
-                    LOGGER.severe(excep.toString());
-                }
+        } catch (SQLIntegrityConstraintViolationException sqlicve) {
+            try {
+                System.err.print("Transaction is being rolled back");
+                connection.rollback();
+            } catch (SQLException excep) {
+                LOGGER.severe(excep.toString());
+                throw new DaoException("Un problème est survenu lors de la creation d'un client");
             }
-            throw new DaoException("Problème lors de la creation d'un client");
+            throw new DaoException("La raison sociale du client existe déjà");
+        } catch (SQLException sqle) {
+            LOGGER.severe("Problème lors de la creation d'un client : "+sqle);
+            try {
+                System.err.print("Transaction is being rolled back");
+                connection.rollback();
+            } catch (SQLException excep) {
+                LOGGER.severe("Problème lors de l'annulation de la " +
+                                "transaction : "+excep);
+            } finally {
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "creation d'un client");
+            }
+
         } finally {
             if (statement != null) {
                 statement.close();
             }
-            connection.setAutoCommit(true);
+            if (connection != null) {
+                connection.setAutoCommit(true);
+            }
         }
 
     }
@@ -212,26 +223,36 @@ public class ClientDao implements IDao<Client>{
             statement.setInt(7, client.getIdentifiant());
             statement.executeUpdate();
             connection.commit();
-        }
-//        catch (SQLIntegrityConstraintViolationException e) {
-//            throw new DaoException("Duplication de champ");
-//        }
-        catch (SQLException e) {
-            if (connection != null) {
-                try {
-                    System.err.print("Transaction is being rolled back");
-                    connection.rollback();
-                } catch(SQLException excep) {
-                    LOGGER.severe(excep.toString());
-                }
+        } catch (SQLIntegrityConstraintViolationException sqlicve) {
+            try {
+                System.err.print("Transaction is being rolled back");
+                connection.rollback();
+            } catch (SQLException excep) {
+                LOGGER.severe(excep.toString());
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "mise à jour d'un client");
             }
-            throw new DaoException("Problème lors de la mise à jour d'un " +
-                    "client");
+            throw new DaoException("La raison sociale du client existe déjà");
+        } catch (SQLException sqle) {
+            LOGGER.severe("Problème lors de la mise à jour d'un client : "+sqle);
+            try {
+                System.err.print("Transaction is being rolled back");
+                connection.rollback();
+            } catch (SQLException excep) {
+                LOGGER.severe("Problème lors de l'annulation de la " +
+                        "transaction : "+excep);
+            } finally {
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "mise à jour d'un client");
+            }
+
         } finally {
             if (statement != null) {
                 statement.close();
             }
-            connection.setAutoCommit(true);
+            if (connection != null) {
+                connection.setAutoCommit(true);
+            }
         }
 
     }
@@ -262,22 +283,26 @@ public class ClientDao implements IDao<Client>{
             statement.setInt(1, adresse.getIdentifiant());
             statement.executeUpdate();
             connection.commit();
-        } catch (SQLException e) {
-            if (connection != null) {
-                try {
-                    System.err.print("Transaction is being rolled back");
-                    connection.rollback();
-                } catch(SQLException excep) {
-                    LOGGER.severe(excep.toString());
-                }
+        } catch (SQLException sqle) {
+            LOGGER.severe("Problème lors de la suppression d'un " +
+                    "client : " + sqle);
+            try {
+                System.err.print("Transaction is being rolled back");
+                connection.rollback();
+            } catch (SQLException excep) {
+                LOGGER.severe("Problème lors de l'annulation de la " +
+                        "transaction : "+excep);
+            } finally {
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "suppression d'un client");
             }
-            throw new DaoException("Problème lors de la suppression d'un " +
-                    "client");
         } finally {
             if (statement != null) {
                 statement.close();
             }
-            connection.setAutoCommit(true);
+            if (connection != null) {
+                connection.setAutoCommit(true);
+            }
         }
 
     }

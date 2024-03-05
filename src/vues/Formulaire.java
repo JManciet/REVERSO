@@ -49,13 +49,14 @@ public class Formulaire extends JDialog {
 
         ControleurFormulaire controleurFormulaire = new ControleurFormulaire();
 
-        final Societe societe;
+        Societe societe = null;
         try {
             societe = controleurFormulaire.getSociete(choix, nom);
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } catch (DaoException e) {
-            throw new RuntimeException(e);
+        } catch (DaoException de) {
+            JOptionPane.showMessageDialog(null,de.getMessage());
+            dispose();
         }
 
         if (societe != null) {
@@ -145,31 +146,33 @@ public class Formulaire extends JDialog {
                     controleurFormulaire.createSociete(societe);
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
-                } catch (DaoException ex) {
-                    throw new RuntimeException(ex);
+                } catch (DaoException de) {
+                    JOptionPane.showMessageDialog(null,de.getMessage());
                 }
             }
         });
         buttonUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
                 Societe societe = instantiateSociete(choix);
                 try {
                     controleurFormulaire.updateSociete(societe);
+                    dispose();
+                    controleurFormulaire.retourAcceuil();
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
-                } catch (DaoException ex) {
-                    throw new RuntimeException(ex);
+                } catch (DaoException de) {
+                    JOptionPane.showMessageDialog(null,de.getMessage());
                 }
             }
         });
 
+        Societe finalSociete = societe;
         buttonDelete.addActionListener(e -> {
 
             int dialogChoix = JOptionPane.showConfirmDialog(
                     null,
-                    "Voulez-vous vraiment supprimer le " + (choix.equals(TypeSociete.CLIENT) ? "client " : "prospect ") + societe.getRaisonSociale() + " ?",
+                    "Voulez-vous vraiment supprimer le " + (choix.equals(TypeSociete.CLIENT) ? "client " : "prospect ") + finalSociete.getRaisonSociale() + " ?",
                     "Confirmation",
                     JOptionPane.YES_NO_OPTION
             );
@@ -177,11 +180,11 @@ public class Formulaire extends JDialog {
             if (dialogChoix == JOptionPane.YES_OPTION) {
                 try {
                     dispose();
-                    controleurFormulaire.deleteSociete(societe);
+                    controleurFormulaire.deleteSociete(finalSociete);
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
-                } catch (DaoException ex) {
-                    throw new RuntimeException(ex);
+                } catch (DaoException de) {
+                    JOptionPane.showMessageDialog(null,de.getMessage());
                 }
             }
 

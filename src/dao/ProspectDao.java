@@ -49,12 +49,11 @@ public class ProspectDao implements IDao<Prospect>{
                 ));
             }
             return prospects;
-        } catch (DaoException e) {
-            LOGGER.severe(e.getMessage());
-            throw new DaoException("Problème avec la connection : "+ e.getMessage());
-        } catch (SQLException e) {
-            throw new DaoException("Problème lors de la recherche des " +
-                    "prospect dans la base de donnée : "+e);
+        } catch (SQLException sqle) {
+            LOGGER.severe("Problème lors de la recherche des " +
+                    "prospects dans la base de donnée : "+ sqle);
+            throw new DaoException("Un problème est survenu lors de la " +
+                    "recherche des prospects dans la base de donnée");
         }finally {
             if (statement != null) { statement.close(); }
         }
@@ -98,9 +97,11 @@ public class ProspectDao implements IDao<Prospect>{
             } else {
                 return null;
             }
-        } catch (SQLException e) {
-            throw new DaoException("Problème lors de la recherche par nom des" +
-                    " prospects dans la base de donnée");
+        } catch (SQLException sqle) {
+            LOGGER.severe("Problème lors de la recherche par nom de" +
+                    " prospect dans la base de donnée : "+sqle);
+            throw new DaoException("Un problème est survenu lors de la " +
+                    "recherche par nom de prospect dans la base de donnée");
         }finally {
             if (statement != null) { statement.close(); }
         }
@@ -149,26 +150,36 @@ public class ProspectDao implements IDao<Prospect>{
             statement.setString(7, prospect.getCommentaires());
             statement.executeUpdate();
             connection.commit();
-        }
-//        catch (SQLIntegrityConstraintViolationException e) {
-//            throw new DaoException("Duplication de champ dans prospect");
-//        }
-        catch (SQLException e) {
-            if (connection != null) {
-                try {
-                    System.err.print("Transaction is being rolled back");
-                    connection.rollback();
-                } catch(SQLException excep) {
-                    LOGGER.severe(excep.toString());
-                }
+        } catch (SQLIntegrityConstraintViolationException sqlicve) {
+            try {
+                System.err.print("Transaction is being rolled back");
+                connection.rollback();
+            } catch (SQLException excep) {
+                LOGGER.severe(excep.toString());
+                throw new DaoException("Un problème est survenu lors de la creation d'un " +
+                        "prospect");
             }
-            throw new DaoException("Problème lors de la creation d'un " +
-                    "prospect");
+            throw new DaoException("La raison sociale du prospect existe déjà");
+        } catch (SQLException sqle) {
+            LOGGER.severe("Problème lors de la creation d'un prospect : "+sqle);
+            try {
+                System.err.print("Transaction is being rolled back");
+                connection.rollback();
+            } catch (SQLException excep) {
+                LOGGER.severe("Problème lors de l'annulation de la " +
+                        "transaction : "+excep);
+            } finally {
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "creation d'un prospect");
+            }
+
         } finally {
             if (statement != null) {
                 statement.close();
             }
-            connection.setAutoCommit(true);
+            if (connection != null) {
+                connection.setAutoCommit(true);
+            }
         }
     }
 
@@ -218,26 +229,36 @@ public class ProspectDao implements IDao<Prospect>{
             statement.setInt(7, prospect.getIdentifiant());
             statement.executeUpdate();
             connection.commit();
-        }
-//        catch (SQLIntegrityConstraintViolationException e) {
-//            throw new DaoException("Duplication de champ");
-//        }
-        catch (SQLException e) {
-            if (connection != null) {
-                try {
-                    System.err.print("Transaction is being rolled back");
-                    connection.rollback();
-                } catch(SQLException excep) {
-                    LOGGER.severe(excep.toString());
-                }
+        } catch (SQLIntegrityConstraintViolationException sqlicve) {
+            try {
+                System.err.print("Transaction is being rolled back");
+                connection.rollback();
+            } catch (SQLException excep) {
+                LOGGER.severe(excep.toString());
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "mise à jour d'un prospect");
             }
-            throw new DaoException("Problème lors de la mise à jour d'un " +
-                    "prospect");
+            throw new DaoException("La raison sociale du prospect existe déjà");
+        } catch (SQLException sqle) {
+            LOGGER.severe("Problème lors de la mise à jour d'un prospect : "+sqle);
+            try {
+                System.err.print("Transaction is being rolled back");
+                connection.rollback();
+            } catch (SQLException excep) {
+                LOGGER.severe("Problème lors de l'annulation de la " +
+                        "transaction : "+excep);
+            } finally {
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "mise à jour d'un prospect");
+            }
+
         } finally {
             if (statement != null) {
                 statement.close();
             }
-            connection.setAutoCommit(true);
+            if (connection != null) {
+                connection.setAutoCommit(true);
+            }
         }
     }
 
@@ -267,22 +288,26 @@ public class ProspectDao implements IDao<Prospect>{
             statement.setInt(1, adresse.getIdentifiant());
             statement.executeUpdate();
             connection.commit();
-        } catch (SQLException e) {
-            if (connection != null) {
-                try {
-                    System.err.print("Transaction is being rolled back");
-                    connection.rollback();
-                } catch(SQLException excep) {
-                    LOGGER.severe(excep.toString());
-                }
+        } catch (SQLException sqle) {
+            LOGGER.severe("Problème lors de la suppression d'un " +
+                    "prospect : " + sqle);
+            try {
+                System.err.print("Transaction is being rolled back");
+                connection.rollback();
+            } catch (SQLException excep) {
+                LOGGER.severe("Problème lors de l'annulation de la " +
+                        "transaction : "+excep);
+            } finally {
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "suppression d'un prospect");
             }
-            throw new DaoException("Problème lors de la suppression d'un " +
-                    "prospect");
         } finally {
             if (statement != null) {
                 statement.close();
             }
-            connection.setAutoCommit(true);
+            if (connection != null) {
+                connection.setAutoCommit(true);
+            }
         }
     }
 }

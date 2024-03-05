@@ -10,6 +10,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.*;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
 
 import static utilitaires.Utilitaires.LOGGER;
 
@@ -99,32 +101,36 @@ public class Acceuil extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                action[0] = TypeAction.MODIFICATION;
-                selection.setText("Choisissez le "+(choix.equals(TypeSociete.CLIENT)? "client":"prospect")+" à " +
-                        "modifier :");
-                panelList.setVisible(true);
                 try {
-                    listSociete.setListData(controleurAcceuil.liste(choix).toArray());
-                } catch (DaoException | SQLException d) {
-                    LOGGER.severe("Problème avec la connection : "+d.getMessage());
-                    System.out.println("problème, voir log");
+                    populateOrderedListSociete(controleurAcceuil.liste(choix));
+                    action[0] = TypeAction.MODIFICATION;
+                    selection.setText("Choisissez le "+(choix.equals(TypeSociete.CLIENT)? "client":"prospect")+" à " +
+                            "modifier :");
+                    panelList.setVisible(true);
+                } catch (DaoException de) {
+                    JOptionPane.showMessageDialog(null,de.getMessage());
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
                 }
+
             }
         });
         SUPPRESSIONButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                action[0] = TypeAction.SUPPRESSION;
-                selection.setText("Choisissez le "+(choix.equals(TypeSociete.CLIENT)? "client":"prospect")+" à " +
-                        "supprimer :");
-                panelList.setVisible(true);
                 try {
-                    listSociete.setListData(controleurAcceuil.liste(choix).toArray());
-                } catch (DaoException | SQLException d) {
-                    LOGGER.severe("Problème avec la connection : "+d.getMessage());
-                    System.out.println("problème, voir log");
+                    populateOrderedListSociete(controleurAcceuil.liste(choix));
+                    action[0] = TypeAction.SUPPRESSION;
+                    selection.setText("Choisissez le "+(choix.equals(TypeSociete.CLIENT)? "client":"prospect")+" à " +
+                            "supprimer :");
+                    panelList.setVisible(true);
+                } catch (DaoException de) {
+                    JOptionPane.showMessageDialog(null,de.getMessage());
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
                 }
+
             }
         });
         CREATIONButton.addActionListener(new ActionListener() {
@@ -161,6 +167,10 @@ public class Acceuil extends JDialog {
         });
     }
 
+    private void populateOrderedListSociete(List liste) {
+        Collections.sort(liste);
+        listSociete.setListData(liste.toArray());
+    }
 
 
     private void onCancel() {

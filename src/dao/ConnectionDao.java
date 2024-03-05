@@ -30,16 +30,19 @@ public class ConnectionDao {
                     dataProperties.getProperty("login"),
                     dataProperties.getProperty("password")
             );
-        } catch (FileNotFoundException e) {
-            LOGGER.severe(e.getMessage());
-            throw new DaoException("Fichier de connection non trouvé :"+e.getMessage());
-        } catch (IOException e) {
-            LOGGER.severe(e.getMessage());
-            throw new DaoException("Soucis avec le fichier de connection :"+e.getMessage());
-        } catch (SQLException e) {
-            LOGGER.severe(e.getMessage());
+        } catch (FileNotFoundException fnfe) {
+            LOGGER.severe("Fichier de connection non trouvé : "+fnfe);
+            fnfe.printStackTrace();
+            throw new DaoException("Fichier de connection non trouvé");
+        } catch (IOException ioe) {
+            LOGGER.severe("Soucis avec le fichier de connection : "+ioe);
+            throw new DaoException("Soucis avec le fichier de connection");
+        } catch (SQLException sqle) {
+            LOGGER.severe("Connection avec la base de données non " +
+                    "établie : "+sqle);
+            sqle.printStackTrace();
             throw new DaoException("Connection avec la base de données non " +
-                    "établie :"+e.getMessage());
+                    "établie");
         }
 
 

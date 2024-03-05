@@ -30,11 +30,11 @@ public class Main {
 
         LOGGER.log(Level.INFO, "début pg");
 
-        try {
-            ConnectionDao.getConnection();
-        } catch (DaoException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            ConnectionDao.getConnection();
+//        } catch (DaoException e) {
+//            throw new RuntimeException(e);
+//        }
 
         Acceuil acceuil = new Acceuil();
         acceuil.setSize(600,300);

@@ -19,15 +19,15 @@ public class ControleurAcceuil {
         if(choix.equals(TypeSociete.CLIENT)) {
             List<Client> clients = new ClientDao().findAll();
             List<String> nomClients = new ArrayList<>();
-            for (int i = 0; i < clients.size(); i++) {
-                nomClients.add(clients.get(i).getRaisonSociale());
+            for (Client client : clients) {
+                nomClients.add(client.getRaisonSociale());
             }
             result = nomClients;
         }else{
             List<Prospect> prospects = new ProspectDao().findAll();
             List<String> nomProspects = new ArrayList<>();
-            for (int i = 0; i < prospects.size(); i++) {
-                nomProspects.add(prospects.get(i).getRaisonSociale());
+            for (Prospect prospect : prospects) {
+                nomProspects.add(prospect.getRaisonSociale());
             }
             result = nomProspects;
         }

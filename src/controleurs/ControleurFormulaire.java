@@ -39,7 +39,7 @@ public class ControleurFormulaire {
         }else{
             new ProspectDao().update((Prospect)societe);
         }
-        retourAcceuil();
+//        retourAcceuil();
     }
 
     public void deleteSociete(Societe societe) throws SQLException,
