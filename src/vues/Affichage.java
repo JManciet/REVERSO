@@ -1,13 +1,16 @@
 package vues;
 
+import controleurs.ControleurAffichage;
+import controleurs.TypeSociete;
 import entites.Client;
 import entites.Prospect;
+import exceptions.DaoException;
 import vues.model.ModelTable;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Affichage extends JDialog {
     private JPanel contentPane;
@@ -20,20 +23,27 @@ public class Affichage extends JDialog {
         this.setSize(1000,300);
         this.setVisible(true);
     }
-    public Affichage(ArrayList societes) {
+    public Affichage(TypeSociete choix) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
-        for (Object obj : societes) {
-            if (obj instanceof Client) {
-                titre.setText("Tableau des clients");
-                break;
-            } else if (obj instanceof Prospect) {
-                titre.setText("Tableau des prospects");
-                break;
-            }
+
+        if (choix.equals(TypeSociete.CLIENT)) {
+            titre.setText("Tableau des clients");
+        } else if (choix.equals(TypeSociete.PROSPECT)) {
+            titre.setText("Tableau des prospects");
         }
+
+        ArrayList societes = null;
+        try {
+            societes = new ControleurAffichage().getListSociete(choix);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (DaoException e) {
+            throw new RuntimeException(e);
+        }
+
 
         table1.setModel(new ModelTable(societes));
         buttonOK.addActionListener(new ActionListener() {

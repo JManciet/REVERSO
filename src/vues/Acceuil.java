@@ -148,16 +148,9 @@ public class Acceuil extends JDialog {
         AFFICHAGEButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    ArrayList<Societe> listSociete=
-                            controleurAcceuil.getListSociete(choix);
+
                     dispose();
-                    controleurAcceuil.affichage(listSociete);
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                } catch (DaoException ex) {
-                    throw new RuntimeException(ex);
-                }
+                    controleurAcceuil.affichage(choix);
 
             }
         });

@@ -25,17 +25,6 @@ public class ControleurAcceuil {
         return societe;
     }
 
-    public ArrayList getListSociete(TypeSociete choix) throws SQLException,
-            DaoException {
-        ArrayList societes = null;
-        if(choix.equals(TypeSociete.CLIENT)) {
-            societes = new ClientDao().findAll();
-        }else{
-            societes = new ProspectDao().findAll();
-        }
-        return societes;
-    }
-
     public List<String> listeNoms(TypeSociete choix) throws DaoException, SQLException {
 
         List result;
@@ -75,8 +64,8 @@ public class ControleurAcceuil {
         formulaire.init();
     }
 
-    public void affichage(ArrayList<Societe> societes) {
-        Affichage affichage = new Affichage(societes);
+    public void affichage(TypeSociete choix) {
+        Affichage affichage = new Affichage(choix);
         affichage.init();
     }
 
