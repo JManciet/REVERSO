@@ -2,6 +2,7 @@ package vues;
 
 import controleurs.ControleurAffichage;
 import controleurs.TypeSociete;
+import entites.Societe;
 import exceptions.DaoException;
 import vues.model.ModelTable;
 
@@ -10,6 +11,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 import static utilitaires.Utilitaires.LOGGER;
 
@@ -29,6 +32,7 @@ public class Affichage extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
+        ControleurAffichage controleurAffichage = new ControleurAffichage();
 
         if (choix.equals(TypeSociete.CLIENT)) {
             titre.setText("Tableau des clients");
@@ -38,7 +42,7 @@ public class Affichage extends JDialog {
 
         ArrayList societes = null;
         try {
-            societes = new ControleurAffichage().getListSociete(choix);
+            societes = controleurAffichage.getListSociete(choix);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (DaoException de) {
@@ -47,12 +51,16 @@ public class Affichage extends JDialog {
             System.exit(1);
         }
 
-        table.setModel(new ModelTable(societes));
+        ArrayList sortedSocietes = (ArrayList) societes.stream()
+                .sorted(Comparator.comparing(Societe::getRaisonSociale))
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        table.setModel(new ModelTable(sortedSocietes));
 
         buttonRetourAcceuil.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                new Acceuil().init();
+                controleurAffichage.retourAcceuil();
             }
         });
 

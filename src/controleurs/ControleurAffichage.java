@@ -24,4 +24,9 @@ public class ControleurAffichage {
         }
         return societes;
     }
+
+    public void retourAcceuil(){
+        Acceuil acceuil = new Acceuil();
+        acceuil.init();
+    }
 }
