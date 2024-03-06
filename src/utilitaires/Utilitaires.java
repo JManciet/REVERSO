@@ -3,6 +3,8 @@ package utilitaires;
 import exceptions.CustomException;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
@@ -25,5 +27,13 @@ public class Utilitaires {
         LOGGER.addHandler(fh);
         fh.setFormatter(new FormatterLog());
 
+    }
+
+    public static String formatDate(LocalDate localDate){
+
+        String europeanDatePattern = "dd/MM/yyyy";
+        DateTimeFormatter europeanDateFormatter = DateTimeFormatter.ofPattern(europeanDatePattern);
+
+        return europeanDateFormatter.format(localDate);
     }
 }

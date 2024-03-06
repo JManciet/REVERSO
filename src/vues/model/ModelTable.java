@@ -1,9 +1,7 @@
 package vues.model;
 
-import entites.Adresse;
-import entites.Client;
-import entites.Prospect;
-import entites.Societe;
+import entites.*;
+import utilitaires.Utilitaires;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
@@ -75,12 +73,19 @@ public class ModelTable  extends AbstractTableModel {
                 if(societe instanceof Client)
                     return ((Client) societe).getChiffreAffaires();
                 else if(societe instanceof Prospect)
-                    return ((Prospect) societe).getDateProspection();
+                    return Utilitaires.formatDate(((Prospect) societe).getDateProspection());
             case 8:
                 if(societe instanceof Client)
                     return ((Client) societe).getNbrEmployes();
-                else if(societe instanceof Prospect)
-                    return ((Prospect) societe).getInteresse();
+                else if(societe instanceof Prospect) {
+                    Interessement interessement =
+                            ((Prospect) societe).getInteresse();
+                    if (interessement != null) {
+                        return ((Prospect) societe).getInteresse().getValue();
+                    } else {
+                        return "";
+                    }
+                }
             default:
                 return null;
         }
