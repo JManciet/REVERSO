@@ -1,6 +1,7 @@
 package vues;
 
 import controleurs.ControleurAffichage;
+import controleurs.TypeAction;
 import controleurs.TypeSociete;
 import entites.Societe;
 import exceptions.CustomException;
@@ -29,6 +30,9 @@ public class Affichage extends JDialog {
         this.setVisible(true);
     }
     public Affichage(TypeSociete choix) {
+
+        init();
+
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -44,14 +48,18 @@ public class Affichage extends JDialog {
         ArrayList societes = null;
         try {
             societes = controleurAffichage.getListSociete(choix);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (DaoException de) {
-            JOptionPane.showMessageDialog(null,de.getMessage()+"\n Fermeture " +
-                    "de l'application.");
+        } catch (DaoException | CustomException e) {
+            JOptionPane.showMessageDialog(null,e.getMessage());
             System.exit(1);
-        } catch (CustomException e) {
-            throw new RuntimeException(e);
+        }
+
+        if(societes.isEmpty()) {
+            dispose();
+            JOptionPane.showMessageDialog(null,
+                    "Aucun " + (choix.equals(TypeSociete.CLIENT) ?
+                            "client" : "prospect") + " à afficher. Veuillez " +
+                            "dabord en créer un.");
+            controleurAffichage.retourAcceuil();
         }
 
         ArrayList sortedSocietes = (ArrayList) societes.stream()

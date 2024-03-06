@@ -74,7 +74,7 @@ public class ControleurAcceuil {
 
     public void pageAffichage(TypeSociete choix) {
         Affichage affichage = new Affichage(choix);
-        affichage.init();
+//        affichage.init();
     }
 
 }

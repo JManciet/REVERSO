@@ -173,10 +173,16 @@ public class Acceuil extends JDialog {
     private void populateListSociete() {
         try {
             ArrayList<String> listeNoms = controleurAcceuil.listeNoms(choix);
-            Collections.sort(listeNoms);
-            listSociete.setListData(listeNoms.toArray());
-            selection.setText("Choisissez le "+(choix.equals(TypeSociete.CLIENT)? "client":"prospect")+" à " +(action[0].equals(TypeAction.SUPPRESSION)? "supprimer":"modifier")+" :");
-            panelList.setVisible(true);
+            if(listeNoms.isEmpty()){
+                JOptionPane.showMessageDialog(null,
+                        "Aucun " + (choix.equals(TypeSociete.CLIENT) ?
+                                "client" : "prospect") + " à " + (action[0].equals(TypeAction.SUPPRESSION) ? "supprimer" : "modifier") +". Veuillez dabord en créer un.");
+            }else {
+                Collections.sort(listeNoms);
+                listSociete.setListData(listeNoms.toArray());
+                selection.setText("Choisissez le " + (choix.equals(TypeSociete.CLIENT) ? "client" : "prospect") + " à " + (action[0].equals(TypeAction.SUPPRESSION) ? "supprimer" : "modifier") + " :");
+                panelList.setVisible(true);
+            }
         } catch (CustomException | DaoException ex) {
             JOptionPane.showMessageDialog(null,ex.getMessage());
             System.exit(1);
