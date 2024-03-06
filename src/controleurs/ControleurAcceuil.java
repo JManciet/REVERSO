@@ -6,6 +6,7 @@ import entites.Client;
 import entites.Prospect;
 import entites.Societe;
 import exceptions.DaoException;
+import vues.Acceuil;
 import vues.Affichage;
 import vues.Formulaire;
 
@@ -58,13 +59,18 @@ public class ControleurAcceuil {
 //        }
 //    }
 
-    public void formulaire(TypeSociete choix,Societe societe,
-                           TypeAction action){
+    public static void pageAcceuil(){
+        Acceuil acceuil = new Acceuil();
+        acceuil.init();
+    }
+
+    public void pageFormulaire(TypeSociete choix, Societe societe,
+                               TypeAction action){
         Formulaire formulaire = new Formulaire(choix, societe, action);
         formulaire.init();
     }
 
-    public void affichage(TypeSociete choix) {
+    public void pageAffichage(TypeSociete choix) {
         Affichage affichage = new Affichage(choix);
         affichage.init();
     }

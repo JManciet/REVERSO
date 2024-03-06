@@ -1,3 +1,4 @@
+import controleurs.ControleurAcceuil;
 import dao.ClientDao;
 import dao.ConnectionDao;
 import dao.ProspectDao;
@@ -30,7 +31,7 @@ public class Main {
 
         LOGGER.log(Level.INFO, "début pg");
 
-        new Acceuil().init();
+        ControleurAcceuil.pageAcceuil();
 
 
         Adresse adresse = new Adresse(1,"55","rue générale Papin",

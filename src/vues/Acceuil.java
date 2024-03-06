@@ -11,7 +11,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.*;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,7 +33,8 @@ public class Acceuil extends JDialog {
     private JPanel panelList;
     private JLabel selection;
     private TypeSociete choix;
-
+    private ControleurAcceuil controleurAcceuil = new ControleurAcceuil();
+    private final TypeAction[] action = new TypeAction[1];
     public void init(){
         this.setSize(600,300);
         this.setVisible(true);
@@ -42,11 +42,11 @@ public class Acceuil extends JDialog {
 
     public Acceuil() {
 
-        final TypeAction[] action = new TypeAction[1];
         setTitle("REVERSO");
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
+
         buttonCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onCancel();
@@ -69,7 +69,7 @@ public class Acceuil extends JDialog {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
 
-        ControleurAcceuil controleurAcceuil = new ControleurAcceuil();
+
 
 
         buttonClient.addActionListener(new ActionListener() {
@@ -105,40 +105,16 @@ public class Acceuil extends JDialog {
         MODIFICATIONButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                try {
-                    populateOrderedListSociete(controleurAcceuil.listeNoms(choix));
-                    action[0] = TypeAction.MODIFICATION;
-                    selection.setText("Choisissez le "+(choix.equals(TypeSociete.CLIENT)? "client":"prospect")+" à " +
-                            "modifier :");
-                    panelList.setVisible(true);
-                } catch (DaoException de) {
-                    JOptionPane.showMessageDialog(null,de.getMessage()+"\n Fermeture " +
-                            "de l'application.");
-                    System.exit(1);
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
+                action[0] = TypeAction.MODIFICATION;
+                populateListSociete();
 
             }
         });
         SUPPRESSIONButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                try {
-                    populateOrderedListSociete(controleurAcceuil.listeNoms(choix));
-                    action[0] = TypeAction.SUPPRESSION;
-                    selection.setText("Choisissez le "+(choix.equals(TypeSociete.CLIENT)? "client":"prospect")+" à " +
-                            "supprimer :");
-                    panelList.setVisible(true);
-                } catch (DaoException de) {
-                    JOptionPane.showMessageDialog(null,de.getMessage()+"\n Fermeture " +
-                            "de l'application.");
-                    System.exit(1);
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
+                action[0] = TypeAction.SUPPRESSION;
+                populateListSociete();
 
             }
         });
@@ -146,7 +122,7 @@ public class Acceuil extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                controleurAcceuil.formulaire(choix,null,TypeAction.CREATION);
+                controleurAcceuil.pageFormulaire(choix,null,TypeAction.CREATION);
             }
         });
         AFFICHAGEButton.addActionListener(new ActionListener() {
@@ -154,7 +130,7 @@ public class Acceuil extends JDialog {
             public void actionPerformed(ActionEvent e) {
 
                     dispose();
-                    controleurAcceuil.affichage(choix);
+                    controleurAcceuil.pageAffichage(choix);
 
             }
         });
@@ -173,7 +149,7 @@ public class Acceuil extends JDialog {
                                     controleurAcceuil.getSociete(choix,
                                     elementSelectionne.toString());
                             dispose();
-                            controleurAcceuil.formulaire(choix,
+                            controleurAcceuil.pageFormulaire(choix,
                                     societe,action[0]);
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
@@ -190,6 +166,21 @@ public class Acceuil extends JDialog {
                 }
             }
         });
+    }
+
+    private void populateListSociete() {
+        try {
+            populateOrderedListSociete(controleurAcceuil.listeNoms(choix));
+            selection.setText("Choisissez le "+(choix.equals(TypeSociete.CLIENT)? "client":"prospect")+" à " +
+                    "supprimer :");
+            panelList.setVisible(true);
+        } catch (DaoException de) {
+            JOptionPane.showMessageDialog(null,de.getMessage()+"\n Fermeture " +
+                    "de l'application.");
+            System.exit(1);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     private void populateOrderedListSociete(List liste) {
