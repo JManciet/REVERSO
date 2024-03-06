@@ -11,10 +11,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.*;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static utilitaires.Utilitaires.LOGGER;
 
 public class Acceuil extends JDialog {
     private JPanel contentPane;
@@ -108,7 +107,7 @@ public class Acceuil extends JDialog {
             public void actionPerformed(ActionEvent e) {
 
                 try {
-                    populateOrderedListSociete(controleurAcceuil.liste(choix));
+                    populateOrderedListSociete(controleurAcceuil.listeNoms(choix));
                     action[0] = TypeAction.MODIFICATION;
                     selection.setText("Choisissez le "+(choix.equals(TypeSociete.CLIENT)? "client":"prospect")+" à " +
                             "modifier :");
@@ -126,7 +125,7 @@ public class Acceuil extends JDialog {
             public void actionPerformed(ActionEvent e) {
 
                 try {
-                    populateOrderedListSociete(controleurAcceuil.liste(choix));
+                    populateOrderedListSociete(controleurAcceuil.listeNoms(choix));
                     action[0] = TypeAction.SUPPRESSION;
                     selection.setText("Choisissez le "+(choix.equals(TypeSociete.CLIENT)? "client":"prospect")+" à " +
                             "supprimer :");
@@ -149,7 +148,17 @@ public class Acceuil extends JDialog {
         AFFICHAGEButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                panelList.setVisible(false);
+                try {
+                    ArrayList<Societe> listSociete=
+                            controleurAcceuil.getListSociete(choix);
+                    dispose();
+                    controleurAcceuil.affichage(listSociete);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                } catch (DaoException ex) {
+                    throw new RuntimeException(ex);
+                }
+
             }
         });
 

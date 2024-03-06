@@ -13,7 +13,7 @@ import static utilitaires.Utilitaires.LOGGER;
 public class ClientDao implements IDao<Client>{
 
     @Override
-    public List<Client> findAll() throws DaoException, SQLException {
+    public ArrayList<Client> findAll() throws DaoException, SQLException {
 
         PreparedStatement statement = null;
 
@@ -23,7 +23,7 @@ public class ClientDao implements IDao<Client>{
                              "INNER JOIN ADRESSE a ON c.IDADRESSE = a" +
                              ".IDADRESSE");
             ResultSet resultSet = statement.executeQuery();
-            List<Client> clients = new ArrayList<>();
+            ArrayList<Client> clients = new ArrayList<>();
             while (resultSet.next()) {
 
                 Adresse adresse = new Adresse(

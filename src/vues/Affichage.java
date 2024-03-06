@@ -1,18 +1,41 @@
 package vues;
 
+import entites.Client;
+import entites.Prospect;
+import vues.model.ModelTable;
+
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Affichage extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
+    private JTable table1;
+    private JLabel titre;
 
-    public Affichage() {
+    public void init(){
+        this.setSize(1000,300);
+        this.setVisible(true);
+    }
+    public Affichage(ArrayList societes) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
+        for (Object obj : societes) {
+            if (obj instanceof Client) {
+                titre.setText("Tableau des clients");
+                break;
+            } else if (obj instanceof Prospect) {
+                titre.setText("Tableau des prospects");
+                break;
+            }
+        }
+
+        table1.setModel(new ModelTable(societes));
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onOK();

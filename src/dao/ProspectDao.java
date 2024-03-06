@@ -14,7 +14,7 @@ import static utilitaires.Utilitaires.LOGGER;
 public class ProspectDao implements IDao<Prospect>{
 
     @Override
-    public List<Prospect> findAll() throws DaoException, SQLException {
+    public ArrayList<Prospect> findAll() throws DaoException, SQLException {
 
         PreparedStatement statement = null;
 
@@ -24,7 +24,7 @@ public class ProspectDao implements IDao<Prospect>{
                              "INNER JOIN ADRESSE a ON p.IDADRESSE = a" +
                              ".IDADRESSE");
             ResultSet resultSet = statement.executeQuery();
-            List<Prospect> prospects = new ArrayList<>();
+            ArrayList<Prospect> prospects = new ArrayList<>();
             while (resultSet.next()) {
 
                 Adresse adresse = new Adresse(
