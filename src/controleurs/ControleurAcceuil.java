@@ -5,6 +5,7 @@ import dao.ProspectDao;
 import entites.Client;
 import entites.Prospect;
 import entites.Societe;
+import exceptions.CustomException;
 import exceptions.DaoException;
 import vues.Acceuil;
 import vues.Affichage;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class ControleurAcceuil {
 
-    public Societe getSociete(TypeSociete choix, String nom) throws SQLException, DaoException {
+    public Societe getSociete(TypeSociete choix, String nom) throws SQLException, DaoException, CustomException {
         Societe societe = null;
         if(choix.equals(TypeSociete.CLIENT)) {
             societe = new ClientDao().findByName(nom);
@@ -26,19 +27,20 @@ public class ControleurAcceuil {
         return societe;
     }
 
-    public List<String> listeNoms(TypeSociete choix) throws DaoException, SQLException {
+    public ArrayList<String> listeNoms(TypeSociete choix) throws DaoException,
+            SQLException, CustomException {
 
-        List result;
+        ArrayList<String> result;
         if(choix.equals(TypeSociete.CLIENT)) {
-            List<Client> clients = new ClientDao().findAll();
-            List<String> nomClients = new ArrayList<>();
+            ArrayList<Client> clients = new ClientDao().findAll();
+            ArrayList<String> nomClients = new ArrayList<>();
             for (Client client : clients) {
                 nomClients.add(client.getRaisonSociale());
             }
             result = nomClients;
         }else{
-            List<Prospect> prospects = new ProspectDao().findAll();
-            List<String> nomProspects = new ArrayList<>();
+            ArrayList<Prospect> prospects = new ProspectDao().findAll();
+            ArrayList<String> nomProspects = new ArrayList<>();
             for (Prospect prospect : prospects) {
                 nomProspects.add(prospect.getRaisonSociale());
             }

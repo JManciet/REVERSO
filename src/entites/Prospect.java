@@ -1,16 +1,30 @@
 package entites;
 
+import exceptions.CustomException;
+
 import java.time.LocalDate;
 
 public class Prospect extends Societe{
     private LocalDate dateProspection;
     private Interessement interesse;
 
-    public Prospect(Integer identifiant, String raisonSociale, Adresse adresse,
-                    String telephone,
-                    String eMail, String commentaires, LocalDate dateProspection, Interessement interesse) {
-        super(identifiant, raisonSociale, adresse, telephone, eMail,
-                commentaires);
+    public Prospect(
+            Integer identifiant,
+            String raisonSociale,
+            Adresse adresse,
+            String telephone,
+            String eMail,
+            String commentaires,
+            LocalDate dateProspection,
+            Interessement interesse
+    ) throws CustomException {
+        super(
+                identifiant,
+                raisonSociale,
+                adresse, telephone,
+                eMail,
+                commentaires
+        );
         setDateProspection(dateProspection);
         setInteresse(interesse);
     }

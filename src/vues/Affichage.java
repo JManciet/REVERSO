@@ -3,6 +3,7 @@ package vues;
 import controleurs.ControleurAffichage;
 import controleurs.TypeSociete;
 import entites.Societe;
+import exceptions.CustomException;
 import exceptions.DaoException;
 import vues.model.ModelTable;
 
@@ -49,6 +50,8 @@ public class Affichage extends JDialog {
             JOptionPane.showMessageDialog(null,de.getMessage()+"\n Fermeture " +
                     "de l'application.");
             System.exit(1);
+        } catch (CustomException e) {
+            throw new RuntimeException(e);
         }
 
         ArrayList sortedSocietes = (ArrayList) societes.stream()

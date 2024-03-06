@@ -37,18 +37,25 @@ public class Main {
         Adresse adresse = new Adresse(1,"55","rue générale Papin",
                 "67400",
                 "Nancy");
-        Client client = new Client(1,"MAn++",adresse,"0606050408",
-                "contact" +
-                "@reverso.fr","its good",5555555, 55);
+        try {
+            Client client = new Client(1,"MAn++",adresse,"0606050408",
+                    "contact" +
+                    "@reverso.fr","its good",5555555, 55);
+        } catch (CustomException e) {
+            throw new RuntimeException(e);
+        }
 
-        Prospect prospect = new Prospect(1,"REVERSOCHOUETTE",adresse,
-                "0606050408",
-                "contact" +
-                "@reverso.fr","its good", LocalDate.now(), Interessement.NON);
+        try {
+            Prospect prospect = new Prospect(1,"REVERSOCHOUETTE",adresse,
+                    "0606050408",
+                    "contact" +
+                    "@reverso.fr","its good", LocalDate.now(), Interessement.NON);
+        } catch (CustomException e) {
+            throw new RuntimeException(e);
+        }
 
 
-
-            ClientDao clientDao = new ClientDao();
+        ClientDao clientDao = new ClientDao();
 
         ProspectDao prospectDao = new ProspectDao();
 

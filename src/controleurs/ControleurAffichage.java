@@ -3,6 +3,7 @@ package controleurs;
 import dao.ClientDao;
 import dao.ProspectDao;
 import entites.Societe;
+import exceptions.CustomException;
 import exceptions.DaoException;
 import vues.Acceuil;
 import vues.Affichage;
@@ -15,7 +16,7 @@ public class ControleurAffichage {
 
 
     public ArrayList getListSociete(TypeSociete choix) throws SQLException,
-            DaoException {
+            DaoException, CustomException {
         ArrayList societes = null;
         if(choix.equals(TypeSociete.CLIENT)) {
             societes = new ClientDao().findAll();

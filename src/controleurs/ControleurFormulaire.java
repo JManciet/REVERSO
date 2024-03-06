@@ -5,6 +5,7 @@ import dao.ProspectDao;
 import entites.Client;
 import entites.Prospect;
 import entites.Societe;
+import exceptions.CustomException;
 import exceptions.DaoException;
 import vues.Acceuil;
 import vues.Formulaire;
@@ -13,7 +14,7 @@ import java.sql.SQLException;
 
 public class ControleurFormulaire {
 
-    public void createSociete(Societe societe) throws SQLException, DaoException {
+    public void createSociete(Societe societe) throws DaoException, CustomException {
         if(societe instanceof Client) {
             new ClientDao().create((Client)societe);
         }else{
@@ -21,8 +22,7 @@ public class ControleurFormulaire {
         }
     }
 
-    public void updateSociete(Societe societe) throws SQLException,
-            DaoException {
+    public void updateSociete(Societe societe) throws DaoException, CustomException {
         if(societe instanceof Client) {
             new ClientDao().update((Client)societe);
         }else{
@@ -30,8 +30,7 @@ public class ControleurFormulaire {
         }
     }
 
-    public void deleteSociete(Societe societe) throws SQLException,
-            DaoException {
+    public void deleteSociete(Societe societe) throws DaoException {
         if(societe instanceof Client) {
             new ClientDao().delete((Client)societe);
         }else{

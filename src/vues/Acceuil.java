@@ -4,6 +4,7 @@ import controleurs.TypeAction;
 import controleurs.TypeSociete;
 import controleurs.ControleurAcceuil;
 import entites.Societe;
+import exceptions.CustomException;
 import exceptions.DaoException;
 
 import javax.swing.*;
@@ -11,6 +12,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.*;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -151,12 +153,12 @@ public class Acceuil extends JDialog {
                             dispose();
                             controleurAcceuil.pageFormulaire(choix,
                                     societe,action[0]);
+                        } catch (CustomException | DaoException ex) {
+                            JOptionPane.showMessageDialog(null,
+                                    ex.getMessage());
+                            System.exit(1);
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
-                        } catch (DaoException de) {
-                            JOptionPane.showMessageDialog(null,de.getMessage()+"\n Fermeture " +
-                                    "de l'application.");
-                            System.exit(1);
                         }
 
 
@@ -170,24 +172,18 @@ public class Acceuil extends JDialog {
 
     private void populateListSociete() {
         try {
-            populateOrderedListSociete(controleurAcceuil.listeNoms(choix));
-            selection.setText("Choisissez le "+(choix.equals(TypeSociete.CLIENT)? "client":"prospect")+" à " +
-                    "supprimer :");
+            ArrayList<String> listeNoms = controleurAcceuil.listeNoms(choix);
+            Collections.sort(listeNoms);
+            listSociete.setListData(listeNoms.toArray());
+            selection.setText("Choisissez le "+(choix.equals(TypeSociete.CLIENT)? "client":"prospect")+" à " +(action[0].equals(TypeAction.SUPPRESSION)? "supprimer":"modifier")+" :");
             panelList.setVisible(true);
-        } catch (DaoException de) {
-            JOptionPane.showMessageDialog(null,de.getMessage()+"\n Fermeture " +
-                    "de l'application.");
+        } catch (CustomException | DaoException ex) {
+            JOptionPane.showMessageDialog(null,ex.getMessage());
             System.exit(1);
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
     }
-
-    private void populateOrderedListSociete(List liste) {
-        Collections.sort(liste);
-        listSociete.setListData(liste.toArray());
-    }
-
 
     private void onCancel() {
         // add your code here if necessary

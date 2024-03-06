@@ -2,6 +2,7 @@ package dao;
 
 import entites.Adresse;
 import entites.Client;
+import exceptions.CustomException;
 import exceptions.DaoException;
 
 import java.sql.*;
@@ -13,7 +14,7 @@ import static utilitaires.Utilitaires.LOGGER;
 public class ClientDao implements IDao<Client>{
 
     @Override
-    public ArrayList<Client> findAll() throws DaoException, SQLException {
+    public ArrayList<Client> findAll() throws DaoException, CustomException {
 
         PreparedStatement statement = null;
 
@@ -46,18 +47,33 @@ public class ClientDao implements IDao<Client>{
                 ));
             }
             return clients;
-        }catch (SQLException sqle) {
+        } catch (CustomException ce) {
+            LOGGER.severe("Une donnée de la BDD n'est pas conforme : "+ ce);
+            throw new CustomException("Problème avec les données " +
+                    "enregistrées dans la base de donnée. Veuillez contacter " +
+                    "un administrateur.\nFermeture de l'application.");
+        } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la recherche des " +
                     "clients dans la base de donnée : "+ sqle);
             throw new DaoException("Un problème est survenu lors de la " +
-                    "recherche des clients dans la base de donnée.");
-        }finally {
-            if (statement != null) { statement.close(); }
+                    "recherche des clients dans la base de donnée. Veuillez contacter un administrateur.\nFermeture de l'application.");
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException sqle) {
+                LOGGER.severe("Problème lors de la recherche des " +
+                        "clients dans la base de donnée.: " + sqle);
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "recherche des clients dans la base de donnée. " +
+                        "Veuillez contacter un administrateur.\nFermeture de l'application.");
+            }
         }
     }
 
     @Override
-    public Client findByName(String nom) throws DaoException, SQLException {
+    public Client findByName(String nom) throws DaoException, CustomException {
 
         PreparedStatement statement = null;
 
@@ -91,18 +107,33 @@ public class ClientDao implements IDao<Client>{
             } else {
                 return null;
             }
+        } catch (CustomException ce) {
+            LOGGER.severe("Une donnée de la BDD n'est pas conforme : "+ ce);
+            throw new CustomException("Problème avec les données " +
+                    "enregistrées dans la base de donnée. Veuillez contacter " +
+                    "un administrateur.\nFermeture de l'application.");
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la recherche par nom de" +
                     " client dans la base de donnée : "+sqle);
             throw new DaoException("Un problème est survenu lors de la recherche par nom de" +
-                    " client dans la base de donnée.");
+                    " client dans la base de donnée. Veuillez contacter un administrateur.\nFermeture de l'application.");
         }finally {
-            if (statement != null) { statement.close(); }
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException sqle) {
+                LOGGER.severe("Problème lors de la recherche par nom de " +
+                        "client : " + sqle);
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "recherche par nom de client. Veuillez contacter un " +
+                        "administrateur.\nFermeture de l'application.");
+            }
         }
     }
 
     @Override
-    public void create(Client client) throws DaoException, SQLException {
+    public void create(Client client) throws DaoException, CustomException {
 
         PreparedStatement statement = null;
         Connection connection = null;
@@ -151,9 +182,10 @@ public class ClientDao implements IDao<Client>{
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
                 throw new DaoException("Un problème est survenu lors de la " +
-                        "creation d'un client.");
+                        "creation d'un client. Veuillez contacter un administrateur.\nFermeture de l'application.");
             }
-            throw new DaoException("La raison sociale du client existe déjà");
+            throw new CustomException("La raison sociale du client existe " +
+                    "déjà");
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la creation d'un client : "+sqle);
             try {
@@ -164,22 +196,30 @@ public class ClientDao implements IDao<Client>{
                                 "transaction : "+excep);
             } finally {
                 throw new DaoException("Un problème est survenu lors de la " +
-                        "creation d'un client.");
+                        "creation d'un client. Veuillez contacter un administrateur.\nFermeture de l'application.");
             }
 
         } finally {
-            if (statement != null) {
-                statement.close();
-            }
-            if (connection != null) {
-                connection.setAutoCommit(true);
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.setAutoCommit(true);
+                }
+            } catch (SQLException sqle) {
+                LOGGER.severe("Problème lors de la creation d'un " +
+                        "client : " + sqle);
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "creation d'un client. Veuillez contacter un " +
+                        "administrateur.\nFermeture de l'application.");
             }
         }
 
     }
 
     @Override
-    public void update(Client client) throws DaoException, SQLException {
+    public void update(Client client) throws DaoException, CustomException {
 
         PreparedStatement statement = null;
         Connection connection = null;
@@ -231,9 +271,10 @@ public class ClientDao implements IDao<Client>{
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
                 throw new DaoException("Un problème est survenu lors de la " +
-                        "mise à jour d'un client.");
+                        "mise à jour d'un client. Veuillez contacter un administrateur.\nFermeture de l'application.");
             }
-            throw new DaoException("La raison sociale du client existe déjà.");
+            throw new CustomException("La raison sociale du client existe " +
+                    "déjà.");
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la mise à jour d'un client : "+sqle);
             try {
@@ -244,22 +285,30 @@ public class ClientDao implements IDao<Client>{
                         "transaction : "+excep);
             } finally {
                 throw new DaoException("Un problème est survenu lors de la " +
-                        "mise à jour d'un client.");
+                        "mise à jour d'un client. Veuillez contacter un administrateur.\nFermeture de l'application.");
             }
 
         } finally {
-            if (statement != null) {
-                statement.close();
-            }
-            if (connection != null) {
-                connection.setAutoCommit(true);
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.setAutoCommit(true);
+                }
+            } catch (SQLException sqle) {
+                LOGGER.severe("Problème lors de la mise à jour d'un " +
+                        "client : " + sqle);
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "mise à jour d'un client. Veuillez contacter un " +
+                        "administrateur.\nFermeture de l'application.");
             }
         }
 
     }
 
     @Override
-    public void delete(Client client) throws DaoException, SQLException {
+    public void delete(Client client) throws DaoException {
 
         PreparedStatement statement = null;
         Connection connection = null;
@@ -295,14 +344,22 @@ public class ClientDao implements IDao<Client>{
                         "transaction : "+excep);
             } finally {
                 throw new DaoException("Un problème est survenu lors de la " +
-                        "suppression d'un client.");
+                        "suppression d'un client. Veuillez contacter un administrateur.\nFermeture de l'application.");
             }
         } finally {
-            if (statement != null) {
-                statement.close();
-            }
-            if (connection != null) {
-                connection.setAutoCommit(true);
+            try {
+                if (statement != null) {
+                        statement.close();
+                }
+                if (connection != null) {
+                    connection.setAutoCommit(true);
+                }
+            } catch (SQLException sqle) {
+                LOGGER.severe("Problème lors de la suppression d'un " +
+                        "client : " + sqle);
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "suppression d'un client. Veuillez contacter un " +
+                        "administrateur.\nFermeture de l'application.");
             }
         }
 

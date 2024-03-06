@@ -3,6 +3,7 @@ package dao;
 import entites.Adresse;
 import entites.Interessement;
 import entites.Prospect;
+import exceptions.CustomException;
 import exceptions.DaoException;
 
 import java.sql.*;
@@ -14,7 +15,7 @@ import static utilitaires.Utilitaires.LOGGER;
 public class ProspectDao implements IDao<Prospect>{
 
     @Override
-    public ArrayList<Prospect> findAll() throws DaoException, SQLException {
+    public ArrayList<Prospect> findAll() throws DaoException, CustomException {
 
         PreparedStatement statement = null;
 
@@ -49,18 +50,32 @@ public class ProspectDao implements IDao<Prospect>{
                 ));
             }
             return prospects;
+        } catch (CustomException ce) {
+            LOGGER.severe("Une donnée de la BDD n'est pas conforme : "+ ce);
+            throw new CustomException("Problème avec les données " +
+                    "enregistrées dans la base de donnée. Veuillez contacter un administrateur.\nFermeture de l'application.");
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la recherche des " +
                     "prospects dans la base de donnée : "+ sqle);
             throw new DaoException("Un problème est survenu lors de la " +
-                    "recherche des prospects dans la base de donnée.");
+                    "recherche des prospects dans la base de donnée. Veuillez contacter un administrateur.\nFermeture de l'application.");
         }finally {
-            if (statement != null) { statement.close(); }
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException sqle) {
+                LOGGER.severe("Problème lors de la recherche des " +
+                        "propects dans la base de donnée.: " + sqle);
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "recherche des prospects dans la base de donnée. " +
+                        "Veuillez contacter un administrateur.\nFermeture de l'application.");
+            }
         }
     }
 
     @Override
-    public Prospect findByName(String nom) throws DaoException, SQLException {
+    public Prospect findByName(String nom) throws DaoException, CustomException {
 
         PreparedStatement statement = null;
 
@@ -97,18 +112,32 @@ public class ProspectDao implements IDao<Prospect>{
             } else {
                 return null;
             }
+        } catch (CustomException ce) {
+            LOGGER.severe("Une donnée de la BDD n'est pas conforme : "+ ce);
+            throw new CustomException("Problème avec les données " +
+                    "enregistrées dans la base de donnée. Veuillez contacter un administrateur.\nFermeture de l'application.");
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la recherche par nom de" +
                     " prospect dans la base de donnée : "+sqle);
             throw new DaoException("Un problème est survenu lors de la " +
-                    "recherche par nom de prospect dans la base de donnée.");
+                    "recherche par nom de prospect dans la base de donnée. Veuillez contacter un administrateur.\nFermeture de l'application.");
         }finally {
-            if (statement != null) { statement.close(); }
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException sqle) {
+                LOGGER.severe("Problème lors de la recherche par nom de " +
+                        "prospect : " + sqle);
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "recherche par nom de prospect. Veuillez contacter un" +
+                        " administrateur.\nFermeture de l'application.");
+            }
         }
     }
 
     @Override
-    public void create(Prospect prospect) throws DaoException, SQLException {
+    public void create(Prospect prospect) throws DaoException, CustomException {
 
         PreparedStatement statement = null;
         Connection connection = null;
@@ -157,9 +186,10 @@ public class ProspectDao implements IDao<Prospect>{
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
                 throw new DaoException("Un problème est survenu lors de la creation d'un " +
-                        "prospect.");
+                        "prospect. Veuillez contacter un administrateur.\nFermeture de l'application.");
             }
-            throw new DaoException("La raison sociale du prospect existe déjà");
+            throw new CustomException("La raison sociale du prospect existe " +
+                    "déjà");
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la creation d'un prospect : "+sqle);
             try {
@@ -170,21 +200,29 @@ public class ProspectDao implements IDao<Prospect>{
                         "transaction : "+excep);
             } finally {
                 throw new DaoException("Un problème est survenu lors de la " +
-                        "creation d'un prospect.");
+                        "creation d'un prospect. Veuillez contacter un administrateur.\nFermeture de l'application.");
             }
 
         } finally {
-            if (statement != null) {
-                statement.close();
-            }
-            if (connection != null) {
-                connection.setAutoCommit(true);
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.setAutoCommit(true);
+                }
+            } catch (SQLException sqle) {
+                LOGGER.severe("Problème lors de la creation d'un " +
+                        "prospect : " + sqle);
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "creation d'un prospect. Veuillez contacter un " +
+                        "administrateur.\nFermeture de l'application.");
             }
         }
     }
 
     @Override
-    public void update(Prospect prospect) throws DaoException, SQLException {
+    public void update(Prospect prospect) throws DaoException, CustomException {
 
         PreparedStatement statement = null;
         Connection connection = null;
@@ -236,9 +274,10 @@ public class ProspectDao implements IDao<Prospect>{
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
                 throw new DaoException("Un problème est survenu lors de la " +
-                        "mise à jour d'un prospect.");
+                        "mise à jour d'un prospect. Veuillez contacter un administrateur.\nFermeture de l'application.");
             }
-            throw new DaoException("La raison sociale du prospect existe déjà.");
+            throw new CustomException("La raison sociale du prospect existe " +
+                    "déjà.");
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la mise à jour d'un prospect : "+sqle);
             try {
@@ -249,21 +288,29 @@ public class ProspectDao implements IDao<Prospect>{
                         "transaction : "+excep);
             } finally {
                 throw new DaoException("Un problème est survenu lors de la " +
-                        "mise à jour d'un prospect.");
+                        "mise à jour d'un prospect. Veuillez contacter un administrateur.\nFermeture de l'application.");
             }
 
         } finally {
-            if (statement != null) {
-                statement.close();
-            }
-            if (connection != null) {
-                connection.setAutoCommit(true);
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.setAutoCommit(true);
+                }
+            } catch (SQLException sqle) {
+                LOGGER.severe("Problème lors de la mise à jour d'un " +
+                        "prospect : " + sqle);
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "mise à jour d'un prospect. Veuillez contacter un " +
+                        "administrateur.\nFermeture de l'application.");
             }
         }
     }
 
     @Override
-    public void delete(Prospect prospect) throws DaoException, SQLException {
+    public void delete(Prospect prospect) throws DaoException {
 
         PreparedStatement statement = null;
         Connection connection = null;
@@ -299,14 +346,22 @@ public class ProspectDao implements IDao<Prospect>{
                         "transaction : "+excep);
             } finally {
                 throw new DaoException("Un problème est survenu lors de la " +
-                        "suppression d'un prospect.");
+                        "suppression d'un prospect. Veuillez contacter un administrateur.\nFermeture de l'application.");
             }
         } finally {
-            if (statement != null) {
-                statement.close();
-            }
-            if (connection != null) {
-                connection.setAutoCommit(true);
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.setAutoCommit(true);
+                }
+            } catch (SQLException sqle) {
+                LOGGER.severe("Problème lors de la suppression d'un " +
+                        "prospect : " + sqle);
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "suppression d'un prospect. Veuillez contacter un " +
+                        "administrateur.\nFermeture de l'application.");
             }
         }
     }
