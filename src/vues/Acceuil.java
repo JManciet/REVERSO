@@ -113,7 +113,9 @@ public class Acceuil extends JDialog {
                             "modifier :");
                     panelList.setVisible(true);
                 } catch (DaoException de) {
-                    JOptionPane.showMessageDialog(null,de.getMessage());
+                    JOptionPane.showMessageDialog(null,de.getMessage()+"\n Fermeture " +
+                            "de l'application.");
+                    System.exit(1);
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -131,7 +133,9 @@ public class Acceuil extends JDialog {
                             "supprimer :");
                     panelList.setVisible(true);
                 } catch (DaoException de) {
-                    JOptionPane.showMessageDialog(null,de.getMessage());
+                    JOptionPane.showMessageDialog(null,de.getMessage()+"\n Fermeture " +
+                            "de l'application.");
+                    System.exit(1);
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -174,8 +178,9 @@ public class Acceuil extends JDialog {
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
                         } catch (DaoException de) {
-                            JOptionPane.showMessageDialog(null,de.getMessage());
-                            listSociete.clearSelection();
+                            JOptionPane.showMessageDialog(null,de.getMessage()+"\n Fermeture " +
+                                    "de l'application.");
+                            System.exit(1);
                         }
 
 

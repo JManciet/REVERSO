@@ -53,7 +53,7 @@ public class ProspectDao implements IDao<Prospect>{
             LOGGER.severe("Problème lors de la recherche des " +
                     "prospects dans la base de donnée : "+ sqle);
             throw new DaoException("Un problème est survenu lors de la " +
-                    "recherche des prospects dans la base de donnée");
+                    "recherche des prospects dans la base de donnée.");
         }finally {
             if (statement != null) { statement.close(); }
         }
@@ -101,7 +101,7 @@ public class ProspectDao implements IDao<Prospect>{
             LOGGER.severe("Problème lors de la recherche par nom de" +
                     " prospect dans la base de donnée : "+sqle);
             throw new DaoException("Un problème est survenu lors de la " +
-                    "recherche par nom de prospect dans la base de donnée");
+                    "recherche par nom de prospect dans la base de donnée.");
         }finally {
             if (statement != null) { statement.close(); }
         }
@@ -157,7 +157,7 @@ public class ProspectDao implements IDao<Prospect>{
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
                 throw new DaoException("Un problème est survenu lors de la creation d'un " +
-                        "prospect");
+                        "prospect.");
             }
             throw new DaoException("La raison sociale du prospect existe déjà");
         } catch (SQLException sqle) {
@@ -170,7 +170,7 @@ public class ProspectDao implements IDao<Prospect>{
                         "transaction : "+excep);
             } finally {
                 throw new DaoException("Un problème est survenu lors de la " +
-                        "creation d'un prospect");
+                        "creation d'un prospect.");
             }
 
         } finally {
@@ -236,9 +236,9 @@ public class ProspectDao implements IDao<Prospect>{
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
                 throw new DaoException("Un problème est survenu lors de la " +
-                        "mise à jour d'un prospect");
+                        "mise à jour d'un prospect.");
             }
-            throw new DaoException("La raison sociale du prospect existe déjà");
+            throw new DaoException("La raison sociale du prospect existe déjà.");
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la mise à jour d'un prospect : "+sqle);
             try {
@@ -249,7 +249,7 @@ public class ProspectDao implements IDao<Prospect>{
                         "transaction : "+excep);
             } finally {
                 throw new DaoException("Un problème est survenu lors de la " +
-                        "mise à jour d'un prospect");
+                        "mise à jour d'un prospect.");
             }
 
         } finally {
@@ -299,7 +299,7 @@ public class ProspectDao implements IDao<Prospect>{
                         "transaction : "+excep);
             } finally {
                 throw new DaoException("Un problème est survenu lors de la " +
-                        "suppression d'un prospect");
+                        "suppression d'un prospect.");
             }
         } finally {
             if (statement != null) {

@@ -30,8 +30,7 @@ public class Main {
 
         LOGGER.log(Level.INFO, "début pg");
 
-        Acceuil acceuil = new Acceuil();
-        acceuil.init();
+        new Acceuil().init();
 
 
         Adresse adresse = new Adresse(1,"55","rue générale Papin",

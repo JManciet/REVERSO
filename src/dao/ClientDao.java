@@ -50,7 +50,7 @@ public class ClientDao implements IDao<Client>{
             LOGGER.severe("Problème lors de la recherche des " +
                     "clients dans la base de donnée : "+ sqle);
             throw new DaoException("Un problème est survenu lors de la " +
-                    "recherche des clients dans la base de donnée");
+                    "recherche des clients dans la base de donnée.");
         }finally {
             if (statement != null) { statement.close(); }
         }
@@ -95,7 +95,7 @@ public class ClientDao implements IDao<Client>{
             LOGGER.severe("Problème lors de la recherche par nom de" +
                     " client dans la base de donnée : "+sqle);
             throw new DaoException("Un problème est survenu lors de la recherche par nom de" +
-                    " client dans la base de donnée");
+                    " client dans la base de donnée.");
         }finally {
             if (statement != null) { statement.close(); }
         }
@@ -150,7 +150,8 @@ public class ClientDao implements IDao<Client>{
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
-                throw new DaoException("Un problème est survenu lors de la creation d'un client");
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "creation d'un client.");
             }
             throw new DaoException("La raison sociale du client existe déjà");
         } catch (SQLException sqle) {
@@ -163,7 +164,7 @@ public class ClientDao implements IDao<Client>{
                                 "transaction : "+excep);
             } finally {
                 throw new DaoException("Un problème est survenu lors de la " +
-                        "creation d'un client");
+                        "creation d'un client.");
             }
 
         } finally {
@@ -230,9 +231,9 @@ public class ClientDao implements IDao<Client>{
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
                 throw new DaoException("Un problème est survenu lors de la " +
-                        "mise à jour d'un client");
+                        "mise à jour d'un client.");
             }
-            throw new DaoException("La raison sociale du client existe déjà");
+            throw new DaoException("La raison sociale du client existe déjà.");
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la mise à jour d'un client : "+sqle);
             try {
@@ -243,7 +244,7 @@ public class ClientDao implements IDao<Client>{
                         "transaction : "+excep);
             } finally {
                 throw new DaoException("Un problème est survenu lors de la " +
-                        "mise à jour d'un client");
+                        "mise à jour d'un client.");
             }
 
         } finally {
@@ -294,7 +295,7 @@ public class ClientDao implements IDao<Client>{
                         "transaction : "+excep);
             } finally {
                 throw new DaoException("Un problème est survenu lors de la " +
-                        "suppression d'un client");
+                        "suppression d'un client.");
             }
         } finally {
             if (statement != null) {

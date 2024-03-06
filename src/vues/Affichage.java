@@ -2,21 +2,22 @@ package vues;
 
 import controleurs.ControleurAffichage;
 import controleurs.TypeSociete;
-import entites.Client;
-import entites.Prospect;
 import exceptions.DaoException;
 import vues.model.ModelTable;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import static utilitaires.Utilitaires.LOGGER;
+
 public class Affichage extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
-    private JButton buttonCancel;
-    private JTable table1;
+    private JButton buttonRetourAcceuil;
+    private JTable table;
     private JLabel titre;
 
     public void init(){
@@ -40,21 +41,18 @@ public class Affichage extends JDialog {
             societes = new ControleurAffichage().getListSociete(choix);
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } catch (DaoException e) {
-            throw new RuntimeException(e);
+        } catch (DaoException de) {
+            JOptionPane.showMessageDialog(null,de.getMessage()+"\n Fermeture " +
+                    "de l'application.");
+            System.exit(1);
         }
 
+        table.setModel(new ModelTable(societes));
 
-        table1.setModel(new ModelTable(societes));
-        buttonOK.addActionListener(new ActionListener() {
+        buttonRetourAcceuil.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
-
-        buttonCancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
+                dispose();
+                new Acceuil().init();
             }
         });
 
@@ -72,11 +70,6 @@ public class Affichage extends JDialog {
                 onCancel();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-    }
-
-    private void onOK() {
-        // add your code here
-        dispose();
     }
 
     private void onCancel() {
