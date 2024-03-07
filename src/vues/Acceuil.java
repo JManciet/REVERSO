@@ -41,6 +41,7 @@ public class Acceuil extends JDialog {
 
     public void init(){
         this.setSize(600,300);
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
     };
     public Acceuil() {

@@ -26,6 +26,7 @@ public class Affichage extends JDialog {
 
     public void init(){
         this.setSize(1000,300);
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
     public Affichage(TypeSociete choix) {

@@ -49,6 +49,7 @@ public class Formulaire extends JDialog {
     private final ControleurFormulaire controleurFormulaire;
     public void init() {
         this.setSize(700,500);
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
     public Formulaire(TypeSociete choix, Societe societe, TypeAction action) {
