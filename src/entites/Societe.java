@@ -11,6 +11,9 @@ public abstract class Societe {
     private String eMail;
     private String commentaires;
 
+    public Societe() {
+    }
+
     public Societe(Integer identifiant, String raisonSociale, Adresse adresse,
                    String telephone, String eMail, String commentaires) throws CustomException {
         setIdentifiant(identifiant);
@@ -20,6 +23,7 @@ public abstract class Societe {
         setEMail(eMail);
         setCommentaires(commentaires);
     }
+
 
     public Integer getIdentifiant() {
         return identifiant;
@@ -68,7 +72,7 @@ public abstract class Societe {
 
         boolean valide = Utilitaires.PATTERN_MAIL.matcher(eMail).matches();
 
-        if (!valide) {
+        if (eMail == null || !valide) {
             throw new CustomException("Le format du mail est invalid.\nIl " +
                     "devrait avoir comme format xx@zz.");
         }

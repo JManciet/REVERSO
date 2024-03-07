@@ -6,24 +6,23 @@ public class Client extends Societe {
     private double chiffreAffaires;
     private int nbrEmployes;
 
-    public Client(
-            Integer identifiant,
-            String raisonSociale,
-            Adresse adresse,
-            String telephone,
-            String eMail,
-            String commentaires,
-            double chiffreAffaires,
-            int nbrEmployes
-    ) throws CustomException {
-        super(
-                identifiant,
+    public Client() {
+    }
+
+    public Client(Integer identifiant,
+                  String raisonSociale,
+                  Adresse adresse,
+                  String telephone,
+                  String eMail,
+                  String commentaires,
+                  double chiffreAffaires,
+                  int nbrEmployes) throws CustomException {
+        super(identifiant,
                 raisonSociale,
                 adresse,
                 telephone,
                 eMail,
-                commentaires
-        );
+                commentaires);
         setChiffreAffaires(chiffreAffaires);
         setNbrEmployes(nbrEmployes);
     }
