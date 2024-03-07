@@ -8,14 +8,14 @@ import java.util.List;
 
 public interface IDao<T> {
 
-    List<T> findAll() throws DaoException, CustomException;
+    List<T> findAll() throws Exception;
 
-    T findByName(String nom) throws DaoException, CustomException;
+    T findByName(String nom) throws Exception;
 
-    void create(T entity) throws DaoException, CustomException;
+    void create(T entity) throws Exception;
 
-    void update(T entity) throws DaoException, CustomException;
+    void update(T entity) throws Exception;
 
-    void delete(T entity) throws DaoException;
+    void delete(T entity) throws Exception;
 
 }

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class ControleurAffichage {
 
 
-    public ArrayList getListSociete(TypeSociete choix) throws DaoException, CustomException {
+    public ArrayList getListSociete(TypeSociete choix) throws Exception {
         ArrayList societes = null;
         if(choix.equals(TypeSociete.CLIENT)) {
             societes = new ClientDao().findAll();

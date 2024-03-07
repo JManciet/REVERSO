@@ -15,7 +15,7 @@ import static utilitaires.Utilitaires.LOGGER;
 public class ClientDao implements IDao<Client>{
 
     @Override
-    public ArrayList<Client> findAll() throws DaoException, CustomException {
+    public ArrayList<Client> findAll() throws Exception {
 
         PreparedStatement statement = null;
 
@@ -74,7 +74,7 @@ public class ClientDao implements IDao<Client>{
     }
 
     @Override
-    public Client findByName(String nom) throws DaoException, CustomException {
+    public Client findByName(String nom) throws Exception {
 
         PreparedStatement statement = null;
 
@@ -135,7 +135,7 @@ public class ClientDao implements IDao<Client>{
     }
 
     @Override
-    public void create(Client client) throws DaoException, CustomException {
+    public void create(Client client) throws Exception {
 
         PreparedStatement statement = null;
         Connection connection = null;
@@ -236,7 +236,7 @@ public class ClientDao implements IDao<Client>{
     }
 
     @Override
-    public void update(Client client) throws DaoException, CustomException {
+    public void update(Client client) throws Exception {
 
         PreparedStatement statement = null;
         Connection connection = null;
@@ -341,7 +341,7 @@ public class ClientDao implements IDao<Client>{
     }
 
     @Override
-    public void delete(Client client) throws DaoException {
+    public void delete(Client client) throws Exception {
 
         PreparedStatement statement = null;
         Connection connection = null;

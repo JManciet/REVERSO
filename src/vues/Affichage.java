@@ -20,7 +20,6 @@ import static utilitaires.Utilitaires.LOGGER;
 
 public class Affichage extends JDialog {
     private JPanel contentPane;
-    private JButton buttonOK;
     private JButton buttonRetourAcceuil;
     private JTable table;
     private JLabel titre;
@@ -35,7 +34,7 @@ public class Affichage extends JDialog {
 
         setContentPane(contentPane);
         setModal(true);
-        getRootPane().setDefaultButton(buttonOK);
+        getRootPane().setDefaultButton(buttonRetourAcceuil);
 
         ControleurAffichage controleurAffichage = new ControleurAffichage();
 
@@ -50,6 +49,15 @@ public class Affichage extends JDialog {
             societes = controleurAffichage.getListSociete(choix);
         } catch (DaoException | CustomException e) {
             JOptionPane.showMessageDialog(null,e.getMessage());
+            System.exit(1);
+        } catch (Exception e) {
+            LOGGER.severe("Une erreur inconnue s'est produite" +
+                    " : "+e);
+            JOptionPane.showMessageDialog(null,
+                    "Une erreur inconnue s'est produite. " +
+                            "Veuillez contacter un " +
+                            "administrateur si l'erreur " +
+                            "perssiste.\nFermeture de l'application.");
             System.exit(1);
         }
 

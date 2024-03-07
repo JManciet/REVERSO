@@ -22,7 +22,6 @@ public class Main {
 
     public static void main(String[] args) {
 
-
         try {
             Utilitaires.creationLog();
         } catch (CustomException e) {
@@ -32,52 +31,5 @@ public class Main {
         LOGGER.log(Level.INFO, "début pg");
 
         ControleurAcceuil.pageAcceuil();
-
-
-        Adresse adresse = new Adresse(1,"55","rue générale Papin",
-                "67400",
-                "Nancy");
-        try {
-            Client client = new Client(1,"MAn++",adresse,"0606050408",
-                    "contact" +
-                    "@reverso.fr","its good",5555555, 55);
-        } catch (CustomException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            Prospect prospect = new Prospect(1,"REVERSOCHOUETTE",adresse,
-                    "0606050408",
-                    "contact" +
-                    "@reverso.fr","its good", LocalDate.now(), Interessement.NON);
-        } catch (CustomException e) {
-            throw new RuntimeException(e);
-        }
-
-
-        ClientDao clientDao = new ClientDao();
-
-        ProspectDao prospectDao = new ProspectDao();
-
-
-//        try {
-//
-//            prospectDao.create(prospect);
-//
-//            List<Prospect> clients = prospectDao.findAll();
-//            clients = prospectDao.findAll();
-//
-//            for (int i = 0; i < clients.size(); i++) {
-//                System.out.println(clients.get(i));
-//            }
-//
-//        } catch (DaoException e) {
-//            System.out.println(e.getMessage());
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-
-
-        System.out.println("Hello world!");
     }
 }

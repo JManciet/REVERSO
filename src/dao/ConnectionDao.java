@@ -18,7 +18,7 @@ public class ConnectionDao {
 
     private static Connection connection;
 
-    private ConnectionDao() throws DaoException {
+    private ConnectionDao() throws Exception {
 
         final Properties dataProperties = new Properties();
         File fichier = new File("database.properties");
@@ -48,7 +48,7 @@ public class ConnectionDao {
 
     }
 
-    public static Connection getConnection() throws DaoException {
+    public static Connection getConnection() throws Exception {
         if (connection == null) {
             new ConnectionDao();
         }

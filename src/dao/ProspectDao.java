@@ -16,7 +16,7 @@ import static utilitaires.Utilitaires.LOGGER;
 public class ProspectDao implements IDao<Prospect>{
 
     @Override
-    public ArrayList<Prospect> findAll() throws DaoException, CustomException {
+    public ArrayList<Prospect> findAll() throws Exception {
 
         PreparedStatement statement = null;
 
@@ -76,7 +76,7 @@ public class ProspectDao implements IDao<Prospect>{
     }
 
     @Override
-    public Prospect findByName(String nom) throws DaoException, CustomException {
+    public Prospect findByName(String nom) throws Exception {
 
         PreparedStatement statement = null;
 
@@ -138,7 +138,7 @@ public class ProspectDao implements IDao<Prospect>{
     }
 
     @Override
-    public void create(Prospect prospect) throws DaoException, CustomException {
+    public void create(Prospect prospect) throws Exception {
 
         PreparedStatement statement = null;
         Connection connection = null;
@@ -239,7 +239,7 @@ public class ProspectDao implements IDao<Prospect>{
     }
 
     @Override
-    public void update(Prospect prospect) throws DaoException, CustomException {
+    public void update(Prospect prospect) throws Exception {
 
         PreparedStatement statement = null;
         Connection connection = null;
@@ -344,7 +344,7 @@ public class ProspectDao implements IDao<Prospect>{
     }
 
     @Override
-    public void delete(Prospect prospect) throws DaoException {
+    public void delete(Prospect prospect) throws Exception {
 
         PreparedStatement statement = null;
         Connection connection = null;

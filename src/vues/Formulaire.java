@@ -16,9 +16,10 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.List;
 
+import static utilitaires.Utilitaires.LOGGER;
+
 public class Formulaire extends JDialog {
     private JPanel contentPane;
-    private JButton buttonOK;
     private JButton buttonCancel;
     private JTextField textFieldRaisonSocial;
     private JTextField textFieldTelephone;
@@ -53,7 +54,7 @@ public class Formulaire extends JDialog {
     public Formulaire(TypeSociete choix, Societe societe, TypeAction action) {
         setContentPane(contentPane);
         setModal(true);
-        getRootPane().setDefaultButton(buttonOK);
+        getRootPane().setDefaultButton(buttonDelete);
 
         this.choix = choix;
         this.action = action;
@@ -170,6 +171,15 @@ public class Formulaire extends JDialog {
                     controleurFormulaire.retourAcceuil();
                 } catch (DaoException de) {
                     JOptionPane.showMessageDialog(null, de.getMessage());
+                } catch (Exception ex) {
+                    LOGGER.severe("Une erreur inconnue s'est produite" +
+                            " : "+ex);
+                    JOptionPane.showMessageDialog(null,
+                            "Une erreur inconnue s'est produite. " +
+                                    "Veuillez contacter un " +
+                                    "administrateur si l'erreur " +
+                                    "perssiste.\nFermeture de l'application.");
+                    System.exit(1);
                 }
             }
 
@@ -198,6 +208,15 @@ public class Formulaire extends JDialog {
             } catch (DaoException de) {
                 JOptionPane.showMessageDialog(null, de.getMessage());
                 System.exit(1);
+            } catch (Exception e) {
+                LOGGER.severe("Une erreur inconnue s'est produite" +
+                        " : "+e);
+                JOptionPane.showMessageDialog(null,
+                        "Une erreur inconnue s'est produite. " +
+                                "Veuillez contacter un " +
+                                "administrateur si l'erreur " +
+                                "perssiste.\nFermeture de l'application.");
+                System.exit(1);
             }
         } else {
             JOptionPane.showMessageDialog(null, "Merci de compléter " +
@@ -205,7 +224,7 @@ public class Formulaire extends JDialog {
         }
     }
 
-    private Societe instantiateSociete(TypeSociete choix) throws CustomException, NumberFormatException {
+    private Societe instantiateSociete(TypeSociete choix) throws Exception {
 
         Adresse adresse = new Adresse(
                 idAdresse,

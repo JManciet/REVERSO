@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ControleurAcceuil {
 
-    public Societe getSociete(TypeSociete choix, String nom) throws SQLException, DaoException, CustomException {
+    public Societe getSociete(TypeSociete choix, String nom) throws Exception {
         Societe societe = null;
         if(choix.equals(TypeSociete.CLIENT)) {
             societe = new ClientDao().findByName(nom);
@@ -27,8 +27,7 @@ public class ControleurAcceuil {
         return societe;
     }
 
-    public ArrayList<String> listeNoms(TypeSociete choix) throws DaoException,
-            SQLException, CustomException {
+    public ArrayList<String> listeNoms(TypeSociete choix) throws Exception {
 
         ArrayList<String> result;
         if(choix.equals(TypeSociete.CLIENT)) {
@@ -48,18 +47,6 @@ public class ControleurAcceuil {
         }
         return result;
     };
-
-//    public void suppression(TypeSociete choix,String nom) throws SQLException, DaoException {
-//        if(choix.equals(TypeSociete.CLIENT)) {
-//            ClientDao clientDao = new ClientDao();
-//            Client client = clientDao.findByName(nom);
-//            clientDao.delete(client);
-//        }else{
-//            ProspectDao prospectDao = new ProspectDao();
-//            Prospect prospect = prospectDao.findByName(nom);
-//            prospectDao.delete(prospect);
-//        }
-//    }
 
     public static void pageAcceuil(){
         Acceuil acceuil = new Acceuil();

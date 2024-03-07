@@ -16,9 +16,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static utilitaires.Utilitaires.LOGGER;
+
 public class Acceuil extends JDialog {
     private JPanel contentPane;
-    private JButton buttonOK;
     private JButton buttonCancel;
     private JButton buttonClient;
     private JButton buttonProspect;
@@ -36,18 +37,17 @@ public class Acceuil extends JDialog {
     private JLabel selection;
     private TypeSociete choix;
     private ControleurAcceuil controleurAcceuil = new ControleurAcceuil();
-    private final TypeAction[] action = new TypeAction[1];
+    private TypeAction action;
+
     public void init(){
         this.setSize(600,300);
         this.setVisible(true);
     };
-
     public Acceuil() {
 
         setTitle("REVERSO");
         setContentPane(contentPane);
         setModal(true);
-        getRootPane().setDefaultButton(buttonOK);
 
         buttonCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -107,7 +107,7 @@ public class Acceuil extends JDialog {
         MODIFICATIONButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                action[0] = TypeAction.MODIFICATION;
+                action = TypeAction.MODIFICATION;
                 populateListSociete();
 
             }
@@ -115,7 +115,7 @@ public class Acceuil extends JDialog {
         SUPPRESSIONButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                action[0] = TypeAction.SUPPRESSION;
+                action = TypeAction.SUPPRESSION;
                 populateListSociete();
 
             }
@@ -152,13 +152,20 @@ public class Acceuil extends JDialog {
                                     elementSelectionne.toString());
                             dispose();
                             controleurAcceuil.pageFormulaire(choix,
-                                    societe,action[0]);
+                                    societe,action);
                         } catch (CustomException | DaoException ex) {
                             JOptionPane.showMessageDialog(null,
                                     ex.getMessage());
                             System.exit(1);
-                        } catch (SQLException ex) {
-                            throw new RuntimeException(ex);
+                        } catch (Exception ex) {
+                            LOGGER.severe("Une erreur inconnue s'est produite" +
+                                    " : "+ex);
+                            JOptionPane.showMessageDialog(null,
+                                    "Une erreur inconnue s'est produite. " +
+                                            "Veuillez contacter un " +
+                                            "administrateur si l'erreur " +
+                                            "perssiste.\nFermeture de l'application.");
+                            System.exit(1);
                         }
 
 
@@ -176,18 +183,25 @@ public class Acceuil extends JDialog {
             if(listeNoms.isEmpty()){
                 JOptionPane.showMessageDialog(null,
                         "Aucun " + (choix.equals(TypeSociete.CLIENT) ?
-                                "client" : "prospect") + " à " + (action[0].equals(TypeAction.SUPPRESSION) ? "supprimer" : "modifier") +". Veuillez dabord en créer un.");
+                                "client" : "prospect") + " à " + (action.equals(TypeAction.SUPPRESSION) ? "supprimer" : "modifier") +". Veuillez dabord en créer un.");
             }else {
                 Collections.sort(listeNoms);
                 listSociete.setListData(listeNoms.toArray());
-                selection.setText("Choisissez le " + (choix.equals(TypeSociete.CLIENT) ? "client" : "prospect") + " à " + (action[0].equals(TypeAction.SUPPRESSION) ? "supprimer" : "modifier") + " :");
+                selection.setText("Choisissez le " + (choix.equals(TypeSociete.CLIENT) ? "client" : "prospect") + " à " + (action.equals(TypeAction.SUPPRESSION) ? "supprimer" : "modifier") + " :");
                 panelList.setVisible(true);
             }
         } catch (CustomException | DaoException ex) {
             JOptionPane.showMessageDialog(null,ex.getMessage());
             System.exit(1);
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+        } catch (Exception e) {
+            LOGGER.severe("Une erreur inconnue s'est produite" +
+                    " : "+e);
+            JOptionPane.showMessageDialog(null,
+                    "Une erreur inconnue s'est produite. " +
+                            "Veuillez contacter un " +
+                            "administrateur si l'erreur " +
+                            "perssiste.\nFermeture de l'application.");
+            System.exit(1);
         }
     }
 

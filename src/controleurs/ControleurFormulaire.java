@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 public class ControleurFormulaire {
 
-    public void createSociete(Societe societe) throws DaoException, CustomException {
+    public void createSociete(Societe societe) throws Exception {
         if(societe instanceof Client) {
             new ClientDao().create((Client)societe);
         }else{
@@ -22,7 +22,7 @@ public class ControleurFormulaire {
         }
     }
 
-    public void updateSociete(Societe societe) throws DaoException, CustomException {
+    public void updateSociete(Societe societe) throws Exception {
         if(societe instanceof Client) {
             new ClientDao().update((Client)societe);
         }else{
@@ -30,7 +30,7 @@ public class ControleurFormulaire {
         }
     }
 
-    public void deleteSociete(Societe societe) throws DaoException {
+    public void deleteSociete(Societe societe) throws Exception {
         if(societe instanceof Client) {
             new ClientDao().delete((Client)societe);
         }else{
