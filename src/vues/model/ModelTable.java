@@ -5,7 +5,6 @@ import utilitaires.Utilitaires;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ModelTable  extends AbstractTableModel {
     private ArrayList societes;
@@ -58,7 +57,7 @@ public class ModelTable  extends AbstractTableModel {
             case 0:
                 return societe.getRaisonSociale();
             case 1:
-                return societe.geteMail();
+                return societe.getEMail();
             case 2:
                 return societe.getTelephone();
             case 3:

@@ -32,15 +32,24 @@ public class Client extends Societe {
         return chiffreAffaires;
     }
 
-    public void setChiffreAffaires(double chiffreAffaires) {
+    public void setChiffreAffaires(double chiffreAffaires) throws CustomException {
+
+        if(chiffreAffaires <= 200){
+            throw new CustomException("Le chiffre d’affaires doit être " +
+                    "supérieur à 200");
+        }
         this.chiffreAffaires = chiffreAffaires;
     }
 
-    public int getNbrEmployes() {
-        return nbrEmployes;
-    }
+    public int getNbrEmployes() { return nbrEmployes; }
 
-    public void setNbrEmployes(int nbrEmployes) {
+    public void setNbrEmployes(int nbrEmployes) throws CustomException {
+
+        if(nbrEmployes < 1){
+            throw new CustomException("Le nombre d'employé doit être " +
+                    "supérieur à 0");
+        }
+
         this.nbrEmployes = nbrEmployes;
     }
 

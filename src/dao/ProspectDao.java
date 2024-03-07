@@ -1,14 +1,15 @@
 package dao;
 
+import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import entites.Adresse;
 import entites.Interessement;
 import entites.Prospect;
 import exceptions.CustomException;
 import exceptions.DaoException;
+import utilitaires.Utilitaires;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 import static utilitaires.Utilitaires.LOGGER;
 
@@ -173,12 +174,25 @@ public class ProspectDao implements IDao<Prospect>{
             statement.setInt(1, idAdresse);
             statement.setString(2, prospect.getRaisonSociale());
             statement.setString(3, prospect.getTelephone());
-            statement.setString(4, prospect.geteMail());
+            statement.setString(4, prospect.getEMail());
             statement.setDate(5, Date.valueOf(prospect.getDateProspection()));
             statement.setString(6, String.valueOf(prospect.getInteresse()));
             statement.setString(7, prospect.getCommentaires());
             statement.executeUpdate();
             connection.commit();
+        } catch (MysqlDataTruncation mdt){
+            String champEnCause =
+                    Utilitaires.fieldAsGenerateException(mdt.getMessage());
+            try {
+                System.err.print("Transaction is being rolled back");
+                connection.rollback();
+            } catch (SQLException excep) {
+                LOGGER.severe(excep.toString());
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "creation d'un prospect. Veuillez contacter un " +
+                        "administrateur.\nFermeture de l'application.");
+            }
+            throw new CustomException("Il y a trop de caractères dans le champ "+champEnCause);
         } catch (SQLIntegrityConstraintViolationException sqlicve) {
             try {
                 System.err.print("Transaction is being rolled back");
@@ -188,8 +202,11 @@ public class ProspectDao implements IDao<Prospect>{
                 throw new DaoException("Un problème est survenu lors de la creation d'un " +
                         "prospect. Veuillez contacter un administrateur.\nFermeture de l'application.");
             }
-            throw new CustomException("La raison sociale du prospect existe " +
-                    "déjà");
+            String champEnCause =
+                    Utilitaires.fieldAsGenerateException(sqlicve.getMessage());
+            throw new CustomException("Les informations renseigné dans " +
+                    "le champ "+ champEnCause +" ne peut être identique à un" +
+                    " autre prospect.");
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la creation d'un prospect : "+sqle);
             try {
@@ -260,13 +277,27 @@ public class ProspectDao implements IDao<Prospect>{
                         "WHERE IDPROSPECT = ?");
             statement.setString(1, prospect.getRaisonSociale());
             statement.setString(2, prospect.getTelephone());
-            statement.setString(3, prospect.geteMail());
+            statement.setString(3, prospect.getEMail());
             statement.setDate(4, Date.valueOf(prospect.getDateProspection()));
             statement.setString(5, String.valueOf(prospect.getInteresse()));
             statement.setString(6, prospect.getCommentaires());
             statement.setInt(7, prospect.getIdentifiant());
             statement.executeUpdate();
             connection.commit();
+        } catch (MysqlDataTruncation mdt){
+            String champEnCause =
+                    Utilitaires.fieldAsGenerateException(mdt.getMessage());
+            try {
+                System.err.print("Transaction is being rolled back");
+                connection.rollback();
+            } catch (SQLException excep) {
+                LOGGER.severe(excep.toString());
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "mise à jour d'un prospect. Veuillez contacter un " +
+                        "administrateur.\nFermeture de l'application.");
+            }
+            throw new CustomException("Il y a trop de caractères dans le " +
+                    "champ "+champEnCause);
         } catch (SQLIntegrityConstraintViolationException sqlicve) {
             try {
                 System.err.print("Transaction is being rolled back");
@@ -276,8 +307,11 @@ public class ProspectDao implements IDao<Prospect>{
                 throw new DaoException("Un problème est survenu lors de la " +
                         "mise à jour d'un prospect. Veuillez contacter un administrateur.\nFermeture de l'application.");
             }
-            throw new CustomException("La raison sociale du prospect existe " +
-                    "déjà.");
+            String champEnCause =
+                    Utilitaires.fieldAsGenerateException(sqlicve.getMessage());
+            throw new CustomException("Les informations renseigné dans " +
+                    "le champ "+ champEnCause +" ne peut être identique à un" +
+                    " autre prospect.");
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la mise à jour d'un prospect : "+sqle);
             try {

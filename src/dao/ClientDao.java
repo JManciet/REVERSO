@@ -1,13 +1,14 @@
 package dao;
 
+import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import entites.Adresse;
 import entites.Client;
 import exceptions.CustomException;
 import exceptions.DaoException;
+import utilitaires.Utilitaires;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 import static utilitaires.Utilitaires.LOGGER;
 
@@ -21,7 +22,7 @@ public class ClientDao implements IDao<Client>{
         try {Connection connection = ConnectionDao.getConnection();
             statement = connection.prepareStatement(
                      "SELECT c.*, a.* FROM CLIENT c " +
-                             "INNER JOIN ADRESSE a ON c.IDADRESSE = a" +
+                             "LEFT JOIN ADRESSE a ON c.IDADRESSE = a" +
                              ".IDADRESSE");
             ResultSet resultSet = statement.executeQuery();
             ArrayList<Client> clients = new ArrayList<>();
@@ -80,7 +81,8 @@ public class ClientDao implements IDao<Client>{
         try {Connection connection = ConnectionDao.getConnection();
              statement = connection.prepareStatement(
                      "SELECT c.*, a.* FROM CLIENT c " +
-                             "INNER JOIN ADRESSE a ON c.IDADRESSE = a.IDADRESSE " +
+                             "LEFT JOIN ADRESSE a ON c.IDADRESSE = a" +
+                             ".IDADRESSE " +
                          "WHERE RAISONSOCIALECLIENT = ?");
             statement.setString(1, nom);
             ResultSet resultSet = statement.executeQuery();
@@ -169,12 +171,24 @@ public class ClientDao implements IDao<Client>{
             statement.setInt(1, idAdresse);
             statement.setString(2, client.getRaisonSociale());
             statement.setString(3, client.getTelephone());
-            statement.setString(4, client.geteMail());
+            statement.setString(4, client.getEMail());
             statement.setDouble(5, client.getChiffreAffaires());
             statement.setInt(6, client.getNbrEmployes());
             statement.setString(7, client.getCommentaires());
             statement.executeUpdate();
             connection.commit();
+        } catch (MysqlDataTruncation mdt){
+            try {
+                System.err.print("Transaction is being rolled back");
+                connection.rollback();
+            } catch (SQLException excep) {
+                LOGGER.severe(excep.toString());
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "creation d'un client. Veuillez contacter un administrateur.\nFermeture de l'application.");
+            }
+            String champEnCause =
+                    Utilitaires.fieldAsGenerateException(mdt.getMessage());
+            throw new CustomException("Il y a trop de caractères dans le champ "+champEnCause);
         } catch (SQLIntegrityConstraintViolationException sqlicve) {
             try {
                 System.err.print("Transaction is being rolled back");
@@ -184,8 +198,11 @@ public class ClientDao implements IDao<Client>{
                 throw new DaoException("Un problème est survenu lors de la " +
                         "creation d'un client. Veuillez contacter un administrateur.\nFermeture de l'application.");
             }
-            throw new CustomException("La raison sociale du client existe " +
-                    "déjà");
+            String champEnCause =
+                    Utilitaires.fieldAsGenerateException(sqlicve.getMessage());
+            throw new CustomException("Les informations renseigné dans " +
+                    "le champ "+ champEnCause +" ne peut être identique à un" +
+                    " autre client.");
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la creation d'un client : "+sqle);
             try {
@@ -257,13 +274,26 @@ public class ClientDao implements IDao<Client>{
                         "WHERE IDCLIENT = ?");
             statement.setString(1, client.getRaisonSociale());
             statement.setString(2, client.getTelephone());
-            statement.setString(3, client.geteMail());
+            statement.setString(3, client.getEMail());
             statement.setDouble(4, client.getChiffreAffaires());
             statement.setInt(5, client.getNbrEmployes());
             statement.setString(6, client.getCommentaires());
             statement.setInt(7, client.getIdentifiant());
             statement.executeUpdate();
             connection.commit();
+        } catch (MysqlDataTruncation mdt){
+            try {
+                System.err.print("Transaction is being rolled back");
+                connection.rollback();
+            } catch (SQLException excep) {
+                LOGGER.severe(excep.toString());
+                throw new DaoException("Un problème est survenu lors de la " +
+                        "mise à jour d'un client. Veuillez contacter un " +
+                        "administrateur.\nFermeture de l'application.");
+            }
+            String champEnCause =
+                    Utilitaires.fieldAsGenerateException(mdt.getMessage());
+            throw new CustomException("Il y a trop de caractères dans le champ "+champEnCause);
         } catch (SQLIntegrityConstraintViolationException sqlicve) {
             try {
                 System.err.print("Transaction is being rolled back");
@@ -273,8 +303,11 @@ public class ClientDao implements IDao<Client>{
                 throw new DaoException("Un problème est survenu lors de la " +
                         "mise à jour d'un client. Veuillez contacter un administrateur.\nFermeture de l'application.");
             }
-            throw new CustomException("La raison sociale du client existe " +
-                    "déjà.");
+            String champEnCause =
+                    Utilitaires.fieldAsGenerateException(sqlicve.getMessage());
+            throw new CustomException("Les informations renseigné dans " +
+                    "le champ "+ champEnCause +" ne peut être identique à un" +
+                    " autre client.");
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la mise à jour d'un client : "+sqle);
             try {

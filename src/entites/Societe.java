@@ -1,6 +1,7 @@
 package entites;
 
 import exceptions.CustomException;
+import utilitaires.Utilitaires;
 
 public abstract class Societe {
     private Integer identifiant;
@@ -16,7 +17,7 @@ public abstract class Societe {
         setRaisonSociale(raisonSociale);
         setAdresse(adresse);
         setTelephone(telephone);
-        seteMail(eMail);
+        setEMail(eMail);
         setCommentaires(commentaires);
     }
 
@@ -49,19 +50,29 @@ public abstract class Societe {
     }
 
     public void setTelephone(String telephone) throws CustomException {
-        if(telephone.length()>=10) {
-            this.telephone = telephone;
-        }else{
-           throw new CustomException("Le telephone doit avoir au moins 10 " +
-                   "caractères") ;
+
+        if(telephone == null || telephone.length()<10) {
+            throw new CustomException("Le telephone doit avoir au moins 10 " +
+                    "caractères") ;
         }
+
+        this.telephone = telephone;
+
     }
 
-    public String geteMail() {
+    public String getEMail() {
         return eMail;
     }
 
-    public void seteMail(String eMail) {
+    public void setEMail(String eMail) throws CustomException {
+
+        boolean valide = Utilitaires.PATTERN_MAIL.matcher(eMail).matches();
+
+        if (!valide) {
+            throw new CustomException("Le format du mail est invalid.\nIl " +
+                    "devrait avoir comme format xx@zz.");
+        }
+
         this.eMail = eMail;
     }
 

@@ -6,11 +6,11 @@ import controleurs.TypeSociete;
 import entites.*;
 import exceptions.CustomException;
 import exceptions.DaoException;
+import utilitaires.Utilitaires;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.List;
@@ -64,7 +64,7 @@ public class Formulaire extends JDialog {
             idSociete = societe.getIdentifiant();
             textFieldRaisonSocial.setText(societe.getRaisonSociale());
             textFieldTelephone.setText(societe.getTelephone());
-            textFieldEmail.setText(societe.geteMail());
+            textFieldEmail.setText(societe.getEMail());
             textFieldNumeroRue.setText(societe.getAdresse().getNumeroRue());
             textFieldNomRue.setText(societe.getAdresse().getNomRue());
             textFieldCodePostal.setText(societe.getAdresse().getCodePostal());
@@ -186,6 +186,12 @@ public class Formulaire extends JDialog {
                 }
                 dispose();
                 controleurFormulaire.retourAcceuil();
+            } catch (NumberFormatException nfe) {
+                String valeurEnCause =
+                        Utilitaires.valueAsGetException(nfe.getMessage());
+                JOptionPane.showMessageDialog(null,
+                        "La valeur \""+valeurEnCause+"\" renseignée " +
+                                "n'est pas un nombre valide.");
             } catch (CustomException ce) {
                 JOptionPane.showMessageDialog(null, ce.getMessage());
             } catch (DaoException de) {
@@ -198,7 +204,7 @@ public class Formulaire extends JDialog {
         }
     }
 
-    private Societe instantiateSociete(TypeSociete choix) throws CustomException {
+    private Societe instantiateSociete(TypeSociete choix) throws CustomException, NumberFormatException {
 
         Adresse adresse = new Adresse(
                 idAdresse,
