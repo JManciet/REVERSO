@@ -75,7 +75,7 @@ public class Formulaire extends JDialog {
             textAreaCommentaires.setText(societe.getCommentaires());
             if (societe instanceof Client) {
                 zoneClient.setVisible(true);
-                textFieldChiffreAffaire.setText(String.valueOf(new BigDecimal(((Client) societe).getChiffreAffaires()).toString()));
+                textFieldChiffreAffaire.setText(Utilitaires.aroundTwoDecimalAndFormat(((Client) societe).getChiffreAffaires()));
                 textFieldNombreEmployes.setText(String.valueOf(((Client) societe).getNbrEmployes()));
             } else if (societe instanceof Prospect) {
                 zoneProspect.setVisible(true);
@@ -210,6 +210,7 @@ public class Formulaire extends JDialog {
                 JOptionPane.showMessageDialog(null, de.getMessage());
                 System.exit(1);
             } catch (Exception e) {
+                e.printStackTrace();
                 LOGGER.severe("Une erreur inconnue s'est produite" +
                         " : "+e);
                 JOptionPane.showMessageDialog(null,
@@ -243,7 +244,7 @@ public class Formulaire extends JDialog {
                     textFieldTelephone.getText(),
                     textFieldEmail.getText(),
                     textAreaCommentaires.getText(),
-                    Double.parseDouble(textFieldChiffreAffaire.getText()),
+                    Utilitaires.aroundTwoDecimalAndFormat(textFieldChiffreAffaire.getText()),
                     Integer.parseInt(textFieldNombreEmployes.getText())
             );
         } else if (choix.equals(TypeSociete.PROSPECT)) {
@@ -306,17 +307,6 @@ public class Formulaire extends JDialog {
                     comp.setEnabled(false);
             }
         }
-
-
-//        for (Component comp : getContentPane().getComponents()) {
-//            if (comp instanceof JPanel panel) {
-//                for (Component child : panel.getComponents()) {
-//                    child.setEnabled(false);
-//                }
-//            }else{
-//                comp.setEnabled(false);
-//            }
-//        }
 
     }
 

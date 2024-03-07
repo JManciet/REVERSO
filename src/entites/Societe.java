@@ -72,7 +72,7 @@ public abstract class Societe {
 
         boolean valide = Utilitaires.PATTERN_MAIL.matcher(eMail).matches();
 
-        if (eMail == null || !valide) {
+        if (!valide) {
             throw new CustomException("Le format du mail est invalid.\nIl " +
                     "devrait avoir comme format xx@zz.");
         }

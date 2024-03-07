@@ -7,8 +7,12 @@ public class Adresse {
     private String codePostal;
     private String ville;
 
-    public Adresse(Integer identifiant, String numeroRue, String nomRue,
-                   String codePostal, String ville) {
+
+    public Adresse(Integer identifiant,
+                   String numeroRue,
+                   String nomRue,
+                   String codePostal,
+                   String ville) {
         setIdentifiant(identifiant);
         setNumeroRue(numeroRue);
         setNomRue(nomRue);

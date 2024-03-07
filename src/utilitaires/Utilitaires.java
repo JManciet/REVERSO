@@ -3,6 +3,7 @@ package utilitaires;
 import exceptions.CustomException;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.FileHandler;
@@ -42,6 +43,18 @@ public class Utilitaires {
         return europeanDateFormatter.format(localDate);
     }
 
+    public static String aroundTwoDecimalAndFormat(double valeur){
+
+        DecimalFormat df = new DecimalFormat("###.##");
+        return df.format(valeur);
+    }
+
+    public static double aroundTwoDecimalAndFormat(String valeur){
+
+        valeur = valeur.replace(",",".");
+        return Math.round(Double.valueOf(valeur) * 100) / 100.0;
+    }
+
     public static String fieldAsGenerateException(String errorMessage) {
         if(errorMessage.contains("RAISONSOCIALE")) return "RAISON SOCIALE";
         if(errorMessage.contains("TELEPHONE")) return "TELEPHONE";
@@ -60,7 +73,7 @@ public class Utilitaires {
 
         Pattern pattern = Pattern.compile("(?<=\").*(?=\")");
         Matcher matcher = pattern.matcher(nfe);
-
+        System.out.println(nfe);
         if (matcher.find()) {
             return matcher.group(0);
         } else {

@@ -71,7 +71,7 @@ public class ModelTable  extends AbstractTableModel {
                 return societe.getAdresse().getVille();
             case 7:
                 if(societe instanceof Client)
-                    return new BigDecimal(((Client) societe).getChiffreAffaires()).toString();
+                    return Utilitaires.aroundTwoDecimalAndFormat(((Client) societe).getChiffreAffaires());
                 else if(societe instanceof Prospect)
                     return Utilitaires.formatDate(((Prospect) societe).getDateProspection());
             case 8:
