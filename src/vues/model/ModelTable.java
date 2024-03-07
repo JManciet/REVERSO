@@ -4,6 +4,7 @@ import entites.*;
 import utilitaires.Utilitaires;
 
 import javax.swing.table.AbstractTableModel;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class ModelTable  extends AbstractTableModel {
@@ -70,7 +71,7 @@ public class ModelTable  extends AbstractTableModel {
                 return societe.getAdresse().getVille();
             case 7:
                 if(societe instanceof Client)
-                    return ((Client) societe).getChiffreAffaires();
+                    return new BigDecimal(((Client) societe).getChiffreAffaires()).toString();
                 else if(societe instanceof Prospect)
                     return Utilitaires.formatDate(((Prospect) societe).getDateProspection());
             case 8:

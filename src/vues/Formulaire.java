@@ -11,6 +11,7 @@ import utilitaires.Utilitaires;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.List;
@@ -72,7 +73,7 @@ public class Formulaire extends JDialog {
             textAreaCommentaires.setText(societe.getCommentaires());
             if (societe instanceof Client) {
                 zoneClient.setVisible(true);
-                textFieldChiffreAffaire.setText(String.valueOf(((Client) societe).getChiffreAffaires()));
+                textFieldChiffreAffaire.setText(String.valueOf(new BigDecimal(((Client) societe).getChiffreAffaires()).toString()));
                 textFieldNombreEmployes.setText(String.valueOf(((Client) societe).getNbrEmployes()));
             } else if (societe instanceof Prospect) {
                 zoneProspect.setVisible(true);
