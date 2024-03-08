@@ -1,4 +1,4 @@
-package controleurs;
+package utilitaires;
 
 public enum TypeSociete {
     CLIENT,

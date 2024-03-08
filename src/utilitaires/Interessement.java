@@ -1,4 +1,4 @@
-package entites;
+package utilitaires;
 
 public enum Interessement {
     OUI("oui"),

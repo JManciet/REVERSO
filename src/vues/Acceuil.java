@@ -1,7 +1,7 @@
 package vues;
 
-import controleurs.TypeAction;
-import controleurs.TypeSociete;
+import utilitaires.TypeAction;
+import utilitaires.TypeSociete;
 import controleurs.ControleurAcceuil;
 import entites.Societe;
 import exceptions.CustomException;
@@ -11,10 +11,8 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.*;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import static utilitaires.Utilitaires.LOGGER;
 

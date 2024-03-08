@@ -3,6 +3,7 @@ package dao;
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import entites.Adresse;
 import entites.Client;
+import entites.Societe;
 import exceptions.CustomException;
 import exceptions.DaoException;
 import utilitaires.Utilitaires;
@@ -15,7 +16,7 @@ import static utilitaires.Utilitaires.LOGGER;
 public class ClientDao implements IDao<Client>{
 
     @Override
-    public ArrayList<Client> findAll() throws Exception {
+    public ArrayList<Societe> findAll() throws Exception {
 
         PreparedStatement statement = null;
 
@@ -25,7 +26,7 @@ public class ClientDao implements IDao<Client>{
                              "LEFT JOIN ADRESSE a ON c.IDADRESSE = a" +
                              ".IDADRESSE");
             ResultSet resultSet = statement.executeQuery();
-            ArrayList<Client> clients = new ArrayList<>();
+            ArrayList<Societe> clients = new ArrayList<>();
             while (resultSet.next()) {
 
                 Adresse adresse = new Adresse(

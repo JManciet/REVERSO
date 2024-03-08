@@ -1,17 +1,15 @@
 package vues;
 
 import controleurs.ControleurAffichage;
-import controleurs.TypeAction;
-import controleurs.TypeSociete;
+import utilitaires.TypeSociete;
 import entites.Societe;
 import exceptions.CustomException;
 import exceptions.DaoException;
+import utilitaires.Utilitaires;
 import vues.model.ModelTable;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
@@ -45,7 +43,7 @@ public class Affichage extends JDialog {
             titre.setText("Tableau des prospects");
         }
 
-        ArrayList societes = null;
+        ArrayList<Societe> societes = null;
         try {
             societes = controleurAffichage.getListSociete(choix);
         } catch (DaoException | CustomException e) {
@@ -71,9 +69,8 @@ public class Affichage extends JDialog {
             controleurAffichage.retourAcceuil();
         }
 
-        ArrayList sortedSocietes = (ArrayList) societes.stream()
-                .sorted(Comparator.comparing(Societe::getRaisonSociale))
-                .collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<Societe> sortedSocietes =
+                Utilitaires.sortSocieteByRaisonSociale(societes);
 
         table.setModel(new ModelTable(sortedSocietes));
 

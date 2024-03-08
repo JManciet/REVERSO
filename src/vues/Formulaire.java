@@ -1,8 +1,9 @@
 package vues;
 
 import controleurs.ControleurFormulaire;
-import controleurs.TypeAction;
-import controleurs.TypeSociete;
+import utilitaires.Interessement;
+import utilitaires.TypeAction;
+import utilitaires.TypeSociete;
 import entites.*;
 import exceptions.CustomException;
 import exceptions.DaoException;
@@ -11,7 +12,6 @@ import utilitaires.Utilitaires;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.List;
@@ -75,7 +75,7 @@ public class Formulaire extends JDialog {
             textAreaCommentaires.setText(societe.getCommentaires());
             if (societe instanceof Client) {
                 zoneClient.setVisible(true);
-                textFieldChiffreAffaire.setText(Utilitaires.aroundTwoDecimalAndFormat(((Client) societe).getChiffreAffaires()));
+                textFieldChiffreAffaire.setText(Utilitaires.formatMoney(((Client) societe).getChiffreAffaires()));
                 textFieldNombreEmployes.setText(String.valueOf(((Client) societe).getNbrEmployes()));
             } else if (societe instanceof Prospect) {
                 zoneProspect.setVisible(true);
@@ -244,7 +244,7 @@ public class Formulaire extends JDialog {
                     textFieldTelephone.getText(),
                     textFieldEmail.getText(),
                     textAreaCommentaires.getText(),
-                    Utilitaires.aroundTwoDecimalAndFormat(textFieldChiffreAffaire.getText()),
+                    Utilitaires.formatMoney(textFieldChiffreAffaire.getText()),
                     Integer.parseInt(textFieldNombreEmployes.getText())
             );
         } else if (choix.equals(TypeSociete.PROSPECT)) {

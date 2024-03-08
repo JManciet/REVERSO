@@ -5,15 +5,13 @@ import dao.ProspectDao;
 import entites.Client;
 import entites.Prospect;
 import entites.Societe;
-import exceptions.CustomException;
-import exceptions.DaoException;
+import utilitaires.TypeAction;
+import utilitaires.TypeSociete;
 import vues.Acceuil;
 import vues.Affichage;
 import vues.Formulaire;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ControleurAcceuil {
 
@@ -31,16 +29,16 @@ public class ControleurAcceuil {
 
         ArrayList<String> result;
         if(choix.equals(TypeSociete.CLIENT)) {
-            ArrayList<Client> clients = new ClientDao().findAll();
+            ArrayList<Societe> clients = new ClientDao().findAll();
             ArrayList<String> nomClients = new ArrayList<>();
-            for (Client client : clients) {
+            for (Societe client : clients) {
                 nomClients.add(client.getRaisonSociale());
             }
             result = nomClients;
         }else{
-            ArrayList<Prospect> prospects = new ProspectDao().findAll();
+            ArrayList<Societe> prospects = new ProspectDao().findAll();
             ArrayList<String> nomProspects = new ArrayList<>();
-            for (Prospect prospect : prospects) {
+            for (Societe prospect : prospects) {
                 nomProspects.add(prospect.getRaisonSociale());
             }
             result = nomProspects;

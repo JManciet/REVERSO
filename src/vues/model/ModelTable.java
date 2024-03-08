@@ -1,18 +1,18 @@
 package vues.model;
 
 import entites.*;
+import utilitaires.Interessement;
 import utilitaires.Utilitaires;
 
 import javax.swing.table.AbstractTableModel;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class ModelTable  extends AbstractTableModel {
-    private ArrayList societes;
+    private final ArrayList<Societe> societes;
 
-    private ArrayList<String> entetes = new ArrayList<>();
+    private final ArrayList<String> entetes = new ArrayList<>();
 
-    public ModelTable(ArrayList societes) {
+    public ModelTable(ArrayList<Societe> societes) {
         super();
 
         this.societes = societes;
@@ -36,6 +36,7 @@ public class ModelTable  extends AbstractTableModel {
                 break;
             }
         }
+
     }
 
     public int getRowCount() {
@@ -71,7 +72,7 @@ public class ModelTable  extends AbstractTableModel {
                 return societe.getAdresse().getVille();
             case 7:
                 if(societe instanceof Client)
-                    return Utilitaires.aroundTwoDecimalAndFormat(((Client) societe).getChiffreAffaires());
+                    return Utilitaires.formatMoney(((Client) societe).getChiffreAffaires());
                 else if(societe instanceof Prospect)
                     return Utilitaires.formatDate(((Prospect) societe).getDateProspection());
             case 8:

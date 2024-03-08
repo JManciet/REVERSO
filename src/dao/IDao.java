@@ -1,14 +1,12 @@
 package dao;
 
-import exceptions.CustomException;
-import exceptions.DaoException;
+import entites.Societe;
 
-import java.sql.SQLException;
-import java.util.List;
+import java.util.ArrayList;
 
 public interface IDao<T> {
 
-    List<T> findAll() throws Exception;
+    ArrayList<Societe> findAll() throws Exception;
 
     T findByName(String nom) throws Exception;
 

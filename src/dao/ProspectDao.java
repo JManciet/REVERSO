@@ -2,7 +2,8 @@ package dao;
 
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import entites.Adresse;
-import entites.Interessement;
+import entites.Societe;
+import utilitaires.Interessement;
 import entites.Prospect;
 import exceptions.CustomException;
 import exceptions.DaoException;
@@ -16,7 +17,7 @@ import static utilitaires.Utilitaires.LOGGER;
 public class ProspectDao implements IDao<Prospect>{
 
     @Override
-    public ArrayList<Prospect> findAll() throws Exception {
+    public ArrayList<Societe> findAll() throws Exception {
 
         PreparedStatement statement = null;
 
@@ -26,7 +27,7 @@ public class ProspectDao implements IDao<Prospect>{
                              "INNER JOIN ADRESSE a ON p.IDADRESSE = a" +
                              ".IDADRESSE");
             ResultSet resultSet = statement.executeQuery();
-            ArrayList<Prospect> prospects = new ArrayList<>();
+            ArrayList<Societe> prospects = new ArrayList<>();
             while (resultSet.next()) {
 
                 Adresse adresse = new Adresse(

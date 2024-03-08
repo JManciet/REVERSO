@@ -1,6 +1,7 @@
 package entites;
 
 import exceptions.CustomException;
+import utilitaires.Interessement;
 
 import java.time.LocalDate;
 

@@ -1,15 +1,19 @@
 package utilitaires;
 
+import entites.Societe;
 import exceptions.CustomException;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Utilitaires {
 
@@ -43,16 +47,25 @@ public class Utilitaires {
         return europeanDateFormatter.format(localDate);
     }
 
-    public static String aroundTwoDecimalAndFormat(double valeur){
+    public static String formatMoney(double valeur){
 
         DecimalFormat df = new DecimalFormat("###.##");
         return df.format(valeur);
     }
 
-    public static double aroundTwoDecimalAndFormat(String valeur){
+    public static double formatMoney(String valeur){
 
         valeur = valeur.replace(",",".");
-        return Math.round(Double.valueOf(valeur) * 100) / 100.0;
+        return Math.round(Double.parseDouble(valeur) * 100) / 100.0;
+    }
+
+    public static ArrayList<Societe> sortSocieteByRaisonSociale(ArrayList<Societe> societes){
+        if (societes == null) {
+            throw new NullPointerException("La liste des sociétés ne peut pas être nulle");
+        }
+        return (ArrayList<Societe>) societes.stream()
+                .sorted(Comparator.comparing(Societe::getRaisonSociale))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public static String fieldAsGenerateException(String errorMessage) {

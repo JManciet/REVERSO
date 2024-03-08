@@ -3,20 +3,16 @@ package controleurs;
 import dao.ClientDao;
 import dao.ProspectDao;
 import entites.Societe;
-import exceptions.CustomException;
-import exceptions.DaoException;
+import utilitaires.TypeSociete;
 import vues.Acceuil;
-import vues.Affichage;
-import vues.Formulaire;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ControleurAffichage {
 
 
-    public ArrayList getListSociete(TypeSociete choix) throws Exception {
-        ArrayList societes = null;
+    public ArrayList<Societe> getListSociete(TypeSociete choix) throws Exception {
+        ArrayList<Societe> societes = null;
         if(choix.equals(TypeSociete.CLIENT)) {
             societes = new ClientDao().findAll();
         }else{
