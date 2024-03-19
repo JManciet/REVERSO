@@ -1,6 +1,5 @@
 package dao;
 
-import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import entites.Adresse;
 import entites.Societe;
 import utilitaires.Interessement;
@@ -14,8 +13,19 @@ import java.util.ArrayList;
 
 import static utilitaires.Utilitaires.LOGGER;
 
+/**
+ * Classe implémentant l'interface `IDao` pour les prospects.
+ * Permet de gérer les opérations CRUD (création, lecture, mise à jour,
+ * suppression) sur les prospects dans la base de données.
+ */
 public class ProspectDao implements IDao<Prospect>{
 
+    /**
+     * Méthode pour récupérer tous les prospects de la base de données.
+     *
+     * @return Une liste de prospects
+     * @throws Exception
+     */
     @Override
     public ArrayList<Societe> findAll() throws Exception {
 
@@ -76,6 +86,13 @@ public class ProspectDao implements IDao<Prospect>{
         }
     }
 
+    /**
+     * Méthode pour rechercher un prospect par son nom.
+     *
+     * @param nom Le nom du prospect à rechercher
+     * @return Le prospect trouvé ou null si aucun prospect n'est trouvé
+     * @throws Exception
+     */
     @Override
     public Prospect findByName(String nom) throws Exception {
 
@@ -138,6 +155,12 @@ public class ProspectDao implements IDao<Prospect>{
         }
     }
 
+    /**
+     * Méthode pour créer un nouveau prospect dans la base de données.
+     *
+     * @param prospect Le prospect à créer
+     * @throws Exception
+     */
     @Override
     public void create(Prospect prospect) throws Exception {
 
@@ -181,11 +204,10 @@ public class ProspectDao implements IDao<Prospect>{
             statement.setString(7, prospect.getCommentaires());
             statement.executeUpdate();
             connection.commit();
-        } catch (MysqlDataTruncation mdt){
+        } catch (DataTruncation dt){
             String champEnCause =
-                    Utilitaires.fieldAsGenerateException(mdt.getMessage());
+                    Utilitaires.fieldAsGenerateException(dt.getMessage());
             try {
-                System.err.print("Transaction is being rolled back");
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
@@ -196,7 +218,6 @@ public class ProspectDao implements IDao<Prospect>{
             throw new CustomException("Il y a trop de caractères dans le champ "+champEnCause);
         } catch (SQLIntegrityConstraintViolationException sqlicve) {
             try {
-                System.err.print("Transaction is being rolled back");
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
@@ -211,7 +232,6 @@ public class ProspectDao implements IDao<Prospect>{
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la creation d'un prospect : "+sqle);
             try {
-                System.err.print("Transaction is being rolled back");
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe("Problème lors de l'annulation de la " +
@@ -239,6 +259,12 @@ public class ProspectDao implements IDao<Prospect>{
         }
     }
 
+    /**
+     * Méthode pour mettre à jour un prospect existant dans la base de données.
+     *
+     * @param prospect Le prospect à mettre à jour
+     * @throws Exception
+     */
     @Override
     public void update(Prospect prospect) throws Exception {
 
@@ -285,11 +311,10 @@ public class ProspectDao implements IDao<Prospect>{
             statement.setInt(7, prospect.getIdentifiant());
             statement.executeUpdate();
             connection.commit();
-        } catch (MysqlDataTruncation mdt){
+        } catch (DataTruncation dt){
             String champEnCause =
-                    Utilitaires.fieldAsGenerateException(mdt.getMessage());
+                    Utilitaires.fieldAsGenerateException(dt.getMessage());
             try {
-                System.err.print("Transaction is being rolled back");
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
@@ -301,7 +326,6 @@ public class ProspectDao implements IDao<Prospect>{
                     "champ "+champEnCause);
         } catch (SQLIntegrityConstraintViolationException sqlicve) {
             try {
-                System.err.print("Transaction is being rolled back");
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
@@ -316,7 +340,6 @@ public class ProspectDao implements IDao<Prospect>{
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la mise à jour d'un prospect : "+sqle);
             try {
-                System.err.print("Transaction is being rolled back");
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe("Problème lors de l'annulation de la " +
@@ -344,6 +367,12 @@ public class ProspectDao implements IDao<Prospect>{
         }
     }
 
+    /**
+     * Méthode pour supprimer un prospect de la base de données.
+     *
+     * @param prospect Le prospect à supprimer
+     * @throws Exception
+     */
     @Override
     public void delete(Prospect prospect) throws Exception {
 
@@ -374,7 +403,6 @@ public class ProspectDao implements IDao<Prospect>{
             LOGGER.severe("Problème lors de la suppression d'un " +
                     "prospect : " + sqle);
             try {
-                System.err.print("Transaction is being rolled back");
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe("Problème lors de l'annulation de la " +

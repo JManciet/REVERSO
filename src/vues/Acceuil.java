@@ -16,16 +16,22 @@ import java.util.Collections;
 
 import static utilitaires.Utilitaires.LOGGER;
 
+/**
+ * Classe Acceuil représentant la fenêtre principale de l'application.
+ * Elle permet à l'utilisateur de choisir le type de société à gérer (client
+ * ou prospect) et d'effectuer des actions (création, suppression,
+ * modification, affichage)
+ */
 public class Acceuil extends JDialog {
     private JPanel contentPane;
     private JButton buttonCancel;
     private JButton buttonClient;
     private JButton buttonProspect;
     private JButton buttonAcceuil;
-    private JButton CREATIONButton;
-    private JButton SUPPRESSIONButton;
-    private JButton MODIFICATIONButton;
-    private JButton AFFICHAGEButton;
+    private JButton creationButton;
+    private JButton suppressionButton;
+    private JButton modificationButton;
+    private JButton affichageButton;
     private JLabel questionAcceuil;
     private JLabel labelChoixGestion;
     private JPanel panelChoixGestion;
@@ -37,6 +43,9 @@ public class Acceuil extends JDialog {
     private ControleurAcceuil controleurAcceuil = new ControleurAcceuil();
     private TypeAction action;
 
+    /**
+     * Initialise la fenêtre principale.
+     */
     public void init(){
         this.setSize(600,300);
         this.setLocationRelativeTo(null);
@@ -70,9 +79,6 @@ public class Acceuil extends JDialog {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
 
-
-
-
         buttonClient.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -103,7 +109,7 @@ public class Acceuil extends JDialog {
                 panelChoixAction.setVisible(false);
             }
         });
-        MODIFICATIONButton.addActionListener(new ActionListener() {
+        modificationButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 action = TypeAction.MODIFICATION;
@@ -111,7 +117,7 @@ public class Acceuil extends JDialog {
 
             }
         });
-        SUPPRESSIONButton.addActionListener(new ActionListener() {
+        suppressionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 action = TypeAction.SUPPRESSION;
@@ -119,14 +125,14 @@ public class Acceuil extends JDialog {
 
             }
         });
-        CREATIONButton.addActionListener(new ActionListener() {
+        creationButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 controleurAcceuil.pageFormulaire(choix,null,TypeAction.CREATION);
             }
         });
-        AFFICHAGEButton.addActionListener(new ActionListener() {
+        affichageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
@@ -174,15 +180,21 @@ public class Acceuil extends JDialog {
                 }
             }
         });
+
+        init();
     }
 
+    /**
+     * Remplit la liste des sociétés à afficher à l'utilisateur.
+     */
     private void populateListSociete() {
         try {
             ArrayList<String> listeNoms = controleurAcceuil.listeNoms(choix);
             if(listeNoms.isEmpty()){
                 JOptionPane.showMessageDialog(null,
                         "Aucun " + (choix.equals(TypeSociete.CLIENT) ?
-                                "client" : "prospect") + " à " + (action.equals(TypeAction.SUPPRESSION) ? "supprimer" : "modifier") +". Veuillez dabord en créer un.");
+                                "client" : "prospect") + " à " +
+                                (action.equals(TypeAction.SUPPRESSION) ? "supprimer" : "modifier") +". Veuillez dabord en créer un.");
             }else {
                 Collections.sort(listeNoms);
                 listSociete.setListData(listeNoms.toArray());

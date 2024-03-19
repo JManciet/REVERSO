@@ -1,6 +1,5 @@
 package dao;
 
-import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import entites.Adresse;
 import entites.Client;
 import entites.Societe;
@@ -13,8 +12,19 @@ import java.util.ArrayList;
 
 import static utilitaires.Utilitaires.LOGGER;
 
+/**
+ * Classe implémentant l'interface `IDao` pour les clients.
+ * Permet de gérer les opérations CRUD (création, lecture, mise à jour,
+ * suppression) sur les clients dans la base de données.
+ */
 public class ClientDao implements IDao<Client>{
 
+    /**
+     * Méthode pour récupérer tous les clients de la base de données.
+     *
+     * @return Une liste de clients
+     * @throws Exception
+     */
     @Override
     public ArrayList<Societe> findAll() throws Exception {
 
@@ -74,6 +84,13 @@ public class ClientDao implements IDao<Client>{
         }
     }
 
+    /**
+     * Méthode pour rechercher un client par son nom.
+     *
+     * @param nom Le nom du client à rechercher
+     * @return Le client trouvé ou null si aucun client n'est trouvé
+     * @throws Exception
+     */
     @Override
     public Client findByName(String nom) throws Exception {
 
@@ -135,6 +152,12 @@ public class ClientDao implements IDao<Client>{
         }
     }
 
+    /**
+     * Méthode pour créer un nouveau client dans la base de données.
+     *
+     * @param client Le client à créer
+     * @throws Exception
+     */
     @Override
     public void create(Client client) throws Exception {
 
@@ -178,9 +201,8 @@ public class ClientDao implements IDao<Client>{
             statement.setString(7, client.getCommentaires());
             statement.executeUpdate();
             connection.commit();
-        } catch (MysqlDataTruncation mdt){
+        } catch (DataTruncation dt){
             try {
-                System.err.print("Transaction is being rolled back");
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
@@ -188,11 +210,10 @@ public class ClientDao implements IDao<Client>{
                         "creation d'un client. Veuillez contacter un administrateur.\nFermeture de l'application.");
             }
             String champEnCause =
-                    Utilitaires.fieldAsGenerateException(mdt.getMessage());
+                    Utilitaires.fieldAsGenerateException(dt.getMessage());
             throw new CustomException("Il y a trop de caractères dans le champ "+champEnCause);
         } catch (SQLIntegrityConstraintViolationException sqlicve) {
             try {
-                System.err.print("Transaction is being rolled back");
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
@@ -207,7 +228,6 @@ public class ClientDao implements IDao<Client>{
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la creation d'un client : "+sqle);
             try {
-                System.err.print("Transaction is being rolled back");
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe("Problème lors de l'annulation de la " +
@@ -236,6 +256,12 @@ public class ClientDao implements IDao<Client>{
 
     }
 
+    /**
+     * Méthode pour mettre à jour un client existant dans la base de données.
+     *
+     * @param client Le client à mettre à jour
+     * @throws Exception
+     */
     @Override
     public void update(Client client) throws Exception {
 
@@ -282,9 +308,8 @@ public class ClientDao implements IDao<Client>{
             statement.setInt(7, client.getIdentifiant());
             statement.executeUpdate();
             connection.commit();
-        } catch (MysqlDataTruncation mdt){
+        } catch (DataTruncation dt){
             try {
-                System.err.print("Transaction is being rolled back");
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
@@ -293,11 +318,10 @@ public class ClientDao implements IDao<Client>{
                         "administrateur.\nFermeture de l'application.");
             }
             String champEnCause =
-                    Utilitaires.fieldAsGenerateException(mdt.getMessage());
+                    Utilitaires.fieldAsGenerateException(dt.getMessage());
             throw new CustomException("Il y a trop de caractères dans le champ "+champEnCause);
         } catch (SQLIntegrityConstraintViolationException sqlicve) {
             try {
-                System.err.print("Transaction is being rolled back");
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
@@ -312,7 +336,6 @@ public class ClientDao implements IDao<Client>{
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la mise à jour d'un client : "+sqle);
             try {
-                System.err.print("Transaction is being rolled back");
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe("Problème lors de l'annulation de la " +
@@ -341,6 +364,12 @@ public class ClientDao implements IDao<Client>{
 
     }
 
+    /**
+     * Méthode pour supprimer un client de la base de données.
+     *
+     * @param client Le client à supprimer
+     * @throws Exception
+     */
     @Override
     public void delete(Client client) throws Exception {
 
@@ -371,7 +400,6 @@ public class ClientDao implements IDao<Client>{
             LOGGER.severe("Problème lors de la suppression d'un " +
                     "client : " + sqle);
             try {
-                System.err.print("Transaction is being rolled back");
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe("Problème lors de l'annulation de la " +

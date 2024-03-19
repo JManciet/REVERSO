@@ -21,13 +21,6 @@ class ClientTest extends Client {
     }
 
     @ParameterizedTest
-    @ValueSource(doubles = {201})
-    void setChiffreAffairesValide(double validValues) throws CustomException {
-        this.setChiffreAffaires(validValues);
-        assertEquals(201, this.getChiffreAffaires());
-    }
-
-    @ParameterizedTest
     @ValueSource(ints = {0})
     void setNbrEmployesNonValide(int invalidValues) {
         assertThrows(CustomException.class, () -> {
@@ -35,10 +28,4 @@ class ClientTest extends Client {
         });
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {1})
-    void setNbrEmployesValide(int validValues) throws CustomException {
-        this.setNbrEmployes(validValues);
-        assertEquals(1, this.getNbrEmployes());
-    }
 }

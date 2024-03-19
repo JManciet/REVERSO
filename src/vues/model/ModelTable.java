@@ -37,6 +37,10 @@ public class ModelTable  extends AbstractTableModel {
             }
         }
 
+        if(societes instanceof ArrayList<Societe>){
+
+        }
+
     }
 
     public int getRowCount() {
@@ -72,7 +76,7 @@ public class ModelTable  extends AbstractTableModel {
                 return societe.getAdresse().getVille();
             case 7:
                 if(societe instanceof Client)
-                    return Utilitaires.formatMoney(((Client) societe).getChiffreAffaires());
+                    return Utilitaires.formatMoneyForDisplay(((Client) societe).getChiffreAffaires());
                 else if(societe instanceof Prospect)
                     return Utilitaires.formatDate(((Prospect) societe).getDateProspection());
             case 8:

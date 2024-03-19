@@ -16,17 +16,29 @@ import java.util.stream.Collectors;
 
 import static utilitaires.Utilitaires.LOGGER;
 
+/**
+ * Classe representant la fenêtre d'affichage d'une liste de Sociétés (Client ou Prospect).
+ */
 public class Affichage extends JDialog {
     private JPanel contentPane;
     private JButton buttonRetourAcceuil;
     private JTable table;
     private JLabel titre;
 
+    /**
+     * Initialise la fenêtre d'affichage.
+     */
     public void init(){
         this.setSize(1000,300);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
     }
+
+    /**
+     * Constructeur de la fenêtre d'affichage.
+     *
+     * @param choix Le type de société à afficher (CLIENT ou PROSPECT)
+     */
     public Affichage(TypeSociete choix) {
 
         init();

@@ -14,10 +14,23 @@ import java.util.logging.Level;
 
 import static utilitaires.Utilitaires.LOGGER;
 
+/**
+ * Classe gérant la connexion à la base de données.
+ *
+ * Elle permet d'obtenir une connexion à la base de données afin de pouvoir effectuer des requêtes
+ * et d'assurer la fermeture de la connexion à la fin du programme.
+ */
 public class ConnectionDao {
 
     private static Connection connection;
 
+    /**
+     * Constructeur privé qui initialise la connexion à la base de données à
+     * l'aide des informations contenues dans le
+     * fichier "database.properties".
+     *
+     * @throws Exception
+     */
     private ConnectionDao() throws Exception {
 
         final Properties dataProperties = new Properties();
@@ -32,7 +45,6 @@ public class ConnectionDao {
             );
         } catch (FileNotFoundException fnfe) {
             LOGGER.severe("Fichier de connection non trouvé : "+fnfe);
-            fnfe.printStackTrace();
             throw new DaoException("Fichier de connection non trouvé");
         } catch (IOException ioe) {
             LOGGER.severe("Soucis avec le fichier de connection : "+ioe);
@@ -40,14 +52,21 @@ public class ConnectionDao {
         } catch (SQLException sqle) {
             LOGGER.severe("Connection avec la base de données non " +
                     "établie : "+sqle);
-            sqle.printStackTrace();
             throw new DaoException("Connection avec la base de données non " +
                     "établie");
         }
 
-
     }
 
+    /**
+     * Méthode permettant d'obtenir la connexion à la base de données.
+     *
+     * Si la connexion n'est pas encore établie, elle est créée sinon
+     * retourne la connexion déjà existante.
+     *
+     * @return La connexion à la base de données
+     * @throws Exception en cas de problème lors de la connexion à la base de données
+     */
     public static Connection getConnection() throws Exception {
         if (connection == null) {
             new ConnectionDao();
@@ -55,6 +74,9 @@ public class ConnectionDao {
         return connection;
     }
 
+    /**
+     * Permet de fermer la connexion à la base de données à la fin du programme.
+     */
     static {
         Runtime.getRuntime().addShutdownHook(new Thread()
         {

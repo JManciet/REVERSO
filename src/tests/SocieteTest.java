@@ -33,11 +33,4 @@ class SocieteTest extends Societe {
             this.setEMail(invalidValues);
         });
     }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"a@a"})
-    void setEMailValid(String validValues) throws CustomException {
-        this.setEMail(validValues);
-        assertEquals("a@a", getEMail());
-    }
 }

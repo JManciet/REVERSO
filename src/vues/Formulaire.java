@@ -53,6 +53,9 @@ public class Formulaire extends JDialog {
         this.setVisible(true);
     }
     public Formulaire(TypeSociete choix, Societe societe, TypeAction action) {
+
+        init();
+
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonDelete);
@@ -75,7 +78,7 @@ public class Formulaire extends JDialog {
             textAreaCommentaires.setText(societe.getCommentaires());
             if (societe instanceof Client) {
                 zoneClient.setVisible(true);
-                textFieldChiffreAffaire.setText(Utilitaires.formatMoney(((Client) societe).getChiffreAffaires()));
+                textFieldChiffreAffaire.setText(Utilitaires.formatMoneyForDisplay(((Client) societe).getChiffreAffaires()));
                 textFieldNombreEmployes.setText(String.valueOf(((Client) societe).getNbrEmployes()));
             } else if (societe instanceof Prospect) {
                 zoneProspect.setVisible(true);
@@ -210,7 +213,6 @@ public class Formulaire extends JDialog {
                 JOptionPane.showMessageDialog(null, de.getMessage());
                 System.exit(1);
             } catch (Exception e) {
-                e.printStackTrace();
                 LOGGER.severe("Une erreur inconnue s'est produite" +
                         " : "+e);
                 JOptionPane.showMessageDialog(null,
@@ -244,7 +246,7 @@ public class Formulaire extends JDialog {
                     textFieldTelephone.getText(),
                     textFieldEmail.getText(),
                     textAreaCommentaires.getText(),
-                    Utilitaires.formatMoney(textFieldChiffreAffaire.getText()),
+                    Utilitaires.formatMoneyForSave(textFieldChiffreAffaire.getText().replace(",",".")),
                     Integer.parseInt(textFieldNombreEmployes.getText())
             );
         } else if (choix.equals(TypeSociete.PROSPECT)) {
