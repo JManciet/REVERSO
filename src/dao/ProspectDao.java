@@ -2,6 +2,7 @@ package dao;
 
 import entites.Adresse;
 import entites.Societe;
+import utilitaires.Gravite;
 import utilitaires.Interessement;
 import entites.Prospect;
 import exceptions.CustomException;
@@ -64,13 +65,15 @@ public class ProspectDao implements IDao<Prospect>{
             return prospects;
         } catch (CustomException ce) {
             LOGGER.severe("Une donnée de la BDD n'est pas conforme : "+ ce);
-            throw new CustomException("Problème avec les données " +
-                    "enregistrées dans la base de donnée. Veuillez contacter un administrateur.\nFermeture de l'application.");
+            throw new DaoException(Gravite.SEVERE,"Problème avec les données " +
+                    "enregistrées dans la base de donnée. Veuillez contacter" +
+                    " un administrateur.\nFermeture de l'application.");
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la recherche des " +
                     "prospects dans la base de donnée : "+ sqle);
-            throw new DaoException("Un problème est survenu lors de la " +
-                    "recherche des prospects dans la base de donnée. Veuillez contacter un administrateur.\nFermeture de l'application.");
+            throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
+                    "recherche des prospects dans la base de donnée. Veuillez " +
+                    "contacter un administrateur.\nFermeture de l'application.");
         }finally {
             try {
                 if (statement != null) {
@@ -79,7 +82,7 @@ public class ProspectDao implements IDao<Prospect>{
             } catch (SQLException sqle) {
                 LOGGER.severe("Problème lors de la recherche des " +
                         "propects dans la base de donnée.: " + sqle);
-                throw new DaoException("Un problème est survenu lors de la " +
+                throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
                         "recherche des prospects dans la base de donnée. " +
                         "Veuillez contacter un administrateur.\nFermeture de l'application.");
             }
@@ -133,13 +136,15 @@ public class ProspectDao implements IDao<Prospect>{
             }
         } catch (CustomException ce) {
             LOGGER.severe("Une donnée de la BDD n'est pas conforme : "+ ce);
-            throw new CustomException("Problème avec les données " +
-                    "enregistrées dans la base de donnée. Veuillez contacter un administrateur.\nFermeture de l'application.");
+            throw new DaoException(Gravite.SEVERE,"Problème avec les données " +
+                    "enregistrées dans la base de donnée. Veuillez contacter un" +
+                    " administrateur.\nFermeture de l'application.");
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la recherche par nom de" +
                     " prospect dans la base de donnée : "+sqle);
-            throw new DaoException("Un problème est survenu lors de la " +
-                    "recherche par nom de prospect dans la base de donnée. Veuillez contacter un administrateur.\nFermeture de l'application.");
+            throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
+                    "recherche par nom de prospect dans la base de donnée. Veuillez" +
+                    " contacter un administrateur.\nFermeture de l'application.");
         }finally {
             try {
                 if (statement != null) {
@@ -148,7 +153,7 @@ public class ProspectDao implements IDao<Prospect>{
             } catch (SQLException sqle) {
                 LOGGER.severe("Problème lors de la recherche par nom de " +
                         "prospect : " + sqle);
-                throw new DaoException("Un problème est survenu lors de la " +
+                throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
                         "recherche par nom de prospect. Veuillez contacter un" +
                         " administrateur.\nFermeture de l'application.");
             }
@@ -211,22 +216,22 @@ public class ProspectDao implements IDao<Prospect>{
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
-                throw new DaoException("Un problème est survenu lors de la " +
+                throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
                         "creation d'un prospect. Veuillez contacter un " +
                         "administrateur.\nFermeture de l'application.");
             }
-            throw new CustomException("Il y a trop de caractères dans le champ "+champEnCause);
+            throw new DaoException(Gravite.INFO,"Il y a trop de caractères dans le champ "+champEnCause);
         } catch (SQLIntegrityConstraintViolationException sqlicve) {
             try {
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
-                throw new DaoException("Un problème est survenu lors de la creation d'un " +
+                throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la creation d'un " +
                         "prospect. Veuillez contacter un administrateur.\nFermeture de l'application.");
             }
             String champEnCause =
                     Utilitaires.fieldAsGenerateException(sqlicve.getMessage());
-            throw new CustomException("Les informations renseigné dans " +
+            throw new DaoException(Gravite.INFO,"Les informations renseigné dans " +
                     "le champ "+ champEnCause +" ne peut être identique à un" +
                     " autre prospect.");
         } catch (SQLException sqle) {
@@ -237,7 +242,7 @@ public class ProspectDao implements IDao<Prospect>{
                 LOGGER.severe("Problème lors de l'annulation de la " +
                         "transaction : "+excep);
             } finally {
-                throw new DaoException("Un problème est survenu lors de la " +
+                throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
                         "creation d'un prospect. Veuillez contacter un administrateur.\nFermeture de l'application.");
             }
 
@@ -252,7 +257,7 @@ public class ProspectDao implements IDao<Prospect>{
             } catch (SQLException sqle) {
                 LOGGER.severe("Problème lors de la creation d'un " +
                         "prospect : " + sqle);
-                throw new DaoException("Un problème est survenu lors de la " +
+                throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
                         "creation d'un prospect. Veuillez contacter un " +
                         "administrateur.\nFermeture de l'application.");
             }
@@ -318,23 +323,24 @@ public class ProspectDao implements IDao<Prospect>{
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
-                throw new DaoException("Un problème est survenu lors de la " +
+                throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
                         "mise à jour d'un prospect. Veuillez contacter un " +
                         "administrateur.\nFermeture de l'application.");
             }
-            throw new CustomException("Il y a trop de caractères dans le " +
+            throw new DaoException(Gravite.INFO,"Il y a trop de caractères dans le " +
                     "champ "+champEnCause);
         } catch (SQLIntegrityConstraintViolationException sqlicve) {
             try {
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
-                throw new DaoException("Un problème est survenu lors de la " +
-                        "mise à jour d'un prospect. Veuillez contacter un administrateur.\nFermeture de l'application.");
+                throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
+                        "mise à jour d'un prospect. Veuillez contacter un " +
+                        "administrateur.\nFermeture de l'application.");
             }
             String champEnCause =
                     Utilitaires.fieldAsGenerateException(sqlicve.getMessage());
-            throw new CustomException("Les informations renseigné dans " +
+            throw new DaoException(Gravite.INFO,"Les informations renseigné dans " +
                     "le champ "+ champEnCause +" ne peut être identique à un" +
                     " autre prospect.");
         } catch (SQLException sqle) {
@@ -345,8 +351,9 @@ public class ProspectDao implements IDao<Prospect>{
                 LOGGER.severe("Problème lors de l'annulation de la " +
                         "transaction : "+excep);
             } finally {
-                throw new DaoException("Un problème est survenu lors de la " +
-                        "mise à jour d'un prospect. Veuillez contacter un administrateur.\nFermeture de l'application.");
+                throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
+                        "mise à jour d'un prospect. Veuillez contacter un " +
+                        "administrateur.\nFermeture de l'application.");
             }
 
         } finally {
@@ -360,7 +367,7 @@ public class ProspectDao implements IDao<Prospect>{
             } catch (SQLException sqle) {
                 LOGGER.severe("Problème lors de la mise à jour d'un " +
                         "prospect : " + sqle);
-                throw new DaoException("Un problème est survenu lors de la " +
+                throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
                         "mise à jour d'un prospect. Veuillez contacter un " +
                         "administrateur.\nFermeture de l'application.");
             }
@@ -408,8 +415,9 @@ public class ProspectDao implements IDao<Prospect>{
                 LOGGER.severe("Problème lors de l'annulation de la " +
                         "transaction : "+excep);
             } finally {
-                throw new DaoException("Un problème est survenu lors de la " +
-                        "suppression d'un prospect. Veuillez contacter un administrateur.\nFermeture de l'application.");
+                throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
+                        "suppression d'un prospect. Veuillez contacter " +
+                        "un administrateur.\nFermeture de l'application.");
             }
         } finally {
             try {
@@ -422,7 +430,7 @@ public class ProspectDao implements IDao<Prospect>{
             } catch (SQLException sqle) {
                 LOGGER.severe("Problème lors de la suppression d'un " +
                         "prospect : " + sqle);
-                throw new DaoException("Un problème est survenu lors de la " +
+                throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
                         "suppression d'un prospect. Veuillez contacter un " +
                         "administrateur.\nFermeture de l'application.");
             }

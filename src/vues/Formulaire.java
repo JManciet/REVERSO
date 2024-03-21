@@ -1,13 +1,10 @@
 package vues;
 
 import controleurs.ControleurFormulaire;
-import utilitaires.Interessement;
-import utilitaires.TypeAction;
-import utilitaires.TypeSociete;
+import utilitaires.*;
 import entites.*;
 import exceptions.CustomException;
 import exceptions.DaoException;
-import utilitaires.Utilitaires;
 
 import javax.swing.*;
 import java.awt.*;
@@ -175,6 +172,9 @@ public class Formulaire extends JDialog {
                     controleurFormulaire.retourAcceuil();
                 } catch (DaoException de) {
                     JOptionPane.showMessageDialog(null, de.getMessage());
+                    if (de.getGravite() == Gravite.SEVERE) {
+                        System.exit(1);
+                    }
                 } catch (Exception ex) {
                     LOGGER.severe("Une erreur inconnue s'est produite" +
                             " : "+ex);
@@ -211,7 +211,9 @@ public class Formulaire extends JDialog {
                 JOptionPane.showMessageDialog(null, ce.getMessage());
             } catch (DaoException de) {
                 JOptionPane.showMessageDialog(null, de.getMessage());
-                System.exit(1);
+                if (de.getGravite() == Gravite.SEVERE) {
+                    System.exit(1);
+                }
             } catch (Exception e) {
                 LOGGER.severe("Une erreur inconnue s'est produite" +
                         " : "+e);

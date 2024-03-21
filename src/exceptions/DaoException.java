@@ -1,5 +1,7 @@
 package exceptions;
 
+import utilitaires.Gravite;
+
 /**
  * Classe représentant une exception générique survenant lors d'un accès aux données.
  *
@@ -9,23 +11,23 @@ package exceptions;
  */
 public class DaoException extends Exception{
 
-    private int gravite;
+    private Gravite gravite;
 
-    /**
-     * Constructeur de l'exception DaoException.
-     *
-     * @param message Le message d'erreur à afficher à l'utilisateur
-     */
-    public DaoException(String message) {
-        super(message);
-    }
+//    /**
+//     * Constructeur de l'exception DaoException.
+//     *
+//     * @param message Le message d'erreur à afficher à l'utilisateur
+//     */
+//    public DaoException(String message) {
+//        super(message);
+//    }
 
-    public DaoException(String message, int gravite) {
+    public DaoException(Gravite gravite, String message) {
         super(message);
         this.gravite = gravite;
     }
 
-    public int getGravite() {
+    public Gravite getGravite() {
         return gravite;
     }
 }

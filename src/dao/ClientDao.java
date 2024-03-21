@@ -5,6 +5,7 @@ import entites.Client;
 import entites.Societe;
 import exceptions.CustomException;
 import exceptions.DaoException;
+import utilitaires.Gravite;
 import utilitaires.Utilitaires;
 
 import java.sql.*;
@@ -61,14 +62,15 @@ public class ClientDao implements IDao<Client>{
             return clients;
         } catch (CustomException ce) {
             LOGGER.severe("Une donnée de la BDD n'est pas conforme : "+ ce);
-            throw new CustomException("Problème avec les données " +
+            throw new DaoException(Gravite.SEVERE,"Problème avec les données " +
                     "enregistrées dans la base de donnée. Veuillez contacter " +
                     "un administrateur.\nFermeture de l'application.");
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la recherche des " +
                     "clients dans la base de donnée : "+ sqle);
-            throw new DaoException("Un problème est survenu lors de la " +
-                    "recherche des clients dans la base de donnée. Veuillez contacter un administrateur.\nFermeture de l'application.");
+            throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
+                    "recherche des clients dans la base de donnée. " +
+                    "Veuillez contacter un administrateur.\nFermeture de l'application.");
         } finally {
             try {
                 if (statement != null) {
@@ -77,7 +79,8 @@ public class ClientDao implements IDao<Client>{
             } catch (SQLException sqle) {
                 LOGGER.severe("Problème lors de la recherche des " +
                         "clients dans la base de donnée.: " + sqle);
-                throw new DaoException("Un problème est survenu lors de la " +
+                throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de " +
+                        "la " +
                         "recherche des clients dans la base de donnée. " +
                         "Veuillez contacter un administrateur.\nFermeture de l'application.");
             }
@@ -129,14 +132,17 @@ public class ClientDao implements IDao<Client>{
             }
         } catch (CustomException ce) {
             LOGGER.severe("Une donnée de la BDD n'est pas conforme : "+ ce);
-            throw new CustomException("Problème avec les données " +
+            throw new DaoException(Gravite.SEVERE,"Problème avec les données " +
                     "enregistrées dans la base de donnée. Veuillez contacter " +
                     "un administrateur.\nFermeture de l'application.");
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la recherche par nom de" +
                     " client dans la base de donnée : "+sqle);
-            throw new DaoException("Un problème est survenu lors de la recherche par nom de" +
-                    " client dans la base de donnée. Veuillez contacter un administrateur.\nFermeture de l'application.");
+            throw new DaoException(Gravite.SEVERE,"Un problème est survenu " +
+                    "lors de la " +
+                    "recherche par nom de" +
+                    " client dans la base de donnée. Veuillez contacter " +
+                    "un administrateur.\nFermeture de l'application.");
         }finally {
             try {
                 if (statement != null) {
@@ -145,7 +151,9 @@ public class ClientDao implements IDao<Client>{
             } catch (SQLException sqle) {
                 LOGGER.severe("Problème lors de la recherche par nom de " +
                         "client : " + sqle);
-                throw new DaoException("Un problème est survenu lors de la " +
+                throw new DaoException(Gravite.SEVERE,"Un problème est " +
+                        "survenu lors de la" +
+                        " " +
                         "recherche par nom de client. Veuillez contacter un " +
                         "administrateur.\nFermeture de l'application.");
             }
@@ -206,23 +214,29 @@ public class ClientDao implements IDao<Client>{
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
-                throw new DaoException("Un problème est survenu lors de la " +
-                        "creation d'un client. Veuillez contacter un administrateur.\nFermeture de l'application.");
+                throw new DaoException(Gravite.SEVERE,"Un problème est " +
+                        "survenu lors de la " +
+                        "creation d'un client. Veuillez contacter un administrateur." +
+                        "\nFermeture de l'application.");
             }
             String champEnCause =
                     Utilitaires.fieldAsGenerateException(dt.getMessage());
-            throw new CustomException("Il y a trop de caractères dans le champ "+champEnCause);
+            throw new DaoException(Gravite.INFO,"Il y a trop de caractères " +
+                    "dans le champ "+champEnCause);
         } catch (SQLIntegrityConstraintViolationException sqlicve) {
             try {
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
-                throw new DaoException("Un problème est survenu lors de la " +
-                        "creation d'un client. Veuillez contacter un administrateur.\nFermeture de l'application.");
+                throw new DaoException(Gravite.SEVERE,"Un problème est " +
+                        "survenu lors de la" +
+                        "creation d'un client. Veuillez contacter un administrateur." +
+                        "\nFermeture de l'application.");
             }
             String champEnCause =
                     Utilitaires.fieldAsGenerateException(sqlicve.getMessage());
-            throw new CustomException("Les informations renseigné dans " +
+            throw new DaoException(Gravite.INFO,"Les informations renseigné " +
+                    "dans " +
                     "le champ "+ champEnCause +" ne peut être identique à un" +
                     " autre client.");
         } catch (SQLException sqle) {
@@ -233,8 +247,9 @@ public class ClientDao implements IDao<Client>{
                 LOGGER.severe("Problème lors de l'annulation de la " +
                                 "transaction : "+excep);
             } finally {
-                throw new DaoException("Un problème est survenu lors de la " +
-                        "creation d'un client. Veuillez contacter un administrateur.\nFermeture de l'application.");
+                throw new DaoException(Gravite.SEVERE,"Un problème est " +
+                        "survenu lors de la creation d'un client. Veuillez " +
+                        "contacter un administrateur.\nFermeture de l'application.");
             }
 
         } finally {
@@ -248,7 +263,8 @@ public class ClientDao implements IDao<Client>{
             } catch (SQLException sqle) {
                 LOGGER.severe("Problème lors de la creation d'un " +
                         "client : " + sqle);
-                throw new DaoException("Un problème est survenu lors de la " +
+                throw new DaoException(Gravite.SEVERE,"Un problème est " +
+                        "survenu lors de la " +
                         "creation d'un client. Veuillez contacter un " +
                         "administrateur.\nFermeture de l'application.");
             }
@@ -313,25 +329,27 @@ public class ClientDao implements IDao<Client>{
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
-                throw new DaoException("Un problème est survenu lors de la " +
+                throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
                         "mise à jour d'un client. Veuillez contacter un " +
                         "administrateur.\nFermeture de l'application.");
             }
             String champEnCause =
                     Utilitaires.fieldAsGenerateException(dt.getMessage());
-            throw new CustomException("Il y a trop de caractères dans le champ "+champEnCause);
+            throw new DaoException(Gravite.INFO,"Il y a trop de caractères " +
+                    "dans le champ "+champEnCause);
         } catch (SQLIntegrityConstraintViolationException sqlicve) {
             try {
                 connection.rollback();
             } catch (SQLException excep) {
                 LOGGER.severe(excep.toString());
-                throw new DaoException("Un problème est survenu lors de la " +
-                        "mise à jour d'un client. Veuillez contacter un administrateur.\nFermeture de l'application.");
+                throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
+                        "mise à jour d'un client. Veuillez contacter un administrateur." +
+                        "\nFermeture de l'application.");
             }
             String champEnCause =
                     Utilitaires.fieldAsGenerateException(sqlicve.getMessage());
-            throw new CustomException("Les informations renseigné dans " +
-                    "le champ "+ champEnCause +" ne peut être identique à un" +
+            throw new DaoException(Gravite.INFO,"Les informations renseigné " +
+                    "dans le champ "+ champEnCause +" ne peut être identique à un" +
                     " autre client.");
         } catch (SQLException sqle) {
             LOGGER.severe("Problème lors de la mise à jour d'un client : "+sqle);
@@ -341,8 +359,9 @@ public class ClientDao implements IDao<Client>{
                 LOGGER.severe("Problème lors de l'annulation de la " +
                         "transaction : "+excep);
             } finally {
-                throw new DaoException("Un problème est survenu lors de la " +
-                        "mise à jour d'un client. Veuillez contacter un administrateur.\nFermeture de l'application.");
+                throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
+                        "mise à jour d'un client. Veuillez contacter un administrateur." +
+                        "\nFermeture de l'application.");
             }
 
         } finally {
@@ -356,7 +375,7 @@ public class ClientDao implements IDao<Client>{
             } catch (SQLException sqle) {
                 LOGGER.severe("Problème lors de la mise à jour d'un " +
                         "client : " + sqle);
-                throw new DaoException("Un problème est survenu lors de la " +
+                throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
                         "mise à jour d'un client. Veuillez contacter un " +
                         "administrateur.\nFermeture de l'application.");
             }
@@ -405,8 +424,9 @@ public class ClientDao implements IDao<Client>{
                 LOGGER.severe("Problème lors de l'annulation de la " +
                         "transaction : "+excep);
             } finally {
-                throw new DaoException("Un problème est survenu lors de la " +
-                        "suppression d'un client. Veuillez contacter un administrateur.\nFermeture de l'application.");
+                throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
+                        "suppression d'un client. Veuillez contacter un " +
+                        "administrateur.\nFermeture de l'application.");
             }
         } finally {
             try {
@@ -419,7 +439,7 @@ public class ClientDao implements IDao<Client>{
             } catch (SQLException sqle) {
                 LOGGER.severe("Problème lors de la suppression d'un " +
                         "client : " + sqle);
-                throw new DaoException("Un problème est survenu lors de la " +
+                throw new DaoException(Gravite.SEVERE,"Un problème est survenu lors de la " +
                         "suppression d'un client. Veuillez contacter un " +
                         "administrateur.\nFermeture de l'application.");
             }

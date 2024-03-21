@@ -1,5 +1,6 @@
 package vues;
 
+import utilitaires.Gravite;
 import utilitaires.TypeAction;
 import utilitaires.TypeSociete;
 import controleurs.ControleurAcceuil;
@@ -158,10 +159,12 @@ public class Acceuil extends JDialog {
                             dispose();
                             controleurAcceuil.pageFormulaire(choix,
                                     societe,action);
-                        } catch (CustomException | DaoException ex) {
+                        } catch (DaoException de) {
                             JOptionPane.showMessageDialog(null,
-                                    ex.getMessage());
-                            System.exit(1);
+                                    de.getMessage());
+                            if (de.getGravite() == Gravite.SEVERE) {
+                                System.exit(1);
+                            }
                         } catch (Exception ex) {
                             LOGGER.severe("Une erreur inconnue s'est produite" +
                                     " : "+ex);
@@ -201,9 +204,11 @@ public class Acceuil extends JDialog {
                 selection.setText("Choisissez le " + (choix.equals(TypeSociete.CLIENT) ? "client" : "prospect") + " à " + (action.equals(TypeAction.SUPPRESSION) ? "supprimer" : "modifier") + " :");
                 panelList.setVisible(true);
             }
-        } catch (CustomException | DaoException ex) {
-            JOptionPane.showMessageDialog(null,ex.getMessage());
-            System.exit(1);
+        } catch (DaoException de) {
+            JOptionPane.showMessageDialog(null,de.getMessage());
+            if (de.getGravite() == Gravite.SEVERE) {
+                System.exit(1);
+            }
         } catch (Exception e) {
             LOGGER.severe("Une erreur inconnue s'est produite" +
                     " : "+e);

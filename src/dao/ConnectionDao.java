@@ -1,6 +1,7 @@
 package dao;
 
 import exceptions.DaoException;
+import utilitaires.Gravite;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,15 +46,17 @@ public class ConnectionDao {
             );
         } catch (FileNotFoundException fnfe) {
             LOGGER.severe("Fichier de connection non trouvé : "+fnfe);
-            throw new DaoException("Fichier de connection non trouvé");
+            throw new DaoException(Gravite.SEVERE,"Fichier de connection non " +
+                    "trouvé" + "\nFermeture de l'application");
         } catch (IOException ioe) {
             LOGGER.severe("Soucis avec le fichier de connection : "+ioe);
-            throw new DaoException("Soucis avec le fichier de connection");
+            throw new DaoException(Gravite.SEVERE, "Soucis avec le fichier de" +
+                    " connection" + "\nFermeture de l'application");
         } catch (SQLException sqle) {
             LOGGER.severe("Connection avec la base de données non " +
                     "établie : "+sqle);
-            throw new DaoException("Connection avec la base de données non " +
-                    "établie");
+            throw new DaoException(Gravite.SEVERE, "Connection avec la base " +
+                    "de données non établie" + "\nFermeture de l'application");
         }
 
     }

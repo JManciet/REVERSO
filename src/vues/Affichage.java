@@ -1,6 +1,7 @@
 package vues;
 
 import controleurs.ControleurAffichage;
+import utilitaires.Gravite;
 import utilitaires.TypeSociete;
 import entites.Societe;
 import exceptions.CustomException;
@@ -58,9 +59,11 @@ public class Affichage extends JDialog {
         ArrayList<Societe> societes = null;
         try {
             societes = controleurAffichage.getListSociete(choix);
-        } catch (DaoException | CustomException e) {
-            JOptionPane.showMessageDialog(null,e.getMessage());
-            System.exit(1);
+        } catch (DaoException de) {
+            JOptionPane.showMessageDialog(null,de.getMessage());
+            if (de.getGravite() == Gravite.SEVERE) {
+                System.exit(1);
+            }
         } catch (Exception e) {
             LOGGER.severe("Une erreur inconnue s'est produite" +
                     " : "+e);
