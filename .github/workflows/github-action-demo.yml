@@ -15,7 +15,7 @@
 #      - name: List files in the repository
 #        run:
 #          ls ${{ github.workspace }}
-#      - run: echo "✅ This job's status is ${{ job.status }}."
+#      - run: echo "✅ tThis job's status is ${{ job.status }}."
 
 name: SonarCloud
 on:
