@@ -117,7 +117,7 @@ jobs:
       - name: Compile Java Sources
         run: |
           javac -version
-          javac -d out src/*.java src/controleurs/*.java src/dao/*.java src/entities/*.java src/exceptions/*.java src/utilitaires/*.java src/vues/*.java 
+          javac -d out src/*.java src/controleurs/*.java src/dao/*.java src/entites/*.java src/exceptions/*.java src/utilitaires/*.java src/vues/*.java 
           cd out
           ls -al
 
