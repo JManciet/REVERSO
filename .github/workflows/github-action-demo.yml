@@ -101,7 +101,7 @@ jobs:
     needs: init-workflow
 
     steps:
-      # checkout du projet
+      # checkout  du projet
       - name: Checkout code
         uses: actions/checkout@v4
 
