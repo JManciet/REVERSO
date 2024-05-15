@@ -120,7 +120,7 @@ jobs:
           cd out
           ls -al
 
-      # creation du Jar du projet
+      # creation  du Jar du projet
       - name: Create JAR
         run: |
           ls -al
