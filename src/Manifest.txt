@@ -1,0 +1,3 @@
+Name: REVERSO
+Main-Class: Main
+Class-Path: lib/*.jar
