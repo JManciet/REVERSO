@@ -145,3 +145,44 @@ jobs:
 
       # message de fin indiquant que tout s'est bien passé
       - run: echo "🍏 This job's status is ${{ job.status }}."
+
+  # deployement creer un docker + artefact
+  docker-build-image-push:
+    # vérifie que le déclenchement provient de la branche main
+    if: ${{ github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    needs:
+      - project-build
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set Up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set Up Docker Build
+        uses: docker/setup-buildx-action@v3
+
+      # mise en relation du docker Hub
+      - name: Connect to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      # recuperation de l'artefact construit précédement
+      - name: Download a single artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: reverso.jar
+
+      # construction de l'image reverso à partir du Dockerfile
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USER }}/reverso:latest
+
+      # message de fin indiquant que tout s'est bien passé
+      - run: echo "🍏 This job's status is ${{ job.status }}."
