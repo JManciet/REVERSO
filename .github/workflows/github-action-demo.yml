@@ -116,7 +116,7 @@ jobs:
       # compilation du projet
       - name: Compile Java Sources
         run: |
-          javac -d out src/*.java src/**/*.java
+          javac -d out src/*.java src/**/*.java -exclude src/test
           cd out
           ls -al
 
