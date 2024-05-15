@@ -116,9 +116,12 @@ jobs:
       # compilation du projet
       - name: Compile Java Sources
         run: |
-          javac -d out src/*.java src/**/*.java -exclude src/test
+          javac -d out src/*.java src/**/*.java
           cd out
           ls -al
+
+        paths-ignore:
+          - 'src/tests'
 
       # creation du Jar du projet
       - name: Create JAR
